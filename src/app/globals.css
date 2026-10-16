@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Temporary diagnostic styling. Production theme will come from Supabase. */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}

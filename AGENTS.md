@@ -1,0 +1,11 @@
+# Project rules
+- Build a Sri Lankan travel showcase and inquiry site for international tourists: no payments, no customer accounts, one authorized admin login.
+- Stack: Next.js App Router, TypeScript, Tailwind CSS, Supabase Postgres/Auth/Storage, React Hook Form + Zod, Leaflet + OpenStreetMap, Vercel. Keep application code in src/.
+- All production content and presentation settings must be editable in the admin and stored in Supabase: navbar, footer, page copy, heroes, SEO, theme colours, tours and destinations. Never hardcode production content. Phase 1's temporary setup diagnostic is developer UI only.
+- Work in small phases. Briefly explain changes, provide test instructions, and STOP for user approval before the next phase.
+- Never print or commit secrets. Use only NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY through environment variables. Never use service role or secret keys.
+- Keep .env.local ignored and .env.example tracked with empty values. The user supplies the local publishable key.
+- Enable RLS and least-privilege policies before exposing data. Authentication alone does not authorize an admin. Disable public signup when implementing the single admin login.
+- Add session refresh proxy and verified server authorization with admin authentication; client helpers alone are not route protection.
+- Run lint, TypeScript checking and production build for relevant changes. Commit lockfiles. Never overwrite user work or force-push.
+- Git remote: https://github.com/iamshamhan/str-tours-site.git
