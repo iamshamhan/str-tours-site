@@ -1,4 +1,10 @@
-# Travel website — Phase 1
+# Visit Sri Lanka — project foundation
+
+## Phase 2 database
+
+The database schema, access policies and draft seed content are now applied to the connected Supabase project. See [the database guide](supabase/README.md) for all 17 tables, placeholder content, verification and owner setup. After creating the Auth user, run [admin-bootstrap.sql](supabase/admin-bootstrap.sql) in Supabase SQL Editor. The homepage remains the setup diagnostic until the public website phase.
+
+## Phase 1 foundation
 
 Next.js App Router, TypeScript, Tailwind CSS, ESLint and a src directory.
 Supabase, React Hook Form, Zod, Leaflet and React Leaflet are installed.
@@ -33,7 +39,8 @@ before relying on protected routes.
 
 The homepage is temporary setup UI. All production content, navigation, footer,
 heroes, SEO and theme must be editable in the admin and stored in Supabase.
-No schema or admin UI is created in Phase 1. Vercel deployment and environment
-configuration are deferred to the deployment phase. See AGENTS.md for rules.
+The schema and draft seed are now implemented in Phase 2; the admin UI is still
+pending. Vercel deployment and environment configuration are deferred to the
+deployment phase. See AGENTS.md for rules.
 
 Build note: uses Webpack and the standard Tailwind PostCSS plugin because the generated Turbopack CSS worker failed on this Windows environment. Production dependency audit: zero vulnerabilities. Full audit reports five high warnings in the ESLint development chain caused by the braces nested-pattern advisory; the suggested downgrade conflicts with this Next.js version, so it was not applied.

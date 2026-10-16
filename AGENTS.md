@@ -9,3 +9,16 @@
 - Add session refresh proxy and verified server authorization with admin authentication; client helpers alone are not route protection.
 - Run lint, TypeScript checking and production build for relevant changes. Commit lockfiles. Never overwrite user work or force-push.
 - Git remote: https://github.com/iamshamhan/str-tours-site.git
+
+## Phase 2 database rules
+- Database schema and RLS migrations live in supabase/migrations; local versions must match the applied remote migration ledger. Never edit already-applied migrations; add a new migration for schema changes.
+- The connected project is str-tours (kkfvajdsoucrxvkvvxkv). Do not modify other Supabase projects.
+- supabase/seed.sql is draft placeholder data only, rerunnable without overwriting owner edits. Business name, contact details, USD default and theme are editable site_settings data, not application constants.
+- All 15 editorial tables have slugs, published flags, sort order, placeholder flags and timestamps. Inquiries and admin_users are always private and deliberately lack public publication fields.
+- Public child visibility must respect published parents. Reviews also require approval. Route stops must belong to the same tour as their itinerary day.
+- Admin authorization uses the Auth user ID in admin_users, never email/JWT user_metadata. The database enforces at most one admin. Bootstrap only using supabase/admin-bootstrap.sql after the owner creates the Auth user.
+- Keep private.is_admin() in a non-exposed schema; never grant anonymous access or add arbitrary-user lookup arguments. Do not expose inquiry notes or admin membership through public views or functions.
+- Public inquiry inserts must retain new status and empty notes. Do not request returned inquiry rows. Add validation, bot protection and rate limiting in the inquiry phase.
+- Media table policies do not secure Storage objects. Implement private bucket/object policies before adding uploads; never store secrets in site_settings or public content JSON.
+- Approximate route coordinates and itineraries must be verified by the owner before publishing. Do not fabricate customer reviews, staff identities, vehicle claims or prices.
+- Database test instructions and table descriptions are in supabase/README.md. RLS smoke tests roll back all synthetic fixtures and must use a fresh development database with no real admin.
