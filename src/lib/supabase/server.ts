@@ -18,8 +18,8 @@ export async function createClient() {
             cookieStore.set(name, value, options),
           );
         } catch {
-          // Server Components cannot write cookies. Add the refresh proxy
-          // with admin authentication before relying on persistent sessions.
+          // Server Components cannot write cookies. The admin proxy persists
+          // refreshes and supplies no-store response headers before rendering.
         }
       },
     },

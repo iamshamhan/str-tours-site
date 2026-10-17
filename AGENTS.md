@@ -22,3 +22,25 @@
 - Media table policies do not secure Storage objects. Implement private bucket/object policies before adding uploads; never store secrets in site_settings or public content JSON.
 - Approximate route coordinates and itineraries must be verified by the owner before publishing. Do not fabricate customer reviews, staff identities, vehicle claims or prices.
 - Database test instructions and table descriptions are in supabase/README.md. RLS smoke tests roll back all synthetic fixtures and must use a fresh development database with no real admin.
+
+## Phase 3 authentication rules
+- Next.js 16 uses src/proxy.ts. Protect all /admin paths except /admin/login and preserve refresh/signout cookies plus private/no-store headers on redirects.
+- Verify the user with Supabase Auth and check admin_users on the server. Every future admin page, Route Handler and mutating Server Action must enforce requireAdmin() at its data boundary; layout/proxy checks alone are insufficient.
+- Never authorize from getSession(), client state, email strings or editable user_metadata. Keep RLS enabled as the database enforcement layer.
+- Wrong-password, unknown-account and non-admin login errors must remain generic. Never log credential inputs, Auth payloads, tokens or cookies.
+- Keep Next.js development argument logging disabled in next.config.ts. This installed version otherwise logs Server Function arguments, including login passwords.
+- Logout must remain a POST action, clear local session cookies, and use Supabase signOut. Do not add a GET logout endpoint or arbitrary redirect targets.
+- Admin labels and neutral styling are internal application UI; business identity and public design remain Supabase-managed.
+- The login throttle is bounded and per-process, not distributed. Do not claim it replaces Supabase or platform rate limiting. Preserve native Server Action origin checks.
+- Keep /admin noindex metadata, robots rules and no-store responses. Search-engine directives never replace authorization.
+- Use docs/admin-auth.md for configuration, test instructions and verification limits. Never request the owner's password in chat; have the owner enter it directly in the local app for live tests.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
