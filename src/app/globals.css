@@ -1,7 +1,25 @@
 @import "tailwindcss";
 
-/* Temporary diagnostic styling. Production theme will come from Supabase. */
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Neutral, text-free fallback. Published settings override these variables. */
+.public-site {
+  --site-background: #fff;
+  --site-text: #222;
+  --site-accent: #888;
+  --site-heading-font: sans-serif;
+  --site-body-font: sans-serif;
+  --site-radius: 0px;
+  min-height: 100svh;
+  background: var(--site-background);
+  color: var(--site-text);
+  font-family: var(--site-body-font);
+}
+.public-home { min-height: 100svh; display: grid; align-items: center; padding: clamp(24px, 8vw, 120px); }
+.public-intro { max-width: 1100px; width: 100%; margin-inline: auto; padding: clamp(24px, 5vw, 80px); border: 1px solid color-mix(in srgb, var(--site-text) 12%, transparent); border-radius: var(--site-radius); }
+.public-accent { width: 48px; height: 4px; background: var(--site-accent); border-radius: var(--site-radius); margin-bottom: 40px; }
+.public-intro h1 { font-family: var(--site-heading-font); font-size: clamp(40px, 7vw, 88px); font-weight: 500; line-height: 1.08; letter-spacing: -0.045em; overflow-wrap: anywhere; }
+.public-intro p { margin-top: 28px; max-width: 640px; font-size: clamp(18px, 2vw, 24px); line-height: 1.65; white-space: pre-line; overflow-wrap: anywhere; }

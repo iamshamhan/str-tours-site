@@ -21,18 +21,16 @@ Supabase, React Hook Form, Zod, Leaflet and React Leaflet are installed.
 4. Run `npm run dev` and open http://localhost:3000.
 5. Restart after changing environment variables.
 
-The homepage shows "Configuration needed" while the key is empty. Once configured,
-it makes a fresh, read-only request to the Data API schema endpoint. Success proves
-network connectivity and key acceptance, not table RLS, Storage or admin login.
-No tables are needed. Invalid keys show failure; unreachable requests time out
-after 8 seconds. No key or raw provider error is rendered or logged by this check.
+The homepage reads published site settings from Supabase. It remains blank until
+you review and publish settings at `/admin/settings`. Missing configuration,
+unreachable data or invalid settings also produce a neutral, text-free fallback.
+The original schema-endpoint diagnostic has been removed.
 
 ## Verify
 
 Run `npm run lint`, `npm run typecheck` and `npm run build`.
-Check the empty-key state, then add your key and confirm the success message.
-For failure testing, temporarily use an invalid sb_publishable_... value, restart,
-and refresh. Restore the real key locally afterwards.
+Run `node --test tests/settings.test.mjs tests/admin-auth.test.mjs`.
+See docs/site-settings.md for saving, publishing and public theme checks.
 
 .env.local is ignored; .env.example contains names with empty values only.
 Browser and server helpers are in src/lib/supabase/client.ts and server.ts.
@@ -41,10 +39,10 @@ and src/lib/admin/auth.ts. See docs/admin-auth.md for the remaining live checks.
 
 ## Scope
 
-The homepage is temporary setup UI. All production content, navigation, footer,
+The homepage shows the published business name and tagline. All production content, navigation, footer,
 heroes, SEO and theme must be editable in the admin and stored in Supabase.
-The schema, draft seed, admin authentication and dashboard are implemented;
-content editors are still pending. Vercel deployment and environment configuration are deferred to the
+The schema, draft seed, admin authentication, dashboard and site settings editor are implemented;
+other content editors are still pending. Vercel deployment and environment configuration are deferred to the
 deployment phase. See AGENTS.md for rules.
 
 Build note: uses Webpack and the standard Tailwind PostCSS plugin because the generated Turbopack CSS worker failed on this Windows environment. Production dependency audit: zero vulnerabilities. Full audit reports five high warnings in the ESLint development chain caused by the braces nested-pattern advisory; the suggested downgrade conflicts with this Next.js version, so it was not applied.

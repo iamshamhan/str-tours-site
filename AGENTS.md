@@ -35,6 +35,15 @@
 - Keep /admin noindex metadata, robots rules and no-store responses. Search-engine directives never replace authorization.
 - Use docs/admin-auth.md for configuration, test instructions and verification limits. Never request the owner's password in chat; have the owner enter it directly in the local app for live tests.
 
+## Phase 4A settings rules
+- `/admin/settings` uses RHF and a shared Zod schema. Both the page and save action requireAdmin(); writes use the owner's session and existing RLS, never privileged credentials.
+- The canonical settings record is `site_settings.slug = 'site-config'`. A single upsert saves the entire validated editor atomically. Original business/contact/theme/seo-defaults seed rows are preserved and imported into the editor only before the first canonical save. Do not use those legacy rows for public rendering.
+- Publication is explicit. Saving unpublished settings hides them immediately; there is no separate draft/live version. Do not publish unverified seed placeholders.
+- Public reads use a cookie-free publishable-key client, filter published=true, validate stored JSON and use no-store. Never reuse the admin session for public reads. Empty, invalid or unreachable settings yield a neutral text-free homepage.
+- Public theme and SEO live in the `(public)` route group, isolated from admin styles and metadata. Fonts are curated local stacks, colours are six-digit hex, and radius is bounded. Never accept arbitrary CSS or HTML.
+- Logo/favicon URLs are HTTPS-only saved placeholders, not fetched or rendered until the media phase. Do not restore the starter favicon.
+- See docs/site-settings.md for test instructions and verification evidence.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
