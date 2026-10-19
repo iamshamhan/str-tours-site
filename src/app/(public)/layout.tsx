@@ -6,13 +6,14 @@ import { getPublicNavigation } from "@/lib/navigation/public";
 import { whatsappHref } from "@/lib/navigation/schema";
 import { Navbar } from "@/components/public/navbar";
 import { Footer } from "@/components/public/footer";
+import { publicImageUrl } from "@/lib/media/shared";
 
 export const dynamic = "force-dynamic";
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getPublicSettings();
   if (!settings) return { robots: { index: false, follow: false } };
   return { title: settings.seoTitle || settings.businessName || undefined,
-    description: settings.seoDescription || undefined };
+    description: settings.seoDescription || undefined, icons: publicImageUrl(settings.favicon) ? {icon:publicImageUrl(settings.favicon)} : undefined };
 }
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const [settings, navigation] = await Promise.all([getPublicSettings(), getPublicNavigation()]);
@@ -23,7 +24,7 @@ export default async function PublicLayout({ children }: { children: React.React
     "--site-body-font": fonts[settings.bodyFont].css, "--site-radius": `${settings.radius}px`,
   } as CSSProperties : undefined;
   return <div className="public-site" style={style}>
-    <Navbar name={settings?.businessName ?? ""} items={navigation.nav} menuLabel={navigation.labels?.menu_label ?? ""} closeLabel={navigation.labels?.close_label ?? ""} />
+    <Navbar name={settings?.businessName ?? ""} logo={settings?.logo ? publicImageUrl(settings.logo) : undefined} items={navigation.nav} menuLabel={navigation.labels?.menu_label ?? ""} closeLabel={navigation.labels?.close_label ?? ""} />
     {children}
     <Footer items={navigation.footer} copy={navigation.footerCopy} />
     {whatsapp && navigation.labels?.whatsapp_label && <a className="whatsapp-float" href={whatsapp} target="_blank" rel="noopener noreferrer">{navigation.labels.whatsapp_label}</a>}

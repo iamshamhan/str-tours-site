@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.admin-input { display:block; width:100%; margin-top:.35rem; padding:.6rem .75rem; border:1px solid #cbd5e1; border-radius:.5rem; background:white; color:#0f172a; }
+.admin-button { border:1px solid #cbd5e1; border-radius:.5rem; padding:.5rem .8rem; font-size:.875rem; cursor:pointer; }
+.admin-button:disabled { opacity:.45; cursor:default; }
+
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;

@@ -5,9 +5,10 @@ import { useFieldArray, useForm, type FieldPath } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fonts, settingsSchema, type SiteSettings } from "@/lib/settings/schema";
 import { saveSettings } from "./actions";
+import { MediaPicker } from "@/components/admin/media-library";
 
 const groups = [
-  { title: "Business identity", fields: [["businessName", "Business name"], ["tagline", "Tagline"], ["logo", "Logo URL (reserved for the media library)"], ["favicon", "Favicon URL (reserved for the media library)"], ["sltda", "SLTDA registration number"], ["currency", "Default currency"]] },
+  { title: "Business identity", fields: [["businessName", "Business name"], ["tagline", "Tagline"], ["logo", "Logo"], ["favicon", "Favicon"], ["sltda", "SLTDA registration number"], ["currency", "Default currency"]] },
   { title: "Contact", fields: [["contactEmail", "Contact email"], ["phone", "Phone"], ["whatsapp", "WhatsApp number"], ["address", "Address"]] },
   { title: "Search engines", fields: [["seoTitle", "Default SEO title"], ["seoDescription", "Default SEO description"]] },
   { title: "Theme", fields: [["accent", "Accent colour"], ["background", "Background colour"], ["textColor", "Text colour"]] },
@@ -17,7 +18,7 @@ const inputClass = "mt-2 w-full rounded-lg border border-slate-300 bg-white px-3
 export function SettingsForm({ initial }: { initial: SiteSettings }) {
   const [feedback, setFeedback] = useState<{ ok: boolean; message: string } | null>(null);
   const [pending, startTransition] = useTransition();
-  const { register, control, handleSubmit, reset, formState: { errors, isDirty } } = useForm<SiteSettings>({
+  const { register, control, handleSubmit, reset, setValue, formState: { errors, isDirty } } = useForm<SiteSettings>({
     resolver: zodResolver(settingsSchema), defaultValues: initial,
   });
   const { fields, append, remove } = useFieldArray({ control, name: "socialLinks" });
@@ -39,11 +40,11 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
     <fieldset disabled={pending} className="space-y-8 disabled:opacity-60">
       {groups.map((group) => <section key={group.title} className="rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold">{group.title}</h2>
-        {group.title === "Business identity" && <p className="mt-2 text-sm text-slate-500">Logo and favicon URLs are saved only; image selection and display arrive with the media library.</p>}
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
           {group.fields.map(([name, label]) => <div key={name}>
             <label htmlFor={name} className="text-sm font-medium">{label}</label>
             <input id={name} {...register(name)} className={inputClass} aria-invalid={!!fieldError(name)} aria-describedby={fieldError(name) ? `${name}-error` : undefined} />
+            {(name === "logo" || name === "favicon") && <MediaPicker imagesOnly onSelect={media => setValue(name, media.url, { shouldDirty:true, shouldValidate:true })}/>}
             {fieldError(name) && <p id={`${name}-error`} className="mt-1 text-sm text-red-700">{fieldError(name)}</p>}
           </div>)}
           {group.title === "Theme" && <>

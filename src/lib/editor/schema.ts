@@ -1,0 +1,17 @@
+import { z } from "zod";
+export const slugify=(value:string)=>value.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,150).replace(/-$/g,"");
+export const short=z.string().trim().max(300), long=z.string().trim().max(20000), title=short.min(1,"Required"), slug=z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/,"Use lowercase letters, numbers and hyphens").max(180);
+export const mediaId=z.uuid().nullable(), photos=z.array(z.uuid()).max(100), lines=z.array(z.string().trim().max(1000)).max(100);
+export const seo=z.object({title:z.string().max(160).default(""),description:z.string().max(320).default("")}).passthrough();
+export const base={id:z.uuid(),slug,published:z.boolean(),updated_at:z.string().nullable()};
+export const daySchema=z.object({id:z.uuid(),title,description:long,locations:short,travel_time:short,photos});
+export const tourSchema=z.object({...base,title,summary:z.string().max(1000),description:long,duration_days:z.number().int().min(1).max(365),duration_nights:z.number().int().min(0).max(365).nullable(),price_from:z.number().min(0).max(9999999999.99).nullable(),cover_media_id:mediaId,gallery:photos,difficulty:short,best_months:lines,tags:lines,highlights:lines,inclusions:lines,exclusions:lines,vehicle_type:short,seo});
+export const tourEditorSchema=z.object({tour:tourSchema,days:z.array(daySchema).max(365),deleted:z.array(z.uuid()).max(365)}).superRefine((v,ctx)=>{
+  const ids=v.days.map(d=>d.id);
+  if(new Set(ids).size!==ids.length || v.deleted.some(id=>ids.includes(id)))ctx.addIssue({code:"custom",path:["days"],message:"Duplicate or deleted itinerary day."});
+  if(v.days.length>v.tour.duration_days)ctx.addIssue({code:"custom",path:["days"],message:"Itinerary exceeds tour duration."});
+});
+export type Tour=z.infer<typeof tourSchema>; export type Day=z.infer<typeof daySchema>;
+export const emptyTour:Omit<Tour,"id">={slug:"",published:false,updated_at:null,title:"",summary:"",description:"",duration_days:1,duration_nights:0,price_from:null,cover_media_id:null,gallery:[],difficulty:"",best_months:[],tags:[],highlights:[],inclusions:[],exclusions:[],vehicle_type:"",seo:{title:"",description:""}};
+export type Field={name:string;label:string;type?:"text"|"long"|"number"|"lines"|"image"|"gallery"|"checkbox"|"select"|"date"|"color";options?:{value:string;label:string}[];nullable?:boolean};
+export const tourFields:Field[]=[{name:"title",label:"Title"},{name:"slug",label:"Slug"},{name:"published",label:"Published",type:"checkbox"},{name:"summary",label:"Short description",type:"long"},{name:"description",label:"Long description",type:"long"},{name:"duration_days",label:"Duration (days)",type:"number"},{name:"duration_nights",label:"Nights",type:"number",nullable:true},{name:"price_from",label:"From price (USD)",type:"number",nullable:true},{name:"difficulty",label:"Difficulty"},{name:"best_months",label:"Best months (one per line)",type:"lines"},{name:"tags",label:"Tags (one per line)",type:"lines"},{name:"highlights",label:"Highlights (one per line)",type:"lines"},{name:"inclusions",label:"Inclusions (one per line)",type:"lines"},{name:"exclusions",label:"Exclusions (one per line)",type:"lines"},{name:"vehicle_type",label:"Vehicle type"},{name:"cover_media_id",label:"Cover image",type:"image"},{name:"gallery",label:"Gallery",type:"gallery"},{name:"seo.title",label:"SEO title"},{name:"seo.description",label:"SEO description",type:"long"}];

@@ -1,4 +1,6 @@
 # Project rules
+- Do not create guides, READMEs, testing docs or other documentation unless explicitly requested. Keep changes focused and responses short, plain text: what changed, what was tested, and remaining manual checks. No long reports or tables.
+- Run lint, typecheck and build, then commit and push for each requested task. When the owner explicitly authorizes consecutive parts, complete them without another approval pause; commit and push once per part.
 - Build a Sri Lankan travel showcase and inquiry site for international tourists: no payments, no customer accounts, one authorized admin login.
 - Stack: Next.js App Router, TypeScript, Tailwind CSS, Supabase Postgres/Auth/Storage, React Hook Form + Zod, Leaflet + OpenStreetMap, Vercel. Keep application code in src/.
 - All production content and presentation settings must be editable in the admin and stored in Supabase: navbar, footer, page copy, heroes, SEO, theme colours, tours and destinations. Never hardcode production content. Phase 1's temporary setup diagnostic is developer UI only.
@@ -19,7 +21,7 @@
 - Admin authorization uses the Auth user ID in admin_users, never email/JWT user_metadata. The database enforces at most one admin. Bootstrap only using supabase/admin-bootstrap.sql after the owner creates the Auth user.
 - Keep private.is_admin() in a non-exposed schema; never grant anonymous access or add arbitrary-user lookup arguments. Do not expose inquiry notes or admin membership through public views or functions.
 - Public inquiry inserts must retain new status and empty notes. Do not request returned inquiry rows. Add validation, bot protection and rate limiting in the inquiry phase.
-- Media table policies do not secure Storage objects. Implement private bucket/object policies before adding uploads; never store secrets in site_settings or public content JSON.
+- Media table policies do not secure Storage objects. The owner requested a public site-media bucket: only upload public website assets; only the authorized admin may write. Never store secrets in site_settings or public content JSON.
 - Approximate route coordinates and itineraries must be verified by the owner before publishing. Do not fabricate customer reviews, staff identities, vehicle claims or prices.
 - Database test instructions and table descriptions are in supabase/README.md. RLS smoke tests roll back all synthetic fixtures and must use a fresh development database with no real admin.
 
@@ -41,7 +43,7 @@
 - Publication is explicit. Saving unpublished settings hides them immediately; there is no separate draft/live version. Do not publish unverified seed placeholders.
 - Public reads use a cookie-free publishable-key client, filter published=true, validate stored JSON and use no-store. Never reuse the admin session for public reads. Empty, invalid or unreachable settings yield a neutral text-free homepage.
 - Public theme and SEO live in the `(public)` route group, isolated from admin styles and metadata. Fonts are curated local stacks, colours are six-digit hex, and radius is bounded. Never accept arbitrary CSS or HTML.
-- Logo/favicon URLs are HTTPS-only saved placeholders, not fetched or rendered until the media phase. Do not restore the starter favicon.
+- Logo/favicon selection uses the media picker. Public rendering accepts only this project's site-media image URLs. Do not restore the starter favicon.
 - See docs/site-settings.md for test instructions and verification evidence.
 
 ## Phase 4B navigation and footer rules
