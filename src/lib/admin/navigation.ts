@@ -1,5 +1,6 @@
 // Admin tool labels are application UI, not public site navigation.
 export const adminSections = [
+  { slug: "mock-data", label: "Mock content" },
   { slug: "settings", label: "Settings" },
   { slug: "navigation", label: "Navigation" },
   { slug: "footer", label: "Footer" },

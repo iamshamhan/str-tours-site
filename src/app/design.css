@@ -38,3 +38,5 @@
 .theme-toggle:focus-within{outline:2px solid var(--site-accent);outline-offset:3px}.image-price{position:absolute;right:16px;bottom:16px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--glass);backdrop-filter:blur(14px);color:var(--site-text);font-size:11px;font-weight:600}
 
 @media(max-width:700px){.map-explorer:has(.map-detail-sheet) .leaflet-popup-pane{display:none}.public-site:has(.map-detail-sheet) .whatsapp-float{visibility:hidden}.map-detail-sheet{padding-bottom:max(28px,env(safe-area-inset-bottom))}}
+
+.demo-notice{padding:.6rem 1.2rem;text-align:center;font-size:.76rem;line-height:1.5;color:var(--site-text);background:var(--site-soft);border-bottom:1px solid var(--line)}

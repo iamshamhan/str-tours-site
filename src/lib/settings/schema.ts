@@ -29,6 +29,7 @@ export const themeColorLabels:Record<keyof typeof themeDefaults,string> = {
 };
 const themeColors=Object.fromEntries(Object.entries(themeDefaults).map(([key,value])=>[key,color.default(value)])) as {[K in keyof typeof themeDefaults]:z.ZodDefault<typeof color>};
 export const settingsSchema = z.object({
+  demoMode:z.boolean().default(false),
   ...themeColors,
   navCtaLabel:text(100).default(""),navCtaHref:url.or(z.string().regex(/^\/(?!\/)[a-zA-Z0-9/#?=_-]*$/)).default(""),
   businessName: text(120), tagline: text(300), logo: url, favicon: url,
@@ -52,6 +53,7 @@ export const settingsSchema = z.object({
 export type SiteSettings = z.infer<typeof settingsSchema>;
 // Blank content and neutral editor defaults are not public brand content.
 export const emptySettings: SiteSettings = {
+  demoMode:false,
   ...themeDefaults, navCtaLabel:"",navCtaHref:"",
   businessName: "", tagline: "", logo: "", favicon: "", contactEmail: "", phone: "", whatsapp: "", address: "", sltda: "", currency: "USD",
   socialLinks: [], seoTitle: "", seoDescription: "", accent: "#476A63", background: "#FFFFFF", textColor: "#1D1D1F",

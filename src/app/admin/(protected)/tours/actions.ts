@@ -22,9 +22,12 @@ export async function tourOperation(id:string,operation:"delete"|"publish"|"unpu
     if(operation!=="duplicate")return saveTour({tour:{...t.data,published:operation==="publish",updated_at:expected},days:d.data,deleted:[],stops:s.data,deletedStops:[]});
     const newId=crypto.randomUUID();
     const dayIds=new Map(d.data.map(day=>[day.id,crypto.randomUUID()]));
-    return saveTour({tour:{...t.data,id:newId,slug:`${t.data.slug.slice(0,130)}-copy-${newId.slice(0,8)}`,title:`${t.data.title.slice(0,290)} (copy)`,published:false,updated_at:null},days:d.data.map(day=>({...day,id:dayIds.get(day.id)})),deleted:[],stops:s.data.map(stop=>({...stop,id:crypto.randomUUID(),itinerary_day_id:dayIds.get(stop.itinerary_day_id)})),deletedStops:[]});
+    const copy=tourEditorSchema.parse({tour:{...t.data,id:newId,slug:`${t.data.slug.slice(0,130)}-copy-${newId.slice(0,8)}`,title:`${t.data.title.slice(0,290)} (copy)`,published:false,updated_at:null},days:d.data.map(day=>({...day,id:dayIds.get(day.id)})),deleted:[],stops:s.data.map(stop=>({...stop,id:crypto.randomUUID(),itinerary_day_id:dayIds.get(stop.itinerary_day_id)})),deletedStops:[]});
+    const {data,error}=await supabase.rpc("save_tour_copy",{p_source:id,p_tour:copy.tour,p_days:copy.days,p_stops:copy.stops});
+    if(error)return {ok:false,message:"Could not duplicate tour. No changes applied."};
+    revalidatePath("/admin/tours");return {ok:true,message:"Tour duplicated as a draft.",id:data as string};
   }
-  const query=operation==="delete"?supabase.from("tours").delete():supabase.from("tours").update({published:operation==="publish",is_placeholder:false});
+  const query=supabase.from("tours").delete();
   const {data,error}=await query.eq("id",id).eq("updated_at",expected).select("id");
   if(error||!data?.length)return {ok:false,message:"Not saved. Reload; this tour may have changed."};
   revalidatePath("/admin/tours");return {ok:true,message:operation==="delete"?"Deleted.":"Publication updated."};
