@@ -12,12 +12,6 @@ body {
 
 /* Neutral, text-free fallback. Published settings override these variables. */
 .public-site {
-  --site-background: #fff;
-  --site-text: #222;
-  --site-accent: #888;
-  --site-heading-font: sans-serif;
-  --site-body-font: sans-serif;
-  --site-radius: 0px;
   min-height: 100svh;
   background: var(--site-background);
   color: var(--site-text);

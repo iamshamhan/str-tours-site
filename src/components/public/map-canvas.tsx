@@ -13,7 +13,7 @@ function Controls({positions,ui}:{positions:[number,number][];ui:Ui}){
   useEffect(()=>{map.attributionControl.setPrefix(false);const points=JSON.parse(key) as [number,number][];if(points.length>1)map.fitBounds(latLngBounds(points),{padding:[32,32],maxZoom:11});else if(points.length)map.setView(points[0],10);},[map,key]);
   return <div className="public-map-zoom"><button type="button" aria-label={ui.zoomIn} onClick={()=>map.zoomIn()}>+</button><button type="button" aria-label={ui.zoomOut} onClick={()=>map.zoomOut()}>−</button></div>;
 }
-export default function PublicMapCanvas({catalogue,ui,center,zoom,visibleRoutes,type,region,month,duration,activeDay,onDay,preview}:CanvasProps){
+export default function PublicMapCanvas({catalogue,ui,center,zoom,visibleRoutes,type,region,month,duration,activeDay,onDay,preview,onPlace}:CanvasProps){
   const {places,tours,days,stops,media}=catalogue;
   const shownStops=stops.filter(s=>visibleRoutes.includes(s.tour_id)).sort((a,b)=>a.sort_order-b.sort_order);
   const filteredPlaces=places.filter(p=>(!type||p.type===type)&&(!region||p.region===region)&&(!month||p.best_months.includes(month)||tours.some(t=>visibleRoutes.includes(t.id)&&t.best_months.includes(month)&&shownStops.some(s=>s.place_id===p.id&&s.tour_id===t.id)))&&(!duration||shownStops.some(s=>s.place_id===p.id)));
@@ -26,11 +26,11 @@ export default function PublicMapCanvas({catalogue,ui,center,zoom,visibleRoutes,
   return <MapContainer center={center} zoom={zoom} zoomControl={false} scrollWheelZoom={!preview} className="public-map-canvas">
     <TileLayer referrerPolicy="origin" attribution={'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'} url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"/>
     <Controls positions={positions} ui={ui}/>
-    {filteredPlaces.filter(p=>!shownIds.has(p.id)).map(p=><Marker key={p.id} position={[p.latitude,p.longitude]} icon={placeIcon}><Popup>{placePopup(p)}</Popup></Marker>)}
+    {filteredPlaces.filter(p=>!shownIds.has(p.id)).map(p=><Marker key={p.id} position={[p.latitude,p.longitude]} icon={placeIcon} title={p.name} alt={p.name} eventHandlers={{click:()=>onPlace?.(p.id)}}><Popup>{placePopup(p)}</Popup></Marker>)}
     {tours.filter(t=>visibleRoutes.includes(t.id)).map(t=>{const route=shownStops.filter(s=>s.tour_id===t.id);const coords=route.map(s=>{const p=places.find(p=>p.id===s.place_id);return [p?.latitude??s.latitude,p?.longitude??s.longitude] as [number,number];});return <Fragment key={t.id}>
       {coords.length>1&&<Polyline positions={coords} pathOptions={{color:t.route_colour,weight:activeDay?3:4,opacity:activeDay?0.22:0.8}}/>}
       {activeDay&&route.some(s=>s.itinerary_day_id===activeDay)&&<Polyline positions={coords.filter((_,i)=>route[i].itinerary_day_id===activeDay||(route[i+1]?.itinerary_day_id===activeDay))} pathOptions={{color:t.route_colour,weight:6,opacity:1}}/>}
-      {route.map((s,i)=>{const p=places.find(p=>p.id===s.place_id),day=days.find(d=>d.id===s.itinerary_day_id),icon=divIcon({className:`public-stop-marker ${activeDay&&s.itinerary_day_id!==activeDay?"is-muted":""}`,html:`<span style="border-color:${t.route_colour}">${i+1}</span>`,iconSize:[32,32],iconAnchor:[16,16]});return <Marker key={s.id} icon={icon} position={coords[i]} eventHandlers={{click:()=>onDay?.(s.itinerary_day_id)}}><Popup><div className="map-popup"><p className="eyebrow">{t.title}</p><strong>{ui.day} {day?.day_number} · {day?.title}</strong><p>{s.label}</p>{p&&placePopup(p)}</div></Popup></Marker>;})}
+      {route.map((s,i)=>{const p=places.find(p=>p.id===s.place_id),day=days.find(d=>d.id===s.itinerary_day_id),icon=divIcon({className:`public-stop-marker ${activeDay&&s.itinerary_day_id!==activeDay?"is-muted":""}`,html:`<span style="border-color:${t.route_colour}">${i+1}</span>`,iconSize:[32,32],iconAnchor:[16,16]});return <Marker key={s.id} icon={icon} position={coords[i]} title={`${t.title} · ${ui.day} ${day?.day_number??""}`} alt={`${ui.day} ${day?.day_number??""}`} eventHandlers={{click:()=>{onDay?.(s.itinerary_day_id);if(p)onPlace?.(p.id);}}}><Popup><div className="map-popup"><p className="eyebrow">{t.title}</p><strong>{ui.day} {day?.day_number} · {day?.title}</strong><p>{s.label}</p>{p&&placePopup(p)}</div></Popup></Marker>;})}
     </Fragment>;})}
   </MapContainer>;
 }

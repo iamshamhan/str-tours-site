@@ -53,7 +53,7 @@ const ctaLink=z.string().max(2048).refine(v=>!v || (/^\/(?!\/)/.test(v)&&!/[\s\\
 const contentBase={heading:short.default(""),body:long.default("")};
 const collectionContent=z.object({...contentBase,limit:z.number().int().min(1).max(24).default(6),cta_label:short.default(""),cta_href:ctaLink.default("")}).passthrough();
 export const sectionContents={
-  hero:z.object({...contentBase,eyebrow:short.default(""),cta_label:short.default(""),cta_href:ctaLink.default(""),image:mediaId.default(null)}).passthrough(),
+  hero:z.object({...contentBase,eyebrow:short.default(""),cta_label:short.default(""),cta_href:ctaLink.default(""),image:mediaId.default(null),video:mediaId.default(null),secondary_label:short.default(""),secondary_href:ctaLink.default(""),scroll_label:short.default("")}).passthrough(),
   rich_text:z.object(contentBase).passthrough(),
   gallery:z.object({heading:short.default(""),photos:photos.default([])}).passthrough(),
   cta:z.object({...contentBase,cta_label:short.default(""),cta_href:ctaLink.default("")}).passthrough(),

@@ -1,5 +1,8 @@
 import "./globals.css";
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en"><body>{children}</body></html>;
+import "./design.css";
+import { getPublicSettings } from "@/lib/settings/public";
+import { themeScript,themeStyle } from "@/lib/settings/theme";
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const settings=await getPublicSettings();
+  return <html lang="en" suppressHydrationWarning style={settings?themeStyle(settings):undefined}><head><script dangerouslySetInnerHTML={{__html:themeScript}}/></head><body>{children}</body></html>;
 }

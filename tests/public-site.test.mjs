@@ -5,6 +5,7 @@ import { resolve,dirname } from "node:path";
 import { createRequire } from "node:module";
 import ts from "typescript";
 import React from "react";
+import vm from "node:vm";
 import { renderToStaticMarkup } from "react-dom/server";
 import { tripSchema,reviewSubmissionSchema } from "../src/lib/public/submission-schema.ts";
 import { filterTours,distanceKm } from "../src/lib/public/filters.ts";
@@ -69,4 +70,20 @@ test("public images use database alt text, responsive sizes and hide assets with
 test("published themes enforce readable text contrast",()=>{
   assert.equal(contrastRatio("#FFFFFF","#000000"),21);
   assert.equal(settingsSchema.safeParse({...emptySettings,businessName:"Test",published:true,textColor:"#EEEEEE"}).success,false);
+});
+
+test("both palettes validate button, card and muted-text contrast",()=>{
+ const good={...emptySettings,published:true,businessName:"Test",accent:"#0B655F",background:"#FAFCFA",textColor:"#142E31"};
+ assert.equal(settingsSchema.safeParse(good).success,true);
+ for(const patch of [{darkText:good.darkBackground},{darkAccentText:good.darkAccent},{secondaryText:good.secondary},{muted:good.surface}])assert.equal(settingsSchema.safeParse({...good,...patch}).success,false);
+ assert.equal(settingsSchema.safeParse({...good,navCtaHref:"javascript:alert(1)"}).success,false);
+});
+test("pre-paint theme resolves saved, system, invalid and unavailable storage",()=>{
+ const {themeScript}=sourceModule("src/lib/settings/theme.ts");
+ for(const [saved,dark,expected,blocked] of [["light",true,"light",false],["dark",false,"dark",false],[null,true,"dark",false],["invalid",false,"light",false],[null,true,"dark",true]]){
+  const root={dataset:{}};
+  vm.runInNewContext(themeScript,{document:{documentElement:root},matchMedia:()=>({matches:dark}),localStorage:{getItem:()=>{if(blocked)throw Error("denied");return saved;}}});
+  assert.equal(root.dataset.theme,expected);
+  assert.equal(root.dataset.preference,["light","dark","system"].includes(saved)?saved:"system");
+ }
 });

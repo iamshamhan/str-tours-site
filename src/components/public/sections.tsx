@@ -3,6 +3,8 @@ import { getPublicSettings } from "@/lib/settings/public";
 import { sectionContents,type SectionType } from "@/lib/editor/schema";
 import type { ContentRows } from "@/lib/public/types";
 import { safeLink } from "@/lib/navigation/schema";
+import { mediaUrl } from "@/lib/media/shared";
+import { HeroVideo } from "./hero-video";
 import { Photo } from "./photo";
 import { TourCards,Reviews,Faqs } from "./cards";
 import { MapExplorer } from "./map-explorer";
@@ -15,7 +17,7 @@ async function ContentSection({section,first}:{section:ContentRows["page_section
   const Heading=first?"h1":"h2";
   const intro=<>{c.eyebrow?<p className="eyebrow">{String(c.eyebrow)}</p>:null}{heading&&<Heading>{heading}</Heading>}{body&&<p className="section-body">{body}</p>}</>;
   const cta=typeof c.cta_label==="string"&&c.cta_label&&typeof c.cta_href==="string"&&safeLink(c.cta_href)?<a href={c.cta_href} className="public-button">{c.cta_label}<span aria-hidden="true"> ↗</span></a>:null;
-  if(section.type==="hero"){const media=await readPublished("media");return <section className="public-hero"><div className="hero-copy">{intro}{cta}</div><Photo id={c.image as string|null} media={media} priority={first} className="hero-photo" sizes="100vw"/></section>;}
+  if(section.type==="hero"){const media=await readPublished("media"),video=media.find(m=>m.id===c.video&&m.mime_type.startsWith("video/")),hasImage=media.some(m=>m.id===c.image&&m.mime_type.startsWith("image/")&&m.alt_text.trim());return <section className={`public-hero cinematic-hero ${hasImage?"has-image":""}`}><Photo id={c.image as string|null} media={media} priority={first} className="hero-photo" sizes="100vw"/>{video&&hasImage&&<HeroVideo src={mediaUrl(video.storage_path)} pauseLabel={ui.videoPause??""} playLabel={ui.videoPlay??""}/>}<div className="hero-copy">{intro}<div className="hero-actions">{cta}{typeof c.secondary_label==="string"&&c.secondary_label&&typeof c.secondary_href==="string"&&safeLink(c.secondary_href)&&<a className="public-button secondary-button" href={c.secondary_href}>{c.secondary_label}<span aria-hidden="true">↗</span></a>}</div></div>{c.scroll_label?<a href="#after-hero" className="scroll-cue"><span>{String(c.scroll_label)}</span><span aria-hidden="true">↓</span></a>:null}<span id="after-hero" className="hero-end"/></section>;}
   if(section.type==="guide_story"){const media=await readPublished("media");return <section className="public-section story-grid reveal"><Photo id={c.image as string|null} media={media} sizes="(max-width: 700px) 100vw, 50vw"/><div>{intro}</div></section>;}
   if(section.type==="gallery"){const media=await readPublished("media");return <section className="public-section reveal">{intro}<div className="photo-gallery">{(c.photos as string[]).map(id=><Photo key={id} id={id} media={media}/>)}</div></section>;}
   if(section.type==="why_us")return <section className="public-section reveal">{intro}<div className="values-grid">{(c.items as {title:string;body:string}[]).map((item,i)=><article key={i}><span aria-hidden="true" className="value-number">{String(i+1).padStart(2,"0")}</span><h3>{item.title}</h3><p>{item.body}</p></article>)}</div></section>;

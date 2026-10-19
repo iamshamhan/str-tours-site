@@ -17,7 +17,20 @@ export function contrastRatio(a:string,b:string){
   const luminance=(hex:string)=>{const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);return rgb[0]*0.2126+rgb[1]*0.7152+rgb[2]*0.0722;};
   const x=luminance(a),y=luminance(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);
 }
+export const themeDefaults = {
+  secondary:"#F0BD78", soft:"#E5EEE5", surface:"#FFFFFF", muted:"#526566", accentText:"#FFFFFF", secondaryText:"#302719",
+  darkBackground:"#0D191B", darkText:"#F1F5EF", darkAccent:"#85D8CB", darkSecondary:"#EFC28C", darkSurface:"#162629", darkSoft:"#213735", darkMuted:"#AEC2BC", darkAccentText:"#102423", darkSecondaryText:"#302719",
+  heroOverlay:"#081D23", heroText:"#FFFFFF", successColor:"#206347", errorColor:"#AA3441", darkSuccessColor:"#9AE4BF", darkErrorColor:"#FFABB5",
+} as const;
+export const themeColorLabels:Record<keyof typeof themeDefaults,string> = {
+  secondary:"Sunset highlight",soft:"Tea-green tint",surface:"Card background",muted:"Secondary text",accentText:"Text on accent",secondaryText:"Text on sunset highlight",
+  darkBackground:"Background",darkText:"Text",darkAccent:"Ocean accent",darkSecondary:"Sunset highlight",darkSurface:"Card background",darkSoft:"Tea-green tint",darkMuted:"Secondary text",darkAccentText:"Text on accent",darkSecondaryText:"Text on sunset highlight",
+  heroOverlay:"Hero gradient",heroText:"Text on hero",successColor:"Success message",errorColor:"Error message",darkSuccessColor:"Success message",darkErrorColor:"Error message",
+};
+const themeColors=Object.fromEntries(Object.entries(themeDefaults).map(([key,value])=>[key,color.default(value)])) as {[K in keyof typeof themeDefaults]:z.ZodDefault<typeof color>};
 export const settingsSchema = z.object({
+  ...themeColors,
+  navCtaLabel:text(100).default(""),navCtaHref:url.or(z.string().regex(/^\/(?!\/)[a-zA-Z0-9/#?=_-]*$/)).default(""),
   businessName: text(120), tagline: text(300), logo: url, favicon: url,
   contactEmail: z.union([z.literal(""), z.email().max(254)]), phone, whatsapp: phone,
   address: text(600), sltda: text(100), currency: z.string().regex(/^[A-Z]{3}$/, "Use a three-letter currency code, such as USD."),
@@ -31,11 +44,15 @@ export const settingsSchema = z.object({
   ui: z.record(z.string().max(100),text(2000)).default({}),
   mapLatitude:z.number().min(-90).max(90).default(7.8731),mapLongitude:z.number().min(-180).max(180).default(80.7718),mapZoom:z.number().int().min(2).max(16).default(7),
 }).refine((v) => !v.published || !!v.businessName, { path: ["businessName"], message: "Add the business name before publishing." }).superRefine((v,ctx)=>{
-  if(v.published)for(const key of ["textColor","accent"] as const)if(contrastRatio(v.background,v[key])<4.5)ctx.addIssue({code:"custom",path:[key],message:"Choose a colour with at least 4.5:1 contrast against the background before publishing."});
+  if(v.published){
+    const pairs=[['textColor','background'],['accent','background'],['muted','background'],['textColor','surface'],['muted','surface'],['accentText','accent'],['secondaryText','secondary'],['darkText','darkBackground'],['darkText','darkSurface'],['darkMuted','darkBackground'],['darkMuted','darkSurface'],['darkAccent','darkBackground'],['darkAccentText','darkAccent'],['darkSecondaryText','darkSecondary'],['heroText','heroOverlay'],['textColor','soft'],['muted','soft'],['darkText','darkSoft'],['darkMuted','darkSoft'],['successColor','surface'],['errorColor','surface'],['darkSuccessColor','darkSurface'],['darkErrorColor','darkSurface']] as const;
+    for(const [fg,bg] of pairs)if(contrastRatio(v[fg],v[bg])<4.5)ctx.addIssue({code:"custom",path:[fg],message:`Needs 4.5:1 contrast against ${bg}.`});
+  }
 });
 export type SiteSettings = z.infer<typeof settingsSchema>;
 // Blank content and neutral editor defaults are not public brand content.
 export const emptySettings: SiteSettings = {
+  ...themeDefaults, navCtaLabel:"",navCtaHref:"",
   businessName: "", tagline: "", logo: "", favicon: "", contactEmail: "", phone: "", whatsapp: "", address: "", sltda: "", currency: "USD",
   socialLinks: [], seoTitle: "", seoDescription: "", accent: "#476A63", background: "#FFFFFF", textColor: "#1D1D1F",
   headingFont: "system", bodyFont: "system", radius: 16, published: false,

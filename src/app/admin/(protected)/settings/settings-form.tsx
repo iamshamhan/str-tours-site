@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useFieldArray, useForm,useWatch, type FieldPath } from "react-hook-form";
+import { Controller, useFieldArray, useForm,useWatch, type FieldPath } from "react-hook-form";
 import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { fonts, settingsSchema, type SiteSettings } from "@/lib/settings/schema";
+import { fonts, themeDefaults, themeColorLabels, settingsSchema, type SiteSettings } from "@/lib/settings/schema";
 import { saveSettings } from "./actions";
 import { MediaPicker } from "@/components/admin/media-library";
+import { UnsavedWarning } from "@/components/admin/save-bar";
 import { uiKeys } from "@/lib/public/ui";
 
 const groups = [
@@ -39,8 +40,8 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
     const error = errors[name as keyof SiteSettings];
     return error && "message" in error ? String(error.message) : undefined;
   }
-  return <form className="mt-8 space-y-8" onSubmit={handleSubmit(submit)} noValidate onChange={() => setFeedback(null)}>
-    <fieldset disabled={pending} className="space-y-8 disabled:opacity-60">
+  return <form className="mt-8 space-y-8" onSubmit={handleSubmit(submit,()=>setFeedback({ok:false,message:"Check the highlighted fields before saving."}))} noValidate onChange={() => setFeedback(null)}>
+    <UnsavedWarning dirty={isDirty}/><fieldset disabled={pending} className="space-y-8 disabled:opacity-60">
       {groups.map((group) => <section key={group.title} className="rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold">{group.title}</h2>
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -62,6 +63,7 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           </>}
         </div>
       </section>)}
+      <section className="admin-form-card"><h2>Colour palettes</h2><p className="admin-helper">Preview with the appearance menu. Text and button colours must pass contrast checks before publishing.</p>{[false,true].map(dark=><details key={String(dark)} open={!dark} className="palette-group"><summary>{dark?"Dark palette":"Light palette and hero"}</summary><div className="grid gap-5 sm:grid-cols-3">{(Object.keys(themeDefaults) as (keyof typeof themeDefaults)[]).filter(key=>key.startsWith("dark")===dark).map(key=><Controller key={key} name={key} control={control} render={({field,fieldState})=><div><label htmlFor={`palette-${key}`}>{themeColorLabels[key]}</label><div className="color-field"><input type="color" value={/^#[a-fA-F0-9]{6}$/.test(field.value??"")?field.value:themeDefaults[key]} onChange={field.onChange} onBlur={field.onBlur} aria-label={`${themeColorLabels[key]} ${dark?"dark":"light"}`}/><input id={`palette-${key}`} ref={field.ref} value={field.value??""} onChange={field.onChange} onBlur={field.onBlur} aria-invalid={!!fieldState.error} aria-label={`${themeColorLabels[key]} hex ${dark?"dark":"light"}`}/></div>{fieldState.error&&<small role="alert">{fieldState.error.message}</small>}</div>}/>) }</div></details>)}<div className="grid gap-5 sm:grid-cols-2"><label>Navigation button label<input {...register("navCtaLabel")} className={inputClass}/></label><label>Navigation button destination<input {...register("navCtaHref")} className={inputClass}/>{errors.navCtaHref&&<small role="alert">{errors.navCtaHref.message}</small>}</label></div></section>
       <section className="rounded-2xl border border-slate-200 bg-white p-6 space-y-4">
         <h2 className="text-lg font-semibold">Public forms and search previews</h2>
         <label className="flex gap-3"><input type="checkbox" {...register("inquiriesEnabled")}/>Enable trip inquiries</label>
@@ -86,7 +88,7 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
         </div>)}
         <button type="button" disabled={fields.length >= 12} onClick={() => append({ label: "", url: "" })} className="mt-4 rounded-lg border border-slate-300 px-4 py-2 disabled:opacity-50">Add social link</button>
       </section>
-      <section className="rounded-2xl border border-slate-200 bg-white p-6">
+      <section className="admin-save-bar">
         <label className="flex items-center gap-3 font-medium"><input type="checkbox" {...register("published")} className="size-4" />Publish settings</label>
         <p className="mt-2 text-sm text-slate-600">Saving with this enabled makes these settings public immediately. Disabling it hides the settings and clears the public homepage. This is not a separate draft version.</p>
         <button type="submit" className="mt-5 rounded-lg bg-slate-900 px-5 py-3 font-medium text-white">{pending ? "Saving…" : "Save settings"}</button>

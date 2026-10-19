@@ -1,5 +1,6 @@
 "use client";
 
+import { UnsavedWarning } from "./save-bar";
 import { useRef, useState, useTransition, useSyncExternalStore } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,7 +46,7 @@ export function LinkEditor({ initial }: { initial: LinkEditorData }) {
   }
   return <form method="post" onSubmit={handleSubmit(submit)} noValidate className="mt-6 space-y-6" onChange={() => setFeedback(null)}>
     <p className="text-sm leading-6 text-slate-600">Review seeded links before making them visible. Drag a handle or use Move up / Move down, then save. {navigation ? "Assign a top-level parent to create a dropdown child; hiding a parent hides its children." : "Links with the same group name appear together. Group order follows the first link in each group."} Changes and deletions take effect only when saved.</p>
-    <fieldset disabled={pending || !ready} className="space-y-5 disabled:opacity-60">
+    <UnsavedWarning dirty={isDirty}/><fieldset disabled={pending || !ready} className="space-y-5 disabled:opacity-60">
       {fields.map((field, index) => <section key={field.fieldKey} data-link-index={index} className="rounded-2xl border border-slate-200 bg-white p-5">
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <button type="button" className={`${button} cursor-grab touch-none active:cursor-grabbing`} aria-label={`Drag item ${index + 1}`} onPointerDown={(event) => {
@@ -98,7 +99,7 @@ export function LinkEditor({ initial }: { initial: LinkEditorData }) {
         </div>)}
         {!navigation && <label className="flex items-center gap-2 text-sm"><input type="checkbox" {...register("copy.published")} />Publish footer text (link visibility is separate)</label>}
       </section>
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="admin-save-bar">
         <button type="submit" className="rounded-lg bg-slate-900 px-5 py-3 text-white">{pending ? "Saving…" : "Save changes"}</button>
         <button type="button" className={button} onClick={() => { reset(saved); setFeedback(null); }}>Discard changes</button>
         {isDirty && <span className="text-sm text-slate-600">Unsaved changes</span>}

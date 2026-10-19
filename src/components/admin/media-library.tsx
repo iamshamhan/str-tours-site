@@ -1,5 +1,6 @@
 "use client";
 /* eslint-disable @next/next/no-img-element -- Direct public Storage assets; no image proxy required. */
+import { ConfirmButton } from "./confirm-button";
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { MEDIA_BUCKET, mediaTypes, type Media } from "@/lib/media/shared";
@@ -56,7 +57,7 @@ export function MediaLibrary({ onSelect, imagesOnly=false }: { onSelect?: (item:
   }
   return <div className="space-y-4">
     <p className="text-sm text-slate-600">Uploads are public website assets. Photos are resized to 2400px and compressed. Videos: MP4/WebM, up to 50 MB.</p>
-    <label className="block">Upload photos or videos<input ref={uploadInput} disabled={busy} type="file" multiple accept={mediaTypes.join(",")} className="block mt-2" onChange={e=>void upload(Array.from(e.target.files??[]))}/></label>
+    <label className="media-upload-zone"><span className="upload-icon" aria-hidden="true">↑</span><strong>Bring your journeys to life</strong><span>Upload photos or videos</span><input ref={uploadInput} disabled={busy} type="file" multiple accept={mediaTypes.join(",")} className="block mt-2" onChange={e=>void upload(Array.from(e.target.files??[]))}/></label>
     <label className="block">Search media<input className="admin-input" value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}} /></label>
     <p role="status" className="whitespace-pre-line">{message}</p>
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{items.filter(i=>!imagesOnly || i.mime_type.startsWith("image/")).map(item=><article key={item.id} className="rounded-xl border bg-white p-3 space-y-2">
@@ -67,10 +68,10 @@ export function MediaLibrary({ onSelect, imagesOnly=false }: { onSelect?: (item:
         {item.mime_type.startsWith("image/")&&!item.alt_text.trim()&&<p className="text-sm text-red-700">Add descriptive alt text before selecting this image.</p>}
         {onSelect && <button type="button" disabled={busy||(item.mime_type.startsWith("image/")&&!item.alt_text.trim())} className="admin-button" onClick={async()=>{setBusy(true);try{const result=await updateMedia(item);if(result.ok)onSelect(item);else setMessage(result.message);}catch{setMessage("Save failed. Retry after signing in.");}finally{setBusy(false);}}}>Choose</button>}
         <button type="button" className="admin-button" disabled={busy} onClick={async()=>{setBusy(true);try{setMessage((await updateMedia(item)).message);}catch{setMessage("Save failed. Retry after signing in.");}finally{setBusy(false);}}}>Save metadata</button>
-        {!onSelect && <button type="button" className="admin-button" disabled={busy} onClick={async()=>{if(!confirm("Permanently delete this media file?"))return;setBusy(true);try{setMessage((await deleteMedia(item.id)).message);refresh(r=>r+1);}catch{setMessage("Delete failed. Please retry.");}finally{setBusy(false);}}}>Delete</button>}
+        {!onSelect && <ConfirmButton disabled={busy} message="This permanently removes the photo or video and its media details." onConfirm={()=>{setBusy(true);void deleteMedia(item.id).then(r=>{setMessage(r.message);refresh(n=>n+1);}).catch(()=>setMessage("Delete failed. Please retry.")).finally(()=>setBusy(false));}}/>}
       </div>
     </article>)}</div>
-    {!items.length && <p>No media found.</p>}
+    {!items.length && <div className="admin-empty"><span aria-hidden="true">▧</span><h2>{search?"No matching media":"Make room for beautiful places"}</h2><p>{search?"Try another search.":"Upload your first photos to bring your site to life."}</p><button type="button" className="admin-primary" onClick={()=>uploadInput.current?.click()}>Upload your first photo +</button></div>}
     <div className="flex gap-3"><button type="button" className="admin-button" disabled={!page||busy} onClick={()=>setPage(p=>p-1)}>Previous</button><span>Page {page+1}</span><button type="button" className="admin-button" disabled={!more||busy} onClick={()=>setPage(p=>p+1)}>Next</button></div>
   </div>;
 }

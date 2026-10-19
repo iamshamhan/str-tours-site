@@ -2,8 +2,11 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 export function Reveal(){const pathname=usePathname();useEffect(()=>{
-  if(matchMedia("(prefers-reduced-motion: reduce)").matches||!('IntersectionObserver' in window))return;
-  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("is-visible");observer.unobserve(entry.target);}}),{threshold:0.06});
-  document.querySelectorAll(".reveal").forEach(node=>{if(node.getBoundingClientRect().top>innerHeight){node.classList.add("will-reveal");observer.observe(node);}});
-  return ()=>{observer.disconnect();document.querySelectorAll(".will-reveal").forEach(node=>node.classList.remove("will-reveal"));};
-},[pathname]);return null;}
+ const mq=matchMedia("(prefers-reduced-motion: reduce)");if(!("IntersectionObserver" in window))return;
+ const seen=new WeakSet<Element>(),animations=new Set<Animation>();
+ const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){observer.unobserve(entry.target);if(mq.matches)return;const animation=entry.target.animate([{opacity:0,transform:"translateY(20px)"},{opacity:1,transform:"translateY(0)"}],{duration:650,easing:"cubic-bezier(.2,.6,.25,1)"});animations.add(animation);animation.finished.then(()=>animations.delete(animation)).catch(()=>{});}}),{threshold:.06});
+ // Web Animations do not mutate React-owned classes or attributes while streamed content hydrates.
+ const watch=()=>document.querySelectorAll(".reveal").forEach(node=>{if(seen.has(node))return;seen.add(node);if(!mq.matches&&node.getBoundingClientRect().top>innerHeight)observer.observe(node);});
+ watch();const mutations=new MutationObserver(watch);mutations.observe(document.querySelector("main")??document.body,{childList:true,subtree:true});const motion=()=>{if(mq.matches){observer.disconnect();animations.forEach(a=>a.cancel());}};mq.addEventListener("change",motion);
+ return()=>{observer.disconnect();mutations.disconnect();animations.forEach(a=>a.cancel());mq.removeEventListener("change",motion);};
+ },[pathname]);return null;}
