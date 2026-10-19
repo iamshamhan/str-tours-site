@@ -14,7 +14,7 @@ export function Navbar({ name, logo, items, menuLabel, closeLabel }: { name: str
     if (event.key === "Escape") { setOpen(false); event.currentTarget.querySelectorAll("details[open]").forEach((el) => el.removeAttribute("open")); button.current?.focus(); }
   }}>
     <div className="site-header-inner">
-      {name && <Link href="/" className="site-brand">{logo && <Image unoptimized src={logo} alt="" width={100} height={48} className="inline-block h-10 w-auto mr-3"/>}{name}</Link>}
+      {name && <Link href="/" className="site-brand">{logo && <Image src={logo} alt="" width={100} height={48} sizes="120px" className="inline-block h-10 w-auto mr-3"/>}{name}</Link>}
       {!!roots.length && <>
         {menuLabel && <button ref={button} className="menu-toggle" type="button" aria-expanded={open} aria-controls="site-navigation" onClick={() => setOpen(!open)}>{open ? closeLabel : menuLabel}<span aria-hidden="true">{open ? "×" : "☰"}</span></button>}
         <nav id="site-navigation" className={`site-nav ${open ? "is-open" : ""} ${!menuLabel ? "no-toggle" : ""}`}>

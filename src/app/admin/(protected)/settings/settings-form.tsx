@@ -1,16 +1,18 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useFieldArray, useForm, type FieldPath } from "react-hook-form";
+import { useFieldArray, useForm,useWatch, type FieldPath } from "react-hook-form";
+import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fonts, settingsSchema, type SiteSettings } from "@/lib/settings/schema";
 import { saveSettings } from "./actions";
 import { MediaPicker } from "@/components/admin/media-library";
+import { uiKeys } from "@/lib/public/ui";
 
 const groups = [
   { title: "Business identity", fields: [["businessName", "Business name"], ["tagline", "Tagline"], ["logo", "Logo"], ["favicon", "Favicon"], ["sltda", "SLTDA registration number"], ["currency", "Default currency"]] },
   { title: "Contact", fields: [["contactEmail", "Contact email"], ["phone", "Phone"], ["whatsapp", "WhatsApp number"], ["address", "Address"]] },
-  { title: "Search engines", fields: [["seoTitle", "Default SEO title"], ["seoDescription", "Default SEO description"]] },
+  { title: "Search engines", fields: [["siteUrl", "Public site URL (HTTPS)"], ["seoTitle", "Default SEO title"], ["seoDescription", "Default SEO description"]] },
   { title: "Theme", fields: [["accent", "Accent colour"], ["background", "Background colour"], ["textColor", "Text colour"]] },
 ] as const;
 const inputClass = "mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600";
@@ -18,10 +20,11 @@ const inputClass = "mt-2 w-full rounded-lg border border-slate-300 bg-white px-3
 export function SettingsForm({ initial }: { initial: SiteSettings }) {
   const [feedback, setFeedback] = useState<{ ok: boolean; message: string } | null>(null);
   const [pending, startTransition] = useTransition();
-  const { register, control, handleSubmit, reset, setValue, formState: { errors, isDirty } } = useForm<SiteSettings>({
+  const { register, control, handleSubmit, reset, setValue, formState: { errors, isDirty } } = useForm<z.input<typeof settingsSchema>,unknown,SiteSettings>({
     resolver: zodResolver(settingsSchema), defaultValues: initial,
   });
   const { fields, append, remove } = useFieldArray({ control, name: "socialLinks" });
+  const selectedOg=useWatch({control,name:"ogImageId"});
   function submit(values: SiteSettings) {
     setFeedback(null);
     startTransition(async () => {
@@ -59,6 +62,20 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
           </>}
         </div>
       </section>)}
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 space-y-4">
+        <h2 className="text-lg font-semibold">Public forms and search previews</h2>
+        <label className="flex gap-3"><input type="checkbox" {...register("inquiriesEnabled")}/>Enable trip inquiries</label>
+        <label className="flex gap-3"><input type="checkbox" {...register("publicReviews")}/>Allow public review submissions (pending until approved)</label>
+        <label className="flex gap-3"><input type="checkbox" {...register("cookieNoticeEnabled")}/>Show essential-cookie notice</label>
+        <p>Default Open Graph image: {selectedOg?"Selected":"None"}</p>
+        <MediaPicker imagesOnly onSelect={m=>setValue("ogImageId",m.id,{shouldDirty:true})}/>
+        <button type="button" className="admin-button" onClick={()=>setValue("ogImageId",null,{shouldDirty:true})}>Remove image</button>
+        <div className="grid gap-3 sm:grid-cols-3">{(["mapLatitude","mapLongitude","mapZoom"] as const).map(name=><label key={name}>{name.replace(/([A-Z])/g," $1")}<input type="number" step="any" {...register(name,{valueAsNumber:true})} className={inputClass}/>{errors[name]&&<span className="text-red-700">{errors[name]?.message}</span>}</label>)}</div>
+      </section>
+      <details className="rounded-2xl border border-slate-200 bg-white p-6">
+        <summary className="cursor-pointer text-lg font-semibold">Public interface and form text</summary>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">{uiKeys.map(key=><label key={key} className="block text-sm">{key.replace(/([A-Z])/g," $1")}<textarea rows={2} {...register(`ui.${key}`)} className={inputClass}/>{errors.ui?.[key]&&<span className="text-red-700">{String(errors.ui[key]?.message??"Invalid text")}</span>}</label>)}</div>
+      </details>
       <section className="rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold">Social links</h2>
         {fields.map((field, i) => <div key={field.id} className="mt-4 grid items-start gap-3 sm:grid-cols-[1fr_2fr_auto]">

@@ -12,4 +12,5 @@ export const adminSections = [
   { slug: "team", label: "Team" },
   { slug: "vehicles", label: "Vehicles" },
   { slug: "faqs", label: "FAQs" },
+  { slug: "blog", label: "Blog" },
 ] as const;

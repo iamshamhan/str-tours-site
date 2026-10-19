@@ -8,7 +8,7 @@ export async function saveTour(input:unknown){
   const {supabase}=await requireAdmin(); const parsed=tourEditorSchema.safeParse(input);
   if(!parsed.success)return {ok:false,message:parsed.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; ")};
   const {tour,days,deleted,stops,deletedStops}=parsed.data;
-  if(!await verifyImages([tour.cover_media_id,...tour.gallery,...days.flatMap(d=>d.photos)]))return {ok:false,message:"An image was removed or is invalid. Choose it again."};
+  if(!await verifyImages([tour.cover_media_id,tour.seo.og_media_id,...tour.gallery,...days.flatMap(d=>d.photos)]))return {ok:false,message:"An image was removed or is invalid. Choose it again."};
   const {data,error}=await supabase.rpc("save_tour_route",{p_tour:tour,p_days:days,p_deleted:deleted,p_expected:tour.updated_at,p_stops:stops,p_deleted_stops:deletedStops});
   if(error)return {ok:false,message:error.code==="23505"?"That slug is already in use.":error.message.includes("Stale edit")?"This tour changed. Reload before saving.":"Could not save tour. No changes were applied."};
   revalidatePath("/admin/tours");return {ok:true,message:"Tour saved.",id:data as string};

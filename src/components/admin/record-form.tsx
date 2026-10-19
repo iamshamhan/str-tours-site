@@ -22,6 +22,6 @@ export function RecordForm({section,initial,initialSections=[],tours=[]}:{sectio
   }
   return <form method="post" noValidate onSubmit={handleSubmit(submit)} onChange={()=>setMessage("")} className="space-y-5"><fieldset disabled={pending||!ready} className="space-y-6"><EditorFields fields={config.fields.map(f=>f.name==="tour_id"?{...f,options:tours}:f)} control={control}/><button type="button" className="admin-button" onClick={()=>setValue("slug",slugify(String(name??"")),{shouldDirty:true})}>Generate slug</button>
     {section==="places"&&<EditorMap points={[{id:String(initial.id),label:String(name??""),latitude:Number(latitude),longitude:Number(longitude)}]} onPosition={(lat,lng)=>{setValue("latitude",lat,{shouldDirty:true});setValue("longitude",lng,{shouldDirty:true});}}/>}
-    {section==="pages"&&<SectionsEditor sections={sections} onChange={setSections} onDelete={id=>setDeleted(v=>[...v,id])}/>}
+    {section==="pages"&&<SectionsEditor sections={sections} tours={tours} onChange={setSections} onDelete={id=>setDeleted(v=>[...v,id])}/>}
     <button className="admin-button bg-slate-900 text-white" type="submit">{pending?"Saving…":"Save changes"}</button></fieldset><p role="status">{message}</p></form>;
 }

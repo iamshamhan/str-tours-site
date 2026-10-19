@@ -1,0 +1,6 @@
+export const uiKeys = [
+  "search","all","duration","tag","region","month","type","routes","places","day","days","nights","from","details","itinerary","gallery","inclusions","exclusions","highlights","reviews","source","faq","team","vehicles","bestTime","tips","linkedTours","approximate","distance","kilometres","map","planTrip","noResults","loading","notFoundTitle","notFoundBody","backHome","next","previous","close","skipContent","passengers","luggage","difficulty","travelTime","summary","author","publishedOn","tour",
+  "formHeading","name","email","country","whatsapp","startDate","endDate","travellers","interests","budget","message","consent","submit","sending","success","error","validation","rateLimited","privacyLabel","termsLabel","cancellationLabel","cookieNotice","cookieAccept","cookieDismiss","sltdaLabel","submitReview","reviewHeading","rating","reviewBody","reviewDate","reviewConsent","reviewSuccess","routeToggle","zoomIn","zoomOut","emailSubject","emailBody"
+] as const;
+export type Ui = Record<string,string>;
+export function copy(ui:Ui,key:string){return ui[key]??"";}

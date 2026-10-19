@@ -64,7 +64,8 @@ export function MediaLibrary({ onSelect, imagesOnly=false }: { onSelect?: (item:
       <label className="block">Alt text<input className="admin-input" value={item.alt_text} onChange={e=>setItems(rows=>rows.map(r=>r.id===item.id?{...r,alt_text:e.target.value}:r))}/></label>
       <label className="block">Caption<textarea className="admin-input" value={item.caption} onChange={e=>setItems(rows=>rows.map(r=>r.id===item.id?{...r,caption:e.target.value}:r))}/></label>
       <div className="flex flex-wrap gap-2">
-        {onSelect && <button type="button" disabled={busy} className="admin-button" onClick={()=>onSelect(item)}>Choose</button>}
+        {item.mime_type.startsWith("image/")&&!item.alt_text.trim()&&<p className="text-sm text-red-700">Add descriptive alt text before selecting this image.</p>}
+        {onSelect && <button type="button" disabled={busy||(item.mime_type.startsWith("image/")&&!item.alt_text.trim())} className="admin-button" onClick={async()=>{setBusy(true);try{const result=await updateMedia(item);if(result.ok)onSelect(item);else setMessage(result.message);}catch{setMessage("Save failed. Retry after signing in.");}finally{setBusy(false);}}}>Choose</button>}
         <button type="button" className="admin-button" disabled={busy} onClick={async()=>{setBusy(true);try{setMessage((await updateMedia(item)).message);}catch{setMessage("Save failed. Retry after signing in.");}finally{setBusy(false);}}}>Save metadata</button>
         {!onSelect && <button type="button" className="admin-button" disabled={busy} onClick={async()=>{if(!confirm("Permanently delete this media file?"))return;setBusy(true);try{setMessage((await deleteMedia(item.id)).message);refresh(r=>r+1);}catch{setMessage("Delete failed. Please retry.");}finally{setBusy(false);}}}>Delete</button>}
       </div>

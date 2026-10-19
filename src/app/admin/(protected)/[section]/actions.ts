@@ -11,9 +11,10 @@ export async function saveRecord(section:string,input:unknown,sectionInput:unkno
   if(!parsed.success)return {ok:false,message:parsed.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; ")};
   const {id,updated_at,...value}=parsed.data;
   const row:Record<string,unknown>={...value,is_placeholder:false};
-  const imageIds=[row.cover_media_id,row.photo_media_id,...(Array.isArray(row.photos)?row.photos:[])].filter((v):v is string=>typeof v==="string");
+  const imageIds=[row.cover_media_id,row.photo_media_id,(row.seo as Record<string,unknown>|undefined)?.og_media_id,...(Array.isArray(row.photos)?row.photos:[])].filter((v):v is string=>typeof v==="string");
   if(!await verifyImages(imageIds))return {ok:false,message:"An image was removed or is invalid. Choose it again."};
   if(section==="reviews"){row.source_link=row.source_link||null;row.reviewed_on=row.reviewed_on||null;}
+  if(section==="blog")row.published_at=row.published_at||null;
   if(section==="pages"){
     const sections=sectionsSchema.safeParse(sectionInput),deleted=z.array(z.uuid()).max(100).safeParse(removed);
     if(!sections.success || !deleted.success || sections.data.some(s=>deleted.data.includes(s.id)))return {ok:false,message:"Check the section content, links and images."};
