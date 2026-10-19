@@ -74,6 +74,16 @@ test("published themes enforce readable text contrast",()=>{
   assert.equal(contrastRatio("#FFFFFF","#000000"),21);
   assert.equal(settingsSchema.safeParse({...emptySettings,businessName:"Test",published:true,textColor:"#EEEEEE"}).success,false);
 });
+test("map routes pass their animation class to Leaflet at creation",()=>{
+  const paths=[],element=({children})=>React.createElement("div",null,children);
+  const Map=sourceModule("src/components/public/map-canvas.tsx",{
+    "react-leaflet":{MapContainer:element,TileLayer:()=>null,Marker:element,Popup:element,Polyline:props=>{paths.push(props);return null;},useMap:()=>({})},
+    "leaflet":{divIcon:()=>({})},"leaflet/dist/leaflet.css":{},"next/link":({children})=>React.createElement("a",null,children)
+  }).default;
+  const catalogue={places:[],tours:[{id,title:"Route",route_colour:"#0B5FD6"}],days:[],media:[],stops:[0,1].map(i=>({id:String(i),tour_id:id,place_id:String(i),latitude:7+i,longitude:80,sort_order:i}))};
+  renderToStaticMarkup(React.createElement(Map,{catalogue,ui:{},center:[7,80],zoom:7,visibleRoutes:[id]}));
+  assert.equal(paths.length,1);assert.equal(paths[0].className,"route-line");assert.equal(paths[0].pathOptions.color,"#0B5FD6");
+});
 
 test("both palettes validate button, card and muted-text contrast",()=>{
  const good={...emptySettings,published:true,businessName:"Test",accent:"#0B5FD6",background:"#FBFBFD",textColor:"#1D1D1F"};
