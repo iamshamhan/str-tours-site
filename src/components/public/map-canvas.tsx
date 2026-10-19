@@ -10,7 +10,7 @@ import type { CanvasProps } from "./map-explorer";
 import type { Ui } from "@/lib/public/ui";
 function Controls({positions,ui}:{positions:[number,number][];ui:Ui}){
   const map=useMap(),key=JSON.stringify(positions);
-  useEffect(()=>{map.attributionControl.setPrefix(false);const points=JSON.parse(key) as [number,number][];if(points.length>1)map.fitBounds(latLngBounds(points),{padding:[32,32],maxZoom:11});else if(points.length)map.setView(points[0],10);},[map,key]);
+  useEffect(()=>{map.attributionControl.setPrefix(false);const points=JSON.parse(key) as [number,number][];if(points.length>1)map.fitBounds(latLngBounds(points),{padding:[32,32],maxZoom:11,animate:!matchMedia("(prefers-reduced-motion: reduce)").matches});else if(points.length)map.setView(points[0],10,{animate:false});},[map,key]);
   return <div className="public-map-zoom"><button type="button" aria-label={ui.zoomIn} onClick={()=>map.zoomIn()}>+</button><button type="button" aria-label={ui.zoomOut} onClick={()=>map.zoomOut()}>−</button></div>;
 }
 export default function PublicMapCanvas({catalogue,ui,center,zoom,visibleRoutes,type,region,month,duration,activeDay,onDay,preview,onPlace}:CanvasProps){

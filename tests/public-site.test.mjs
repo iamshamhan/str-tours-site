@@ -87,3 +87,52 @@ test("pre-paint theme resolves saved, system, invalid and unavailable storage",(
   assert.equal(root.dataset.preference,["light","dark","system"].includes(saved)?saved:"system");
  }
 });
+
+
+test("failed challenge prevents inquiry writes and honeypots stay silent",async()=>{
+ let checks=0;
+ const actions=sourceModule("src/app/(public)/actions.ts",{
+  "@/lib/security/turnstile":{verifyTurnstile:async()=>{checks++;return false;}},
+  "@/lib/settings/public":{getPublicSettings:async()=>({inquiriesEnabled:true})},
+  "@/lib/supabase/public":{createPublicClient:()=>{throw Error("No database write allowed");}}
+ });
+ assert.equal((await actions.submitTrip({...trip(),challengeToken:"forged"})).status,"error");
+ assert.equal(checks,1);
+ assert.equal((await actions.submitTrip({...trip(),website:"bot"})).status,"success");
+ assert.equal(checks,1);
+});
+
+
+test("server authorization rejects missing, invalid and non-admin sessions",async()=>{
+ for(const scenario of ["missing","invalid","nonadmin","memberError","admin"]){
+  const auth=sourceModule("src/lib/admin/auth.ts",{
+   "next/navigation":{redirect:path=>{throw Error("redirect:"+path);}},
+   "@/lib/supabase/server":{createClient:async()=>({
+    auth:{getUser:async()=>({data:{user:scenario==="missing"?null:{id}},error:scenario==="invalid"?Error("invalid"):null}),getSession:()=>{throw Error("Unverified session must never authorize");}},
+    from:table=>{assert.equal(table,"admin_users");return {select:()=>({eq:(key,value)=>{assert.equal(key,"user_id");assert.equal(value,id);return {maybeSingle:async()=>({data:scenario==="admin"?{user_id:id}:null,error:scenario==="memberError"?Error("offline"):null})};}})};}
+   })}
+  });
+  if(scenario==="admin")assert.equal((await auth.requireAdmin()).user.id,id);
+  else await assert.rejects(auth.requireAdmin(),/redirect:\/admin\/login/);
+ }
+});
+
+
+test("missing photo references never discard a valid itinerary day",()=>{
+ const row={id,slug:"day-one",published:true,updated_at:"2026-10-19",tour_id:id,day_number:1,title:"Arrival",description:"A calm arrival",locations:"Colombo",travel_time:"1 hour",photos:[null,"removed-image",id]};
+ const parsed=contentSchemas.itinerary_days.parse(row);
+ assert.deepEqual(parsed.photos,[id]);
+});
+
+
+test("login HTML keeps credentials out of URLs and waits for hydration",()=>{
+ const {LoginForm}=sourceModule("src/app/admin/login/login-form.tsx",{
+  "next/navigation":{useRouter:()=>({})},
+  "@/components/turnstile":{Turnstile:()=>null},
+  "./actions":{loginAction:async()=>({ok:false})}
+ });
+ const html=renderToStaticMarkup(React.createElement(LoginForm));
+ assert.match(html,/<form\b[^>]*\bmethod="post"/);
+ assert.match(html,/<button[^>]*disabled/);
+ assert.match(html,/type="password"/);
+});

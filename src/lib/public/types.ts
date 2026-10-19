@@ -1,5 +1,5 @@
 import { z } from "zod";
-const id=z.uuid(),text=z.string(),ids=z.array(id),strings=z.array(text),image=id.nullable();
+const id=z.uuid(),text=z.string(),ids=z.preprocess(v=>Array.isArray(v)?v.filter(value=>id.safeParse(value).success):v,z.array(id)),strings=z.array(text),image=id.nullable();
 const base={id,slug:text,published:z.literal(true),updated_at:text};
 const seo=z.record(z.string(),z.unknown());
 export const contentSchemas={

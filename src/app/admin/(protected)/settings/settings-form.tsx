@@ -40,7 +40,7 @@ export function SettingsForm({ initial }: { initial: SiteSettings }) {
     const error = errors[name as keyof SiteSettings];
     return error && "message" in error ? String(error.message) : undefined;
   }
-  return <form className="mt-8 space-y-8" onSubmit={handleSubmit(submit,()=>setFeedback({ok:false,message:"Check the highlighted fields before saving."}))} noValidate onChange={() => setFeedback(null)}>
+  return <form method="post" className="mt-8 space-y-8" onSubmit={handleSubmit(submit,()=>setFeedback({ok:false,message:"Check the highlighted fields before saving."}))} noValidate onChange={() => setFeedback(null)}>
     <UnsavedWarning dirty={isDirty}/><fieldset disabled={pending} className="space-y-8 disabled:opacity-60">
       {groups.map((group) => <section key={group.title} className="rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="text-lg font-semibold">{group.title}</h2>

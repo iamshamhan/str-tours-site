@@ -7,9 +7,10 @@ import { createPublicClient } from "@/lib/supabase/public";
 import { tripSchema,reviewSubmissionSchema } from "@/lib/public/submission-schema";
 import { allowSubmission } from "@/lib/public/submission-limit";
 import { notifyOwner } from "@/lib/public/notify";
+import { verifyTurnstile } from "@/lib/security/turnstile";
 type Result={status:"success"|"validation"|"error"|"rateLimited"};
 async function submissionClient(startedAt:number){
-  const h=await headers(),ip=(h.get("x-vercel-forwarded-for")||h.get("x-forwarded-for")||"local").split(",")[0].trim().slice(0,100);
+  const h=await headers(),ip=process.env.VERCEL==="1"?(h.get("x-vercel-forwarded-for")||"unknown").split(",")[0].trim().slice(0,100):"local-shared";
   const key=createHash("sha256").update(`${process.env.NEXT_PUBLIC_SUPABASE_URL}:${ip}`).digest("hex");
   if(!allowSubmission(key))return null;
   return createPublicClient({"x-submission-key":key,"x-form-started":String(startedAt)});
@@ -18,6 +19,8 @@ export async function submitTrip(input:unknown):Promise<Result>{
   const parsed=tripSchema.safeParse(input);if(!parsed.success)return {status:"validation"};
   const v=parsed.data;if(v.website)return {status:"success"};
   if(Date.now()-v.startedAt<1500||Date.now()-v.startedAt>86400000)return {status:"validation"};
+  const token=input&&typeof input==="object"&&"challengeToken" in input?input.challengeToken:undefined;
+  if(!await verifyTurnstile(token,"trip_inquiry"))return {status:"error"};
   const settings=await getPublicSettings();if(!settings?.inquiriesEnabled)return {status:"error"};
   const client=await submissionClient(v.startedAt);if(!client)return {status:"rateLimited"};
   try{

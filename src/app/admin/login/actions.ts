@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { loginSchema, LOGIN_ERROR } from "@/lib/admin/login-schema";
 import { allowLoginAttempt } from "@/lib/admin/rate-limit";
 import { clearAdminSession } from "@/lib/admin/clear-session";
+import { verifyTurnstile } from "@/lib/security/turnstile";
 
 export async function loginAction(input: unknown): Promise<{ error?: string; ok?: boolean }> {
   const requestHeaders = await headers();
@@ -17,6 +18,8 @@ export async function loginAction(input: unknown): Promise<{ error?: string; ok?
   if (!allowLoginAttempt(key)) return { error: "Too many sign-in attempts. Please wait 10 minutes and try again." };
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) return { error: LOGIN_ERROR };
+  const token=input&&typeof input==="object"&&"challengeToken" in input?input.challengeToken:undefined;
+  if(!await verifyTurnstile(token,"admin_login"))return {error:LOGIN_ERROR};
 
   try {
     const supabase = await createClient();

@@ -1,0 +1,1 @@
+update public.site_settings set value=jsonb_set(value,'{ui}',coalesce(value->'ui','{}'::jsonb)||jsonb_build_object('verification','Security verification','verificationFailed','Verification could not load. Please reload and try again.')) where slug='site-config';

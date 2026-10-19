@@ -5,21 +5,24 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { tripSchema,reviewSubmissionSchema,type TripInput,type ReviewInput } from "@/lib/public/submission-schema";
 import { submitTrip,submitPublicReview } from "@/app/(public)/actions";
+import { Turnstile } from "@/components/turnstile";
 import type { Ui } from "@/lib/public/ui";
 const subscribe=()=>()=>{};
 export function Inquiry({ui,tourId=null,tours=[],privacy=false}:{ui:Ui;tourId?:string|null;tours?:{id:string;title:string}[];privacy?:boolean}){
   const ready=useSyncExternalStore(subscribe,()=>true,()=>false),[pending,start]=useTransition(),[feedback,setFeedback]=useState(""),[sent,setSent]=useState(false);
+  const [challengeToken,setChallengeToken]=useState(""),[challengeReset,setChallengeReset]=useState(0);
   const {register,handleSubmit,setValue,formState:{errors}}=useForm<TripInput>({resolver:zodResolver(tripSchema),defaultValues:{name:"",email:"",country:"",whatsapp:"",startDate:"",endDate:"",travellers:1,interests:"",budget:"",message:"",tourId,website:"",startedAt:0}});
   useEffect(()=>{setValue("startedAt",Date.now());},[setValue]);
   if(!ui.formHeading||!ui.submit||!ui.consent)return null;
-  return <section id="inquire" className="trip-form public-section"><h2>{ui.formHeading}</h2>{sent?<p role="status" className="form-success">{ui.success}</p>:<form method="post" noValidate onSubmit={handleSubmit(v=>start(async()=>{try{const r=await submitTrip(v);setFeedback(ui[r.status]??ui.error??"");if(r.status==="success")setSent(true);}catch{setFeedback(ui.error??"");}}),()=>setFeedback(ui.validation??""))}>
+  return <section id="inquire" className="trip-form public-section"><h2>{ui.formHeading}</h2>{sent?<p role="status" className="form-success">{ui.success}</p>:<form method="post" noValidate onSubmit={handleSubmit(v=>start(async()=>{try{const r=await submitTrip({...v,challengeToken});setFeedback(ui[r.status]??ui.error??"");if(r.status==="success")setSent(true);}catch{setFeedback(ui.error??"");}finally{setChallengeToken("");setChallengeReset(n=>n+1);}}),()=>setFeedback(ui.validation??""))}>
     <fieldset disabled={pending||!ready} className="form-grid">
       {(["name","email","country","whatsapp","startDate","endDate","travellers","interests","budget"] as const).map(key=><label key={key}>{ui[key]}<input type={key==="email"?"email":key==="whatsapp"?"tel":key==="startDate"||key==="endDate"?"date":key==="travellers"?"number":"text"} min={key==="travellers"?1:undefined} max={key==="travellers"?100:undefined} autoComplete={key==="name"?"name":key==="email"?"email":key==="country"?"country-name":key==="whatsapp"?"tel":undefined} {...register(key,key==="travellers"?{valueAsNumber:true}:{})} aria-invalid={!!errors[key]} aria-describedby={errors[key]?`trip-${key}-error`:undefined}/>{errors[key]&&<small id={`trip-${key}-error`}>{ui.validation}</small>}</label>)}
       {!tourId&&tours.length>0&&<label>{ui.tour}<select {...register("tourId",{setValueAs:v=>v||null})}><option value="">{ui.all}</option>{tours.map(t=><option key={t.id} value={t.id}>{t.title}</option>)}</select></label>}
       <label className="form-wide">{ui.message}<textarea rows={5} {...register("message")} aria-invalid={!!errors.message}/>{errors.message&&<small>{ui.validation}</small>}</label>
       <div className="honeypot" aria-hidden="true"><label>Website<input {...register("website")} tabIndex={-1} autoComplete="off"/></label></div>
       <label className="consent form-wide"><input type="checkbox" {...register("consent")} aria-invalid={!!errors.consent}/><span>{ui.consent}{privacy&&ui.privacyLabel&&<> <Link href="/privacy">{ui.privacyLabel}</Link></>}</span></label>
-      <button type="submit" className="public-button">{pending?ui.sending:ui.submit}</button>
+      <Turnstile action="trip_inquiry" onToken={setChallengeToken} resetKey={challengeReset} label={ui.verification??""} errorLabel={ui.verificationFailed??""}/>
+      <button type="submit" disabled={!!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY&&!challengeToken} className="public-button">{pending?ui.sending:ui.submit}</button>
     </fieldset><p role="status">{feedback}</p>
   </form>}</section>;
 }

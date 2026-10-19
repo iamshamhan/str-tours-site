@@ -19,7 +19,7 @@ export default async function Page({params}:{params:Promise<{slug:string}>}){
   if(slug==="reviews"){
     const [reviews,media,tours]=await Promise.all([readPublished("reviews"),readPublished("media"),readPublished("tours")]);
     const structured={"@context":"https://schema.org","@type":"ItemList",itemListElement:reviews.map((r,i)=>({"@type":"ListItem",position:i+1,item:{"@type":"Review",author:{"@type":"Person",name:r.author_name},reviewBody:r.body,reviewRating:{"@type":"Rating",ratingValue:r.rating,bestRating:5},itemReviewed:{"@type":r.tour_id?"TouristTrip":"TravelAgency",name:r.tour_id?tours.find(t=>t.id===r.tour_id)?.title:s.businessName},datePublished:r.reviewed_on??undefined}}))};
-    extra=<><script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(structured)}}/><section className="public-section">{reviews.length?<Reviews reviews={reviews} media={media} ui={s.ui}/>:<Empty ui={s.ui}/>}</section>{s.publicReviews&&<PublicReviewForm ui={s.ui} tours={tours.map(t=>({id:t.id,title:t.title}))}/>}</>;
+    extra=<>{!s.demoMode&&<script type="application/ld+json" dangerouslySetInnerHTML={{__html:jsonLd(structured)}}/>}<section className="public-section">{reviews.length?<Reviews reviews={reviews} media={media} ui={s.ui}/>:<Empty ui={s.ui}/>}</section>{s.publicReviews&&<PublicReviewForm ui={s.ui} tours={tours.map(t=>({id:t.id,title:t.title}))}/>}</>;
   }
   if(slug==="contact"){
     const [c,privacy]=await Promise.all([getCatalogue(),getPage("privacy")]);
