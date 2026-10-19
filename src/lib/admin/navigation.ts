@@ -2,6 +2,7 @@
 export const adminSections = [
   { slug: "settings", label: "Settings" },
   { slug: "navigation", label: "Navigation" },
+  { slug: "footer", label: "Footer" },
   { slug: "pages", label: "Pages" },
   { slug: "media", label: "Media" },
   { slug: "tours", label: "Tours" },

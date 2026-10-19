@@ -41,8 +41,10 @@ and src/lib/admin/auth.ts. See docs/admin-auth.md for the remaining live checks.
 
 The homepage shows the published business name and tagline. All production content, navigation, footer,
 heroes, SEO and theme must be editable in the admin and stored in Supabase.
-The schema, draft seed, admin authentication, dashboard and site settings editor are implemented;
-other content editors are still pending. Vercel deployment and environment configuration are deferred to the
+The schema, draft seed, admin authentication, dashboard, site settings, navigation
+and footer editors are implemented. See docs/navigation-footer.md for link,
+dropdown, mobile menu and WhatsApp checks. Other content editors are still pending.
+Vercel deployment and environment configuration are deferred to the
 deployment phase. See AGENTS.md for rules.
 
 Build note: uses Webpack and the standard Tailwind PostCSS plugin because the generated Turbopack CSS worker failed on this Windows environment. Production dependency audit: zero vulnerabilities. Full audit reports five high warnings in the ESLint development chain caused by the braces nested-pattern advisory; the suggested downgrade conflicts with this Next.js version, so it was not applied.

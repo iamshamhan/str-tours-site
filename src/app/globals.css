@@ -23,3 +23,36 @@ body {
 .public-accent { width: 48px; height: 4px; background: var(--site-accent); border-radius: var(--site-radius); margin-bottom: 40px; }
 .public-intro h1 { font-family: var(--site-heading-font); font-size: clamp(40px, 7vw, 88px); font-weight: 500; line-height: 1.08; letter-spacing: -0.045em; overflow-wrap: anywhere; }
 .public-intro p { margin-top: 28px; max-width: 640px; font-size: clamp(18px, 2vw, 24px); line-height: 1.65; white-space: pre-line; overflow-wrap: anywhere; }
+
+.public-site a, .public-site button, .public-site summary { -webkit-tap-highlight-color: transparent; }
+.public-site :is(a, button, summary):focus-visible { outline: 2px solid var(--site-accent); outline-offset: 5px; }
+.site-header { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--site-background) 86%, transparent); backdrop-filter: blur(20px); border-bottom: 1px solid color-mix(in srgb, var(--site-text) 12%, transparent); }
+.site-header-inner { max-width: 1280px; margin: auto; min-height: 76px; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.site-brand { font-family: var(--site-heading-font); font-size: 20px; font-weight: 600; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.site-nav > ul { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+.site-nav a, .site-nav summary { display: flex; align-items: center; gap: 10px; padding: 10px 0; font-size: 14px; cursor: pointer; }
+.site-nav a:hover, .site-footer a:hover { color: var(--site-accent); text-decoration: underline; text-underline-offset: 4px; }
+.site-nav details { position: relative; }
+.site-nav summary { list-style: none; }
+.site-nav summary::-webkit-details-marker { display: none; }
+.nav-dropdown { position: absolute; top: 100%; right: 0; min-width: 220px; max-width: min(360px, 90vw); padding: 16px 24px; border-radius: var(--site-radius); background: var(--site-background); box-shadow: 0 12px 40px #00000014; border: 1px solid color-mix(in srgb, var(--site-text) 12%, transparent); overflow-wrap: anywhere; }
+.menu-toggle { display: none; align-items: center; gap: 12px; font-size: 14px; padding: 12px; }
+.site-footer { border-top: 1px solid color-mix(in srgb, var(--site-text) 12%, transparent); padding: 72px max(24px, calc((100vw - 1200px) / 2)) 120px; background: color-mix(in srgb, var(--site-background) 96%, var(--site-text)); }
+.footer-grid { display: flex; flex-wrap: wrap; gap: 48px 72px; }
+.footer-grid section { min-width: 140px; max-width: 400px; }
+.footer-intro { flex: 1 1 320px; }
+.site-footer h2 { font-family: var(--site-heading-font); font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+.site-footer p { white-space: pre-line; overflow-wrap: anywhere; font-size: 14px; line-height: 1.8; }
+.site-footer li { margin-bottom: 12px; font-size: 14px; overflow-wrap: anywhere; }
+.footer-bottom { margin-top: 48px; padding-top: 24px; border-top: 1px solid color-mix(in srgb, var(--site-text) 12%, transparent); }
+.whatsapp-float { position: fixed; z-index: 40; right: max(20px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom)); max-width: calc(100vw - 40px); padding: 14px 22px; border: 2px solid var(--site-accent); color: var(--site-text); background: var(--site-background); border-radius: var(--site-radius); box-shadow: 0 8px 32px #00000012; font-size: 14px; overflow-wrap: anywhere; }
+@media (max-width: 767px) {
+  .site-header-inner { flex-wrap: wrap; padding: 12px 20px; gap: 8px; }
+  .site-brand { max-width: 65%; }
+  .menu-toggle { display: flex; margin-left: auto; }
+  .site-nav { display: none; width: 100%; max-height: 70svh; overflow-y: auto; }
+  .site-nav.is-open, .site-nav.no-toggle { display: block; }
+  .site-nav > ul { display: block; padding-block: 12px; }
+  .site-nav a, .site-nav summary { padding: 14px 8px; }
+  .nav-dropdown { position: static; box-shadow: none; max-width: 100%; margin-bottom: 12px; }
+}

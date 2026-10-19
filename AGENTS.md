@@ -44,6 +44,15 @@
 - Logo/favicon URLs are HTTPS-only saved placeholders, not fetched or rendered until the media phase. Do not restore the starter favicon.
 - See docs/site-settings.md for test instructions and verification evidence.
 
+## Phase 4B navigation and footer rules
+- Navigation and footer saves call requireAdmin() and shared Zod validation, then invoke save_site_links with the owner's session. This SECURITY INVOKER transaction retains RLS and applies explicit deleted IDs; it never deletes every row absent from a stale form.
+- nav_items supports one dropdown level via parent_id. The database rejects cycles/deeper nesting and cross-location parenting. Public RLS requires both child and root to be published. private.published_nav_parents exposes only published root IDs; anonymous users still cannot execute private.is_admin().
+- /admin/navigation edits main navigation and site_settings navigation-ui labels. /admin/footer edits grouped footer_links and site_settings footer text. Visibility and footer-text publication are independent. All edits/deletions are staged until Save; deleting a parent deletes its children. Discard only undoes unsaved changes.
+- Link validation rejects executable schemes, protocol-relative URLs, URL credentials, controls and backslash bypasses. Public reads validate again; new tabs use noopener noreferrer. Render all text escaped, never raw HTML.
+- Public reads remain anonymous/no-store even for a signed-in owner. Navbar/footer have no hardcoded business fallback. WhatsApp uses published site-config.whatsapp and the editable navigation-ui label; invalid or absent configuration hides it.
+- Reorder with pointer handles or keyboard/touch Move up/down controls. Forms stay disabled until hydration. Group order follows the first link in each group. Use one editor tab at a time; same-row edits are last-save-wins.
+- See docs/navigation-footer.md for test steps and verification limits. Never run RLS fixture scripts against an owner-populated project.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
