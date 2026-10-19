@@ -18,7 +18,7 @@ export const tourEditorSchema=z.object({tour:tourSchema,days:z.array(daySchema).
   if(new Set(v.stops.map(s=>s.id)).size!==v.stops.length || v.stops.some(s=>v.deletedStops.includes(s.id)))ctx.addIssue({code:"custom",path:["stops"],message:"Duplicate or deleted route stop."});
 });
 export type Tour=z.infer<typeof tourSchema>; export type Day=z.infer<typeof daySchema>;
-export const emptyTour:Omit<Tour,"id">={slug:"",published:false,updated_at:null,title:"",summary:"",description:"",duration_days:1,duration_nights:0,price_from:null,cover_media_id:null,gallery:[],difficulty:"",best_months:[],tags:[],regions:[],highlights:[],inclusions:[],exclusions:[],vehicle_type:"",seo:{title:"",description:"",og_media_id:null},route_colour:"#476A63"};
+export const emptyTour:Omit<Tour,"id">={slug:"",published:false,updated_at:null,title:"",summary:"",description:"",duration_days:1,duration_nights:0,price_from:null,cover_media_id:null,gallery:[],difficulty:"",best_months:[],tags:[],regions:[],highlights:[],inclusions:[],exclusions:[],vehicle_type:"",seo:{title:"",description:"",og_media_id:null},route_colour:"#0B5FD6"};
 export type Field={name:string;label:string;type?:"text"|"long"|"number"|"lines"|"image"|"gallery"|"checkbox"|"select"|"date"|"color";options?:{value:string;label:string}[];nullable?:boolean};
 export const tourFields:Field[]=[{name:"title",label:"Title"},{name:"slug",label:"Slug"},{name:"published",label:"Published",type:"checkbox"},{name:"summary",label:"Short description",type:"long"},{name:"description",label:"Long description",type:"long"},{name:"duration_days",label:"Duration (days)",type:"number"},{name:"duration_nights",label:"Nights",type:"number",nullable:true},{name:"price_from",label:"From price (USD)",type:"number",nullable:true},{name:"difficulty",label:"Difficulty"},{name:"best_months",label:"Best months (one per line)",type:"lines"},{name:"tags",label:"Tags (one per line)",type:"lines"},{name:"highlights",label:"Highlights (one per line)",type:"lines"},{name:"inclusions",label:"Inclusions (one per line)",type:"lines"},{name:"exclusions",label:"Exclusions (one per line)",type:"lines"},{name:"vehicle_type",label:"Vehicle type"},{name:"cover_media_id",label:"Cover image",type:"image"},{name:"gallery",label:"Gallery",type:"gallery"},{name:"seo.title",label:"SEO title"},{name:"seo.description",label:"SEO description",type:"long"}];
 
@@ -60,6 +60,10 @@ export const sectionContents={
   featured_tours:collectionContent.extend({tour_ids:photos.default([])}),
   why_us:z.object({...contentBase,items:z.array(z.object({title:short,body:long})).max(12).default([])}).passthrough(),
   guide_story:z.object({...contentBase,image:mediaId.default(null),eyebrow:short.default("")}).passthrough(),
+  search_bar:z.object(contentBase).passthrough(),
+  stats:z.object({...contentBase,items:z.array(z.object({title:short,body:short})).max(8).default([])}).passthrough(),
+  how_it_works:z.object({...contentBase,items:z.array(z.object({title:short,body:long})).max(6).default([])}).passthrough(),
+  destinations:collectionContent.extend({place_ids:photos.default([])}),
   map_preview:collectionContent,
   reviews:collectionContent,
   faq:collectionContent,
@@ -67,7 +71,7 @@ export const sectionContents={
 };
 export type SectionType=keyof typeof sectionContents;
 export type Section={id:string;type:SectionType;published:boolean;content:Record<string,unknown>};
-export const sectionsSchema=z.array(z.object({id:z.uuid(),type:z.enum(["hero","rich_text","gallery","cta","featured_tours","why_us","guide_story","map_preview","reviews","faq","call_to_action"]),published:z.boolean(),content:z.record(z.string(),z.unknown())})).max(100).superRefine((sections,ctx)=>{
+export const sectionsSchema=z.array(z.object({id:z.uuid(),type:z.enum(["hero","rich_text","gallery","cta","search_bar","stats","how_it_works","destinations","featured_tours","why_us","guide_story","map_preview","reviews","faq","call_to_action"]),published:z.boolean(),content:z.record(z.string(),z.unknown())})).max(100).superRefine((sections,ctx)=>{
   if(new Set(sections.map(s=>s.id)).size!==sections.length)ctx.addIssue({code:"custom",message:"Duplicate section IDs"});
   sections.forEach((s,i)=>{const parsed=sectionContents[s.type].safeParse(s.content);if(!parsed.success)parsed.error.issues.forEach(issue=>ctx.addIssue({code:"custom",path:[i,"content",...issue.path],message:issue.message}));});
 });

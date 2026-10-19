@@ -8,6 +8,7 @@ import { publicImageUrl } from "@/lib/media/shared";
 import { getPage } from "@/lib/public/content";
 import { jsonLd } from "@/lib/public/seo";
 import { Reveal } from "@/components/public/reveal";
+import { FloatingContact } from "@/components/public/floating-contact";
 import { CookieNotice } from "@/components/public/cookie-notice";
 import Link from "next/link";
 
@@ -31,6 +32,6 @@ export default async function PublicLayout({ children }: { children: React.React
     {settings&&<div className="public-trust">{settings.sltda&&<p className="trust-registration"><span>{settings.ui.sltdaLabel}</span><strong>{settings.sltda}</strong></p>}<nav aria-label={settings.ui.privacyLabel}>{privacy&&settings.ui.privacyLabel&&<Link href="/privacy">{settings.ui.privacyLabel}</Link>}{terms&&settings.ui.termsLabel&&<Link href="/terms">{settings.ui.termsLabel}</Link>}{cancellation&&settings.ui.cancellationLabel&&<Link href="/cancellation">{settings.ui.cancellationLabel}</Link>}{settings.socialLinks.map(s=><a key={s.url} href={s.url} target="_blank" rel="noopener noreferrer"><span className="social-symbol" aria-hidden="true">{new URL(s.url).hostname.includes("instagram")?"◎":new URL(s.url).hostname.includes("facebook")?"f":"↗"}</span>{s.label}</a>)}</nav></div>}
     {settings?.cookieNoticeEnabled&&<CookieNotice ui={settings.ui} privacy={!!privacy}/>}
     <Reveal/>
-    {whatsapp && navigation.labels?.whatsapp_label && <a className="whatsapp-float" aria-label={navigation.labels.whatsapp_label} href={whatsapp} target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.6a8 8 0 0 1-11.8 7L4 20l1.3-4.2A8 8 0 1 1 20 11.6Z" fill="none" stroke="currentColor" strokeWidth="1.6"/><path d="M8 8c.4 4 2.5 6 6.5 7l1.5-2-2-1-1 1c-1.5-.6-2.5-1.6-3-3l1-1-1-2Z" fill="currentColor"/></svg><span>{navigation.labels.whatsapp_label}</span></a>}
+    {whatsapp&&navigation.labels?.whatsapp_label&&<FloatingContact href={whatsapp} label={navigation.labels.whatsapp_label}/>}
   </div>;
 }

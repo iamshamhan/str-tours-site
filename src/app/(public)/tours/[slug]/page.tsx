@@ -6,6 +6,7 @@ import { Gallery } from "@/components/public/gallery";
 import { Photo } from "@/components/public/photo";
 import { Reviews,Faqs } from "@/components/public/cards";
 import { Journey } from "@/components/public/journey";
+import { MobileBookingBar } from "@/components/public/mobile-booking-bar";
 import { Inquiry } from "@/components/public/inquiry";
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}){const {slug}=await params;return metadataFor(`/tours/${slug}`,(await readPublished("tours")).find(t=>t.slug===slug));}
 export default async function TourPage({params}:{params:Promise<{slug:string}>}){
@@ -21,5 +22,6 @@ export default async function TourPage({params}:{params:Promise<{slug:string}>})
     {days.length>0&&<Journey catalogue={{...catalogue,tours:[tour],days,stops}} ui={ui} center={[settings.mapLatitude,settings.mapLongitude]} zoom={settings.mapZoom}/>}
     {ownReviews.length>0&&<section className="public-section reveal"><h2>{ui.reviews}</h2><Reviews reviews={ownReviews} media={catalogue.media} ui={ui}/></section>}{ownFaqs.length>0&&<section className="public-section"><h2>{ui.faq}</h2><Faqs faqs={ownFaqs}/></section>}
     {settings.inquiriesEnabled&&<Inquiry ui={ui} tourId={tour.id} privacy={!!privacy}/>}
+    {settings.inquiriesEnabled&&<MobileBookingBar price={tour.price_from!=null?new Intl.NumberFormat("en",{style:"currency",currency:tour.currency,maximumFractionDigits:0}).format(tour.price_from):null} from={ui.from} label={ui.enquire||ui.planTrip} title={tour.title}/>}
   </main>;
 }

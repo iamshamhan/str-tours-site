@@ -24,10 +24,11 @@ async function prepare(file: File) {
 export function MediaLibrary({ onSelect, imagesOnly=false }: { onSelect?: (item:Media)=>void; imagesOnly?:boolean }) {
   const [items,setItems] = useState<Media[]>([]), [search,setSearch] = useState(""), [page,setPage] = useState(0), [more,setMore] = useState(false);
   const [busy,setBusy] = useState(false), [message,setMessage] = useState(""), [revision,refresh] = useState(0);
+  const [loading,setLoading]=useState(true);
   const uploadInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     let active=true;
-    const timer=setTimeout(() => { listMedia(search,page).then(r => { if(active){setItems(r.items);setMore(r.more);} }).catch(() => {if(active)setMessage("Unable to load media. Sign in again or retry.");}); },200);
+    const timer=setTimeout(() => { setLoading(true);listMedia(search,page).then(r => { if(active){setItems(r.items);setMore(r.more);} }).catch(() => {if(active)setMessage("Unable to load media. Sign in again or retry.");}).finally(()=>{if(active)setLoading(false);}); },200);
     return () => { active=false; clearTimeout(timer); };
   },[search,page,revision]);
   async function upload(files:File[]) {
@@ -71,7 +72,8 @@ export function MediaLibrary({ onSelect, imagesOnly=false }: { onSelect?: (item:
         {!onSelect && <ConfirmButton disabled={busy} message="This permanently removes the photo or video and its media details." onConfirm={()=>{setBusy(true);void deleteMedia(item.id).then(r=>{setMessage(r.message);refresh(n=>n+1);}).catch(()=>setMessage("Delete failed. Please retry.")).finally(()=>setBusy(false));}}/>}
       </div>
     </article>)}</div>
-    {!items.length && <div className="admin-empty"><span aria-hidden="true">▧</span><h2>{search?"No matching media":"Make room for beautiful places"}</h2><p>{search?"Try another search.":"Upload your first photos to bring your site to life."}</p><button type="button" className="admin-primary" onClick={()=>uploadInput.current?.click()}>Upload your first photo +</button></div>}
+    {loading&&!items.length&&<div className="admin-skeleton" aria-busy="true" aria-label="Loading media"><div className="h-48 rounded-xl"/><div className="h-48 rounded-xl"/></div>}
+    {!loading&&!items.length && <div className="admin-empty"><span aria-hidden="true">▧</span><h2>{search?"No matching media":"Make room for beautiful places"}</h2><p>{search?"Try another search.":"Upload your first photos to bring your site to life."}</p><button type="button" className="admin-primary" onClick={()=>uploadInput.current?.click()}>Upload your first photo +</button></div>}
     <div className="flex gap-3"><button type="button" className="admin-button" disabled={!page||busy} onClick={()=>setPage(p=>p-1)}>Previous</button><span>Page {page+1}</span><button type="button" className="admin-button" disabled={!more||busy} onClick={()=>setPage(p=>p+1)}>Next</button></div>
   </div>;
 }

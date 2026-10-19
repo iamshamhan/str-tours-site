@@ -11,7 +11,7 @@ function MapEvents({points,onPosition}:EditorMapProps){
   useMapEvents({click:e=>onPosition?.(Number(e.latlng.lat.toFixed(6)),Number(e.latlng.wrap().lng.toFixed(6)))});
   return null;
 }
-export default function MapCanvas({points,colour="#476A63",onPosition}:EditorMapProps){
+export default function MapCanvas({points,colour="var(--site-accent)",onPosition}:EditorMapProps){
   const valid=points.filter(p=>Number.isFinite(p.latitude)&&Number.isFinite(p.longitude)&&Math.abs(p.latitude)<=90&&Math.abs(p.longitude)<=180);
   const count=valid.length;
   const icons=useMemo(()=>Array.from({length:count},(_,i)=>divIcon({className:"route-marker",html:`<span>${i+1}</span>`,iconSize:[30,30],iconAnchor:[15,15]})),[count]);

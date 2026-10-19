@@ -65,6 +65,9 @@ test("public images use database alt text, responsive sizes and hide assets with
   const Photo=sourceModule("src/components/public/photo.tsx",{"@/lib/public/content":content,"next/image":({src,alt,sizes})=>React.createElement("img",{src,alt,sizes})}).Photo;
   const media=[{id,mime_type:"image/webp",alt_text:"Coastline <script>",storage_path:`${id}.webp`}];
   const html=renderToStaticMarkup(React.createElement(Photo,{id,media}));assert.match(html,/alt="Coastline &lt;script&gt;"/);assert.match(html,/sizes=/);
+  const landscape=[{...media[0],width:2400,height:1600}];
+  assert.match(renderToStaticMarkup(React.createElement(Photo,{id,media:landscape,className:"hero-photo"})),/150svh/);
+  assert.match(renderToStaticMarkup(React.createElement(Photo,{id,media:landscape,portrait:true})),/88vw/);
   assert.equal(renderToStaticMarkup(React.createElement(Photo,{id,media:[{...media[0],alt_text:""}]})),"");
 });
 test("published themes enforce readable text contrast",()=>{
@@ -73,7 +76,7 @@ test("published themes enforce readable text contrast",()=>{
 });
 
 test("both palettes validate button, card and muted-text contrast",()=>{
- const good={...emptySettings,published:true,businessName:"Test",accent:"#0B655F",background:"#FAFCFA",textColor:"#142E31"};
+ const good={...emptySettings,published:true,businessName:"Test",accent:"#0B5FD6",background:"#FBFBFD",textColor:"#1D1D1F"};
  assert.equal(settingsSchema.safeParse(good).success,true);
  for(const patch of [{darkText:good.darkBackground},{darkAccentText:good.darkAccent},{secondaryText:good.secondary},{muted:good.surface}])assert.equal(settingsSchema.safeParse({...good,...patch}).success,false);
  assert.equal(settingsSchema.safeParse({...good,navCtaHref:"javascript:alert(1)"}).success,false);

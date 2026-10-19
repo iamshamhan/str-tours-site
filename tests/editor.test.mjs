@@ -31,3 +31,9 @@ test("page links and inquiry updates validate security-sensitive fields",()=>{
   assert.equal(inquirySchema.safeParse({id,updated_at:"2026-10-19T00:00:00Z",status:"booked",notes:"Private"}).success,true);
   assert.equal(inquirySchema.safeParse({id,updated_at:"now",status:"public",notes:""}).success,false);
 });
+test("new home sections validate destination references, collection limits and step content",()=>{
+  let sequence=0;const section=(type,content)=>({id:`123e4567-e89b-42d3-a456-${String(++sequence).padStart(12,"0")}`,type,published:true,content});
+  assert.equal(sectionsSchema.safeParse([section("search_bar",{}),section("stats",{items:[{title:"6",body:"Journeys"}]}),section("how_it_works",{items:[{title:"Explore",body:"Choose a route"}]}),section("destinations",{place_ids:[id],limit:5})]).success,true);
+  for(const content of [{place_ids:["invalid"]},{limit:999}])assert.equal(sectionsSchema.safeParse([section("destinations",content)]).success,false);
+  assert.equal(sectionsSchema.safeParse([section("how_it_works",{items:[{title:"Explore",body:42}]})]).success,false);
+});

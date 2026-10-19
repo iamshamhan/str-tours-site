@@ -12,19 +12,19 @@ const url = text(2048).refine((value) => {
   catch { return false; }
 }, "Enter a full HTTPS URL, or leave blank.");
 const phone = text(32).refine((v) => !v || /^\+?[0-9 ()-]{7,32}$/.test(v), "Enter a valid phone number.");
-const color = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a six-digit hex colour, such as #476A63.");
+const color = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a six-digit hex colour, such as #0B5FD6.");
 export function contrastRatio(a:string,b:string){
   const luminance=(hex:string)=>{const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=0.04045?v/12.92:((v+0.055)/1.055)**2.4);return rgb[0]*0.2126+rgb[1]*0.7152+rgb[2]*0.0722;};
   const x=luminance(a),y=luminance(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);
 }
 export const themeDefaults = {
-  secondary:"#F0BD78", soft:"#E5EEE5", surface:"#FFFFFF", muted:"#526566", accentText:"#FFFFFF", secondaryText:"#302719",
-  darkBackground:"#0D191B", darkText:"#F1F5EF", darkAccent:"#85D8CB", darkSecondary:"#EFC28C", darkSurface:"#162629", darkSoft:"#213735", darkMuted:"#AEC2BC", darkAccentText:"#102423", darkSecondaryText:"#302719",
-  heroOverlay:"#081D23", heroText:"#FFFFFF", successColor:"#206347", errorColor:"#AA3441", darkSuccessColor:"#9AE4BF", darkErrorColor:"#FFABB5",
+  secondary:"#FF7A45", soft:"#F0F3FA", surface:"#FFFFFF", muted:"#64646F", accentText:"#FFFFFF", secondaryText:"#28180E",
+  darkBackground:"#0B0B0F", darkText:"#F5F5F7", darkAccent:"#4C9AFF", darkSecondary:"#FF925F", darkSurface:"#151519", darkSoft:"#202027", darkMuted:"#A9A9B5", darkAccentText:"#0B0B0F", darkSecondaryText:"#28180E",
+  heroOverlay:"#10162B", heroText:"#FFFFFF", successColor:"#0B5FD6", errorColor:"#AA3441", darkSuccessColor:"#89B8FF", darkErrorColor:"#FFABB5",
 } as const;
 export const themeColorLabels:Record<keyof typeof themeDefaults,string> = {
-  secondary:"Sunset highlight",soft:"Tea-green tint",surface:"Card background",muted:"Secondary text",accentText:"Text on accent",secondaryText:"Text on sunset highlight",
-  darkBackground:"Background",darkText:"Text",darkAccent:"Ocean accent",darkSecondary:"Sunset highlight",darkSurface:"Card background",darkSoft:"Tea-green tint",darkMuted:"Secondary text",darkAccentText:"Text on accent",darkSecondaryText:"Text on sunset highlight",
+  secondary:"Sunset highlight",soft:"Soft neutral tint",surface:"Card background",muted:"Secondary text",accentText:"Text on accent",secondaryText:"Text on sunset highlight",
+  darkBackground:"Background",darkText:"Text",darkAccent:"Sapphire accent",darkSecondary:"Sunset highlight",darkSurface:"Card background",darkSoft:"Soft neutral tint",darkMuted:"Secondary text",darkAccentText:"Text on accent",darkSecondaryText:"Text on sunset highlight",
   heroOverlay:"Hero gradient",heroText:"Text on hero",successColor:"Success message",errorColor:"Error message",darkSuccessColor:"Success message",darkErrorColor:"Error message",
 };
 const themeColors=Object.fromEntries(Object.entries(themeDefaults).map(([key,value])=>[key,color.default(value)])) as {[K in keyof typeof themeDefaults]:z.ZodDefault<typeof color>};
@@ -56,8 +56,8 @@ export const emptySettings: SiteSettings = {
   demoMode:false,
   ...themeDefaults, navCtaLabel:"",navCtaHref:"",
   businessName: "", tagline: "", logo: "", favicon: "", contactEmail: "", phone: "", whatsapp: "", address: "", sltda: "", currency: "USD",
-  socialLinks: [], seoTitle: "", seoDescription: "", accent: "#476A63", background: "#FFFFFF", textColor: "#1D1D1F",
-  headingFont: "system", bodyFont: "system", radius: 16, published: false,
+  socialLinks: [], seoTitle: "", seoDescription: "", accent: "#0B5FD6", background: "#FBFBFD", textColor: "#1D1D1F",
+  headingFont: "georgia", bodyFont: "system", radius: 24, published: false,
   siteUrl:"",ogImageId:null,publicReviews:false,inquiriesEnabled:true,cookieNoticeEnabled:true,ui:{},
   mapLatitude:7.8731,mapLongitude:80.7718,mapZoom:7,
 };
