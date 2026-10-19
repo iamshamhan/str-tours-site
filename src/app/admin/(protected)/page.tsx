@@ -25,7 +25,7 @@ export default async function Dashboard() {
       </div>
       <section className="mt-8 rounded-2xl border border-neutral-200 bg-white p-6">
         <h2 className="font-semibold">Your workspace is ready</h2>
-        <p className="mt-2 text-sm leading-6 text-neutral-500">Content editors will be added in later phases. The sidebar sections currently contain placeholders.</p>
+        <p className="mt-2 text-sm leading-6 text-neutral-500">Use the sidebar to manage your website content, media and inquiries. Review draft content before publishing.</p>
       </section>
     </>
   );

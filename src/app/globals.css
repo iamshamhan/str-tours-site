@@ -3,6 +3,7 @@
 .admin-input { display:block; width:100%; margin-top:.35rem; padding:.6rem .75rem; border:1px solid #cbd5e1; border-radius:.5rem; background:white; color:#0f172a; }
 .admin-button { border:1px solid #cbd5e1; border-radius:.5rem; padding:.5rem .8rem; font-size:.875rem; cursor:pointer; }
 .admin-button:disabled { opacity:.45; cursor:default; }
+.route-marker span { display:flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:50%; background:#0f172a; color:white; border:2px solid white; box-shadow:0 2px 5px #0005; font-weight:600; }
 
 body {
   margin: 0;

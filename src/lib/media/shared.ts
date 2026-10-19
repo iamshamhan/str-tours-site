@@ -8,5 +8,5 @@ export function mediaUrl(path: string) {
 }
 export function publicImageUrl(value: string) {
   const base = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${MEDIA_BUCKET}/`;
-  return value.startsWith(base) && /^https:/.test(value) && /\.(webp|png|jpg|jpeg)$/.test(value) ? value : undefined;
+  return value.startsWith(base) && /^https:/.test(value) && /^[a-f0-9-]{36}\.(webp|png|jpg|jpeg)$/.test(value.slice(base.length)) ? value : undefined;
 }

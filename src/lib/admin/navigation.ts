@@ -9,4 +9,7 @@ export const adminSections = [
   { slug: "places", label: "Places" },
   { slug: "reviews", label: "Reviews" },
   { slug: "inquiries", label: "Inquiries" },
+  { slug: "team", label: "Team" },
+  { slug: "vehicles", label: "Vehicles" },
+  { slug: "faqs", label: "FAQs" },
 ] as const;
