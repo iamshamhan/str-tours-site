@@ -1,6 +1,7 @@
 import "./globals.css";
 import "./design.css";
 import "./map.css";
+import "./polish.css";
 import { getPublicSettings } from "@/lib/settings/public";
 import { themeScript,themeStyle } from "@/lib/settings/theme";
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

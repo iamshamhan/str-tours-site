@@ -11,7 +11,7 @@ import { RouteEditor } from "./route-editor";
 const subscribe=()=>()=>{};
 export function TourForm({initial,initialDays,initialStops=[],places=[]}:{initial:Tour;initialDays:Day[];initialStops?:Stop[];places?:PlaceOption[]}){
   const ready=useSyncExternalStore(subscribe,()=>true,()=>false);
-  const {control,handleSubmit,setValue,getValues,setError,reset,formState:{isDirty}}=useForm<Values>({defaultValues:initial});
+  const {control,handleSubmit,setValue,getValues,setError,setFocus,clearErrors,reset,formState:{isDirty}}=useForm<Values>({defaultValues:initial});
   const title=useWatch({control,name:"title"}),colour=useWatch({control,name:"route_colour"});
   const [stops,setStops]=useState(initialStops),[deletedStops,setDeletedStops]=useState<string[]>([]);
   const search=useSearchParams();
@@ -19,10 +19,10 @@ export function TourForm({initial,initialDays,initialStops=[],places=[]}:{initia
   const [savedChildren,setSavedChildren]=useState(JSON.stringify([initialDays,initialStops]));
   const dirty=isDirty||JSON.stringify([days,stops])!==savedChildren||deleted.length>0||deletedStops.length>0;
   function changeDay(index:number,key:keyof Day,value:unknown){setDays(rows=>rows.map((r,i)=>i===index?{...r,[key]:value}:r));}
-  function submit(tour:Values){
+  function submit(tour:Values){clearErrors();
     if(!tour.slug){tour.slug=slugify(String(tour.title));setValue("slug",tour.slug);}
     const parsed=tourEditorSchema.safeParse({tour,days,deleted,stops,deletedStops});
-    if(!parsed.success){for(const issue of parsed.error.issues)if(issue.path[0]==="tour")setError(issue.path.slice(1).join("."),{message:issue.message});setMessage(parsed.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; "));return;}
+    if(!parsed.success){for(const issue of parsed.error.issues)if(issue.path[0]==="tour")setError(issue.path.slice(1).join("."),{message:issue.message});const first=parsed.error.issues.find(i=>i.path[0]==="tour");if(first)setFocus(first.path.slice(1).join("."));setMessage(parsed.error.issues.map(i=>`${i.path.join(".")}: ${i.message}`).join("; "));return;}
     start(async()=>{try{const result=await saveTour(parsed.data);setMessage(result.message);if(result.ok){reset(tour);setSavedChildren(JSON.stringify([days,stops]));setDeleted([]);setDeletedStops([]);router.replace(`/admin/tours/${result.id}?saved=1`);router.refresh();}}catch{setMessage("Save failed. Check your session and retry.");}});
   }
   return <form method="post" onSubmit={handleSubmit(submit)} onChange={()=>setMessage("")} className="space-y-6" noValidate>
@@ -33,6 +33,6 @@ export function TourForm({initial,initialDays,initialStops=[],places=[]}:{initia
     </section>)}</div><button type="button" className="admin-button" onClick={()=>setDays(rows=>[...rows,{id:crypto.randomUUID(),title:"",description:"",locations:"",travel_time:"",photos:[]}])}>Add day</button>
     <p className="text-sm text-slate-600">Removing a saved day also removes its route stops when you save.</p>
     <RouteEditor stops={stops} days={days} places={places} colour={String(colour)} onChange={setStops} onDelete={id=>setDeletedStops(v=>[...v,id])} onColour={colour=>setValue("route_colour",colour,{shouldDirty:true})}/>
-    </fieldset><SaveBar dirty={dirty} pending={pending||!ready} label="Save tour" message={message}/>
+    </fieldset><SaveBar dirty={dirty} pending={pending} disabled={!ready} label="Save tour" message={message}/>
   </form>;
 }

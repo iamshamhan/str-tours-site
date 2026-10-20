@@ -74,6 +74,15 @@ test("published themes enforce readable text contrast",()=>{
   assert.equal(contrastRatio("#FFFFFF","#000000"),21);
   assert.equal(settingsSchema.safeParse({...emptySettings,businessName:"Test",published:true,textColor:"#EEEEEE"}).success,false);
 });
+test("galleries show each media asset once and retain its first chosen position",()=>{
+ const Gallery=sourceModule("src/components/public/gallery.tsx",{"@/lib/public/content":{imageAsset:(_,id)=>({id,url:"https://example.invalid/photo",alt_text:"Photo",width:100,height:100})},"./image-gallery":{ImageGallery:({images})=>React.createElement("span",null,images.map(i=>i.id).join(","))}}).Gallery;
+ assert.equal(renderToStaticMarkup(React.createElement(Gallery,{ids:["a","a","b","a"],media:[],ui:{}})),"<span>a,b</span>");
+});
+test("save bars distinguish hydration from an actual save",()=>{
+ const {SaveBar}=sourceModule("src/components/admin/save-bar.tsx");
+ const loading=renderToStaticMarkup(React.createElement(SaveBar,{dirty:false,pending:false,disabled:true}));assert.match(loading,/Loading…/);assert.doesNotMatch(loading,/Saving…/);
+ const saving=renderToStaticMarkup(React.createElement(SaveBar,{dirty:true,pending:true}));assert.match(saving,/Saving…/);assert.match(saving,/disabled/);
+});
 test("map routes pass their animation class to Leaflet at creation",()=>{
   const paths=[],element=({children})=>React.createElement("div",null,children);
   const Map=sourceModule("src/components/public/map-canvas.tsx",{

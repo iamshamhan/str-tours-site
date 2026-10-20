@@ -9,7 +9,7 @@ export function FloatingContact({href,label}:{href:string;label:string}){
   let zone:IntersectionObserver;let measuredWidth=-1,measuredHeight=-1;
   const watch=()=>{
    const bounds=anchor.current?.getBoundingClientRect();if(bounds&&(bounds.width!==measuredWidth||bounds.height!==measuredHeight))resize();
-   document.querySelectorAll(".site-footer,.public-trust,#inquire").forEach(element=>{if(!targets.has(element)){targets.add(element);observer.observe(element);}});
+   document.querySelectorAll(".site-footer,.public-trust,#inquire,.map-route-sheet,.map-detail-sheet").forEach(element=>{if(!targets.has(element)){targets.add(element);observer.observe(element);}});
    document.querySelectorAll("main .tour-card,main .profile-card,main .public-button,main input,main textarea,main select,main .bento-place,main .faq-list details,main .review-card,main .itinerary-day,main p,main h2,main h3").forEach(element=>{if(!zoneTargets.has(element)){zoneTargets.add(element);zone?.observe(element);}});
    for(const element of zoneTargets)if(!element.isConnected){zone?.unobserve(element);zoneTargets.delete(element);covered.delete(element);}update();
   };

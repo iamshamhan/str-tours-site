@@ -22,7 +22,7 @@ function ClusteredPins({catalogue,tourId,activeDay,places,ui,onPlace}:Pick<Canva
  useEffect(()=>{
   const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches,labels=new Map<L.Marker,number[]>(),markers:L.Marker[]=[];
   const icon=(numbers:number[])=>L.divIcon({className:`journey-pin ${tourId?"tour-pin":"overview-pin"}`,html:`<span style="--pin-colour:${colour}">${numbers.length?numbers.length>3?`${numbers.slice(0,2).join(" · ")} +${numbers.length-2}`:numbers.join(" · "):"<i></i>"}</span>`,iconSize:[numbers.length>2?90:numbers.length>1?66:42,44],iconAnchor:[numbers.length>2?45:numbers.length>1?33:21,22]});
-  const cluster=L.markerClusterGroup({showCoverageOnHover:false,zoomToBoundsOnClick:!tourId,spiderfyOnMaxZoom:true,spiderfyDistanceMultiplier:1.65,maxClusterRadius:50,animate:!reduced,spiderLegPolylineOptions:{color:colour,weight:1.5,opacity:.7},iconCreateFunction:group=>{const numbers=group.getAllChildMarkers().flatMap(m=>labels.get(m)??[]).sort((a,b)=>a-b);return tourId?icon(numbers):L.divIcon({className:"journey-cluster",html:`<span>${group.getChildCount()}</span>`,iconSize:[46,46]});}});
+  const cluster=L.markerClusterGroup({showCoverageOnHover:false,zoomToBoundsOnClick:!tourId,spiderfyOnMaxZoom:true,spiderfyDistanceMultiplier:1.65,maxClusterRadius:tourId?100:54,animate:!reduced,spiderLegPolylineOptions:{color:colour,weight:1.5,opacity:.7},iconCreateFunction:group=>{const numbers=group.getAllChildMarkers().flatMap(m=>labels.get(m)??[]).sort((a,b)=>a-b);return tourId?icon(numbers):L.divIcon({className:"journey-cluster",html:`<span>${group.getChildCount()}</span>`,iconSize:[46,46]});}});
   const entries=route?route.groups.map(g=>({position:g.position,numbers:g.numbers,ids:g.stops.map(s=>s.place_id),dayIds:g.stops.map(s=>s.itinerary_day_id)})):places.map(p=>({position:[p.latitude,p.longitude] as [number,number],numbers:[],ids:[p.id],dayIds:[]}));
   for(const entry of entries){
    const names=[...new Set(entry.ids.map(id=>catalogue.places.find(p=>p.id===id)?.name).filter(Boolean))].join(" · "),marker=L.marker(entry.position,{icon:icon(entry.numbers),title:names,alt:names,keyboard:true,opacity:activeDay&&!entry.dayIds.includes(activeDay)?.3:1});
@@ -45,7 +45,7 @@ export default function PublicMapCanvas(props:CanvasProps){
  const place=catalogue.places.find(p=>p.id===selectedPlace),photo=catalogue.media.find(m=>m.id===place?.cover_media_id&&m.alt_text.trim());
  return <MapContainer center={center} zoom={zoom} zoomControl={false} scrollWheelZoom={!preview} className="public-map-canvas">
   <TileLayer referrerPolicy="origin" attribution={'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'} url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-  <Controls positions={positions} ui={ui} sidePanel={!lockedTourId}/>
+  <Controls positions={positions} ui={ui} sidePanel={!lockedTourId&&catalogue.tours.length>0}/>
   <ClusteredPins {...props}/>
   {tour&&route&&route.points.length>1&&<Polyline key={tour.id} className="route-line" positions={route.points} pathOptions={{color:tour.route_colour,weight:5,opacity:activeDay?.2:.85}}/>}
   {tour&&activeDay&&route?.segments.filter(s=>s.dayId===activeDay).map(s=><Polyline key={`${tour.id}-${s.key}`} className="route-line route-day-line" positions={s.points} pathOptions={{color:tour.route_colour,weight:7,opacity:1}}/>)}

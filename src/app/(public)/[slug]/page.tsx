@@ -1,5 +1,4 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
+import { notFound,redirect } from "next/navigation";
 import { getPage,getCatalogue,readPublished } from "@/lib/public/content";
 import { metadataFor,jsonLd } from "@/lib/public/seo";
 import { getPublicSettings } from "@/lib/settings/public";
@@ -9,7 +8,7 @@ import { Photo } from "@/components/public/photo";
 import { Inquiry,PublicReviewForm } from "@/components/public/inquiry";
 export async function generateMetadata({params}:{params:Promise<{slug:string}>}){const {slug}=await params;return metadataFor(`/${slug}`,await getPage(slug));}
 export default async function Page({params}:{params:Promise<{slug:string}>}){
-  const {slug}=await params,[page,s]=await Promise.all([getPage(slug),getPublicSettings()]);if(!page||!s)notFound();
+  const {slug}=await params;if(slug==="home")redirect("/");const [page,s]=await Promise.all([getPage(slug),getPublicSettings()]);if(!page||!s)notFound();
   let extra:React.ReactNode=null;
   if(slug==="about"){
     const [team,vehicles,media]=await Promise.all([readPublished("team_members"),readPublished("vehicles"),readPublished("media")]);
@@ -25,5 +24,5 @@ export default async function Page({params}:{params:Promise<{slug:string}>}){
     const [c,privacy]=await Promise.all([getCatalogue(),getPage("privacy")]);
     extra=<><section className="public-section contact-details">{s.contactEmail&&<a href={`mailto:${s.contactEmail}`}>{s.contactEmail}</a>}{s.phone&&<a href={`tel:${s.phone.replace(/[^+0-9]/g,"")}`}>{s.phone}</a>}{s.address&&<address>{s.address}</address>}</section>{s.inquiriesEnabled&&<Inquiry ui={s.ui} tours={c.tours.map(t=>({id:t.id,title:t.title}))} privacy={!!privacy}/>}</>;
   }
-  return <main id="main-content" className="public-content"><PageHeader title={page.title}/><Sections page={page}/>{extra}{slug==="contact"&&s.sltda&&<section className="public-section trust-badge"><p>{s.ui.sltdaLabel}</p><strong>{s.sltda}</strong></section>}{slug==="home"&&<Link href="/">{s.ui.backHome}</Link>}</main>;
+  return <main id="main-content" className="public-content"><PageHeader title={page.title}/><Sections page={page}/>{extra}{slug==="contact"&&s.sltda&&<section className="public-section trust-badge"><p>{s.ui.sltdaLabel}</p><strong>{s.sltda}</strong></section>}</main>;
 }
