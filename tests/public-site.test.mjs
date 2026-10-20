@@ -78,11 +78,22 @@ test("map routes pass their animation class to Leaflet at creation",()=>{
   const paths=[],element=({children})=>React.createElement("div",null,children);
   const Map=sourceModule("src/components/public/map-canvas.tsx",{
     "react-leaflet":{MapContainer:element,TileLayer:()=>null,Marker:element,Popup:element,Polyline:props=>{paths.push(props);return null;},useMap:()=>({})},
-    "leaflet":{divIcon:()=>({})},"leaflet/dist/leaflet.css":{},"next/link":({children})=>React.createElement("a",null,children)
+    "leaflet":{divIcon:()=>({})},"leaflet/dist/leaflet.css":{},"leaflet.markercluster":{},"leaflet.markercluster/dist/MarkerCluster.css":{},"next/link":({children})=>React.createElement("a",null,children)
   }).default;
   const catalogue={places:[],tours:[{id,title:"Route",route_colour:"#0B5FD6"}],days:[],media:[],stops:[0,1].map(i=>({id:String(i),tour_id:id,place_id:String(i),latitude:7+i,longitude:80,sort_order:i}))};
-  renderToStaticMarkup(React.createElement(Map,{catalogue,ui:{},center:[7,80],zoom:7,visibleRoutes:[id]}));
+  renderToStaticMarkup(React.createElement(Map,{catalogue,ui:{},center:[7,80],zoom:7,tourId:id,activeDay:null,places:[],onPlace:()=>{}}));
   assert.equal(paths.length,1);assert.equal(paths[0].className,"route-line");assert.equal(paths[0].pathOptions.color,"#0B5FD6");
+  paths.length=0;renderToStaticMarkup(React.createElement(Map,{catalogue,ui:{},center:[7,80],zoom:7,tourId:null,activeDay:null,places:[],onPlace:()=>{}}));assert.equal(paths.length,0);
+});
+test("route model merges repeat and nearby visits without joining disconnected day segments",()=>{
+ const {routeModel,mapSelection,routeInk}=sourceModule("src/lib/public/map-model.ts");
+ const c={tours:[{id:"a",slug:"island"},{id:"b",slug:"coast"}],days:[{id:"d1",tour_id:"a",day_number:1},{id:"d2",tour_id:"a",day_number:2}],places:[],stops:[
+  {id:"1",tour_id:"a",place_id:"p",latitude:7,longitude:80,sort_order:1,itinerary_day_id:"d1"},
+  {id:"2",tour_id:"a",place_id:"q",latitude:8,longitude:81,sort_order:2,itinerary_day_id:"d2"},
+  {id:"3",tour_id:"a",place_id:"p",latitude:7.0001,longitude:80,sort_order:3,itinerary_day_id:"d1"},
+  {id:"4",tour_id:"b",place_id:"z",latitude:6,longitude:79,sort_order:1,itinerary_day_id:"other"}]};
+ const route=routeModel(c,"a");assert.equal(route.stops.length,3);assert.equal(route.groups.length,2);assert.deepEqual(route.groups[0].numbers,[1,3]);assert.equal(route.segments.filter(s=>s.dayId==="d1").length,1);assert.equal(route.segments[1].points[0][0],8);
+ assert.equal(mapSelection(c,"island","2").day.id,"d2");assert.equal(mapSelection(c,"coast","2","a").tour.id,"a");assert.equal(mapSelection(c,"missing","2").tour,null);assert.equal(mapSelection(c,"island","99").day,null);assert.equal(routeInk("#0B5FD6"),"#ffffff");assert.equal(routeInk("#FF7A45"),"#111111");
 });
 
 test("both palettes validate button, card and muted-text contrast",()=>{
