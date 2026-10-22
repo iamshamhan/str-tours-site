@@ -1,3 +1,52 @@
 "use client";
-import { useId,useRef } from "react";
-export function ConfirmButton({onConfirm,disabled=false,label="Delete",message="This permanently deletes the record and its child content."}:{onConfirm:()=>void;disabled?:boolean;label?:string;message?:string}){const ref=useRef<HTMLDialogElement>(null),id=useId();return <><button type="button" className="admin-button" disabled={disabled} onClick={()=>ref.current?.showModal()}>{label}</button><dialog ref={ref} className="admin-confirm-dialog" aria-labelledby={id}><h2 id={id}>Delete this item?</h2><p>{message}</p><div><button type="button" className="admin-button" autoFocus onClick={()=>ref.current?.close()}>Keep it</button><button type="button" className="admin-button danger-button" onClick={()=>{ref.current?.close();onConfirm();}}>Delete permanently</button></div></dialog></>;}
+import { useId, useRef } from "react";
+export function ConfirmButton({
+  onConfirm,
+  disabled = false,
+  label = "Delete",
+  message = "This permanently deletes the record and its child content.",
+}: {
+  onConfirm: () => void;
+  disabled?: boolean;
+  label?: string;
+  message?: string;
+}) {
+  const ref = useRef<HTMLDialogElement>(null),
+    id = useId();
+  return (
+    <>
+      <button
+        type="button"
+        className="admin-button"
+        disabled={disabled}
+        onClick={() => ref.current?.showModal()}
+      >
+        {label}
+      </button>
+      <dialog ref={ref} className="admin-confirm-dialog" aria-labelledby={id}>
+        <h2 id={id}>Delete this item?</h2>
+        <p>{message}</p>
+        <div>
+          <button
+            type="button"
+            className="admin-button"
+            autoFocus
+            onClick={() => ref.current?.close()}
+          >
+            Keep it
+          </button>
+          <button
+            type="button"
+            className="admin-button danger-button"
+            onClick={() => {
+              ref.current?.close();
+              onConfirm();
+            }}
+          >
+            Delete permanently
+          </button>
+        </div>
+      </dialog>
+    </>
+  );
+}

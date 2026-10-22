@@ -1,2 +1,4 @@
 import { permanentRedirect } from "next/navigation";
-export default function PlacesAlias(){permanentRedirect("/destinations");}
+export default function PlacesAlias() {
+  permanentRedirect("/destinations");
+}

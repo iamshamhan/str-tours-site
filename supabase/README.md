@@ -5,25 +5,25 @@ No service role key was used or requested.
 
 ## Tables in plain language
 
-| Table | What it stores |
-| --- | --- |
-| site_settings | Editable business identity, USD default, contact details, theme, footer text and default SEO. JSON objects are grouped by slug. Public editorial settings only; never put secrets or private notes here. |
-| nav_items | Navigation labels, links, placement and display order. |
-| footer_links | Footer links, editable group names and display order. |
-| pages | Page titles, slugs, publication flags and SEO objects. |
-| page_sections | Reorderable blocks belonging to pages; each has a type such as hero or rich_text and a JSON content object. |
-| media | File paths, captions, alternative text, dimensions and publication flags. Actual files belong in Supabase Storage; buckets and object policies are a later phase. |
-| tours | Tour descriptions, duration, optional starting price, currency, highlights, inclusions, exclusions, image and SEO. No payments or inventory. |
-| itinerary_days | A tour's daily plan, with a unique day number within that tour. |
-| places | Destinations with descriptions, region, approximate coordinates, image and SEO. |
-| route_stops | Ordered map stops linking a tour, one of that tour's itinerary days, and a place. Coordinates can differ from the place centre. |
-| vehicles | Vehicle descriptions, capacity, features and image. |
-| team_members | Public staff profiles, roles, languages, biographies and photos. |
-| reviews | Testimonials with rating, pending/approved status, optional tour and optional HTTPS source link. |
-| blog_posts | Journal titles, excerpts, JSON body, author, image, publication date and SEO. |
-| faqs | Questions and answers grouped by category, optionally linked to a tour. |
-| inquiries | Visitor contact details, requested tour/date/group size, message, new/replied/booked status and private admin notes. Booked is a workflow label, not a payment or reservation system. |
-| admin_users | The single authorized Auth user ID. Credentials stay in Supabase Auth. |
+| Table          | What it stores                                                                                                                                                                                           |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| site_settings  | Editable business identity, USD default, contact details, theme, footer text and default SEO. JSON objects are grouped by slug. Public editorial settings only; never put secrets or private notes here. |
+| nav_items      | Navigation labels, links, placement and display order.                                                                                                                                                   |
+| footer_links   | Footer links, editable group names and display order.                                                                                                                                                    |
+| pages          | Page titles, slugs, publication flags and SEO objects.                                                                                                                                                   |
+| page_sections  | Reorderable blocks belonging to pages; each has a type such as hero or rich_text and a JSON content object.                                                                                              |
+| media          | File paths, captions, alternative text, dimensions and publication flags. Actual files belong in Supabase Storage; buckets and object policies are a later phase.                                        |
+| tours          | Tour descriptions, duration, optional starting price, currency, highlights, inclusions, exclusions, image and SEO. No payments or inventory.                                                             |
+| itinerary_days | A tour's daily plan, with a unique day number within that tour.                                                                                                                                          |
+| places         | Destinations with descriptions, region, approximate coordinates, image and SEO.                                                                                                                          |
+| route_stops    | Ordered map stops linking a tour, one of that tour's itinerary days, and a place. Coordinates can differ from the place centre.                                                                          |
+| vehicles       | Vehicle descriptions, capacity, features and image.                                                                                                                                                      |
+| team_members   | Public staff profiles, roles, languages, biographies and photos.                                                                                                                                         |
+| reviews        | Testimonials with rating, pending/approved status, optional tour and optional HTTPS source link.                                                                                                         |
+| blog_posts     | Journal titles, excerpts, JSON body, author, image, publication date and SEO.                                                                                                                            |
+| faqs           | Questions and answers grouped by category, optionally linked to a tour.                                                                                                                                  |
+| inquiries      | Visitor contact details, requested tour/date/group size, message, new/replied/booked status and private admin notes. Booked is a workflow label, not a payment or reservation system.                    |
+| admin_users    | The single authorized Auth user ID. Credentials stay in Supabase Auth.                                                                                                                                   |
 
 All 15 editorial tables have UUID IDs, unique slugs, published flags, sort_order,
 is_placeholder and created_at/updated_at. Inquiries and admin_users intentionally
@@ -57,6 +57,7 @@ Run `supabase/seed.sql` after all migrations. It is already applied here.
 Re-running it preserves existing edits via ON CONFLICT DO NOTHING.
 
 Seed contents:
+
 - Business name Visit Sri Lanka; currency USD.
 - Editable WhatsApp/phone +94763871280.
 - Editable contact email shamhanahamed4@gmail.com (uses the supplied admin email as the initial business contact).
@@ -94,6 +95,7 @@ these tables or add an admin screen.
 ## Migration files / manual fallback
 
 For a fresh project, run these complete files in order in Supabase SQL Editor:
+
 1. `migrations/20261016170125_content_schema.sql`
 2. `migrations/20261016170144_content_access_policies.sql`
 3. `migrations/20261016170425_restrict_platform_trigger_function.sql`
@@ -111,6 +113,7 @@ CLI migration history; reconcile that history before later CLI pushes.
 Run `npm run lint`, `npm run typecheck`, and `npm run build`.
 
 Database checks completed on the connected project:
+
 - All 17 tables have RLS; migrations and seed applied.
 - Seed re-run does not duplicate records.
 - `tests/rls_smoke.sql` exercises anonymous, non-admin and admin roles, draft parents,

@@ -1,0 +1,11 @@
+node_modules
+.next
+.next-smoke
+.vercel
+playwright-report
+test-results
+coverage
+package-lock.json
+# Applied migrations are immutable and must match the remote ledger.
+supabase/migrations
+.env*

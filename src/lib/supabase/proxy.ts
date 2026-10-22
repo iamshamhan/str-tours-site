@@ -35,7 +35,9 @@ export async function updateAdminSession(request: NextRequest) {
         const previous = response;
         response = NextResponse.next({ request });
         previous.cookies.getAll().forEach((cookie) => response.cookies.set(cookie));
-        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options),
+        );
         Object.entries(headers).forEach(([name, value]) => response.headers.set(name, value));
       },
     },
@@ -45,10 +47,16 @@ export async function updateAdminSession(request: NextRequest) {
   // Never authorize from unverified getSession() or browser-supplied metadata.
   let authorized = false;
   try {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
     if (!error && user) {
-      const { data, error: membershipError } = await supabase.from("admin_users")
-        .select("user_id").eq("user_id", user.id).maybeSingle();
+      const { data, error: membershipError } = await supabase
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
       authorized = !membershipError && !!data;
     }
     if (!authorized) await supabase.auth.signOut({ scope: "local" });

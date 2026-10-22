@@ -1,19 +1,367 @@
 "use client";
 import { MediaPicker } from "./media-library";
 import { Reorder } from "./editor-fields";
-import { sectionContents,type Section,type SectionType } from "@/lib/editor/schema";
-export function SectionsEditor({sections,onChange,onDelete,tours=[],places=[]}:{sections:Section[];onChange:(v:Section[])=>void;onDelete:(id:string)=>void;tours?:{value:string;label:string}[];places?:{id:string;name:string}[]}){
-  function update(index:number,patch:Partial<Section>){onChange(sections.map((s,i)=>i===index?{...s,...patch}:s));}
-  return <section className="space-y-4"><h2 className="text-xl font-semibold">Page sections</h2><div data-sort-group className="space-y-4">{sections.map((s,i)=><article key={s.id} data-sort-index={i} className="space-y-3 rounded-xl border bg-white p-4"><Reorder index={i} total={sections.length} move={(from,to)=>{const next=[...sections];next.splice(to,0,next.splice(from,1)[0]);onChange(next);}} remove={()=>{onDelete(s.id);onChange(sections.filter(r=>r.id!==s.id));}}/>
-    <label className="block">Section type<select className="admin-input" value={s.type} onChange={e=>{const type=e.target.value as SectionType;update(i,{type,content:sectionContents[type].parse({})});}}>{Object.keys(sectionContents).map(type=><option key={type}>{type}</option>)}</select></label>
-    <label className="flex gap-2"><input type="checkbox" checked={s.published} onChange={e=>update(i,{published:e.target.checked})}/>Visible</label>
-    {(s.type==="hero"?["eyebrow","heading","body","cta_label","cta_href","secondary_label","secondary_href","scroll_label"]:s.type==="guide_story"?["eyebrow","heading","body"]:s.type==="gallery"?["heading"]:["why_us","stats","how_it_works","search_bar","rich_text"].includes(s.type)?["heading","body"]:["heading","body","cta_label","cta_href"]).map(key=><label key={key} className="block capitalize">{key.replaceAll("_"," ")}<textarea className="admin-input" rows={key==="body"?4:1} value={String(s.content[key]??"")} onChange={e=>update(i,{content:{...s.content,[key]:e.target.value}})}/></label>)}
-    {(s.type==="hero"||s.type==="guide_story")&&<div><p>{s.content.image?"Image selected":"No image"}</p><MediaPicker imagesOnly onSelect={m=>update(i,{content:{...s.content,image:m.id}})}/><button className="admin-button" type="button" onClick={()=>update(i,{content:{...s.content,image:null}})}>Remove image</button></div>}
-    {s.type==="hero"&&<div><p>Optional background video (use a poster image too): {s.content.video?"Selected":"None"}</p><MediaPicker onSelect={m=>{if(m.mime_type.startsWith("video/"))update(i,{content:{...s.content,video:m.id}});}}/><button type="button" className="admin-button" onClick={()=>update(i,{content:{...s.content,video:null}})}>Remove video</button><p className="admin-helper">Use a short, silent video. Reduced-motion visitors see the poster instead.</p></div>}
-    {["featured_tours","destinations","reviews","faq"].includes(s.type)&&<label className="block">Maximum items<input type="number" min={1} max={24} className="admin-input" value={Number(s.content.limit??6)} onChange={e=>update(i,{content:{...s.content,limit:Number(e.target.value)}})}/></label>}
-    {s.type==="featured_tours"&&<details><summary>Choose tours (empty selects published tours automatically)</summary>{tours.map(t=><label key={t.value} className="flex gap-3"><input type="checkbox" checked={((s.content.tour_ids??[]) as string[]).includes(t.value)} onChange={e=>update(i,{content:{...s.content,tour_ids:e.target.checked?[...((s.content.tour_ids??[]) as string[]),t.value]:((s.content.tour_ids??[]) as string[]).filter(v=>v!==t.value)}})}/>{t.label}</label>)}</details>}
-    {s.type==="destinations"&&<details><summary>Choose destinations (empty selects published places automatically)</summary>{places.map(p=><label key={p.id} className="flex gap-3"><input type="checkbox" checked={((s.content.place_ids??[]) as string[]).includes(p.id)} onChange={e=>update(i,{content:{...s.content,place_ids:e.target.checked?[...((s.content.place_ids??[]) as string[]),p.id]:((s.content.place_ids??[]) as string[]).filter(v=>v!==p.id)}})}/>{p.name}</label>)}<div className="space-y-3">{((s.content.place_ids??[]) as string[]).map((id,n)=><div key={id}><p>{places.find(p=>p.id===id)?.name??"Unavailable place"}</p><Reorder index={n} total={(s.content.place_ids as string[]).length} move={(from,to)=>{const next=[...(s.content.place_ids as string[])];next.splice(to,0,next.splice(from,1)[0]);update(i,{content:{...s.content,place_ids:next}});}} remove={()=>update(i,{content:{...s.content,place_ids:(s.content.place_ids as string[]).filter(v=>v!==id)}})}/></div>)}</div></details>}
-    {["why_us","stats","how_it_works"].includes(s.type)&&<div className="space-y-4">{((s.content.items??[]) as {title:string;body:string}[]).map((item,n)=><div key={n}><label>Title<input className="admin-input" value={item.title} onChange={e=>update(i,{content:{...s.content,items:(s.content.items as typeof item[]).map((v,k)=>k===n?{...v,title:e.target.value}:v)}})}/></label><label>Body<textarea className="admin-input" value={item.body} onChange={e=>update(i,{content:{...s.content,items:(s.content.items as typeof item[]).map((v,k)=>k===n?{...v,body:e.target.value}:v)}})}/></label><button type="button" className="admin-button" onClick={()=>update(i,{content:{...s.content,items:(s.content.items as typeof item[]).filter((_,k)=>k!==n)}})}>Remove item</button></div>)}<button type="button" className="admin-button" onClick={()=>update(i,{content:{...s.content,items:[...((s.content.items??[]) as object[]),{title:"",body:""}]}})}>Add item</button></div>}
-    {s.type==="gallery"&&<div className="space-y-2">{((s.content.photos??[]) as string[]).map((id,n)=><div key={id}>Photo {n+1}<button className="admin-button" type="button" onClick={()=>update(i,{content:{...s.content,photos:(s.content.photos as string[]).filter(v=>v!==id)}})}>Remove</button>{n>0&&<button className="admin-button" type="button" onClick={()=>{const list=[...(s.content.photos as string[])];[list[n-1],list[n]]=[list[n],list[n-1]];update(i,{content:{...s.content,photos:list}});}}>Move up</button>}</div>)}<MediaPicker imagesOnly onSelect={m=>update(i,{content:{...s.content,photos:[...new Set([...((s.content.photos??[]) as string[]),m.id])]}})}/></div>}
-  </article>)}</div><button type="button" className="admin-button" disabled={sections.length>=100} onClick={()=>onChange([...sections,{id:crypto.randomUUID(),type:"rich_text",published:false,content:{heading:"",body:""}}])}>Add section</button></section>;
+import { sectionContents, type Section, type SectionType } from "@/lib/editor/schema";
+export function SectionsEditor({
+  sections,
+  onChange,
+  onDelete,
+  tours = [],
+  places = [],
+}: {
+  sections: Section[];
+  onChange: (v: Section[]) => void;
+  onDelete: (id: string) => void;
+  tours?: { value: string; label: string }[];
+  places?: { id: string; name: string }[];
+}) {
+  function update(index: number, patch: Partial<Section>) {
+    onChange(sections.map((s, i) => (i === index ? { ...s, ...patch } : s)));
+  }
+  return (
+    <section className="space-y-4">
+      <h2 className="text-xl font-semibold">Page sections</h2>
+      <div data-sort-group className="space-y-4">
+        {sections.map((s, i) => (
+          <article
+            key={s.id}
+            data-sort-index={i}
+            className="space-y-3 rounded-xl border bg-white p-4"
+          >
+            <Reorder
+              index={i}
+              total={sections.length}
+              move={(from, to) => {
+                const next = [...sections];
+                next.splice(to, 0, next.splice(from, 1)[0]);
+                onChange(next);
+              }}
+              remove={() => {
+                onDelete(s.id);
+                onChange(sections.filter((r) => r.id !== s.id));
+              }}
+            />
+            <label className="block">
+              Section type
+              <select
+                className="admin-input"
+                value={s.type}
+                onChange={(e) => {
+                  const type = e.target.value as SectionType;
+                  update(i, { type, content: sectionContents[type].parse({}) });
+                }}
+              >
+                {Object.keys(sectionContents).map((type) => (
+                  <option key={type}>{type}</option>
+                ))}
+              </select>
+            </label>
+            <label className="flex gap-2">
+              <input
+                type="checkbox"
+                checked={s.published}
+                onChange={(e) => update(i, { published: e.target.checked })}
+              />
+              Visible
+            </label>
+            {(s.type === "hero"
+              ? [
+                  "eyebrow",
+                  "heading",
+                  "body",
+                  "cta_label",
+                  "cta_href",
+                  "secondary_label",
+                  "secondary_href",
+                  "scroll_label",
+                ]
+              : s.type === "guide_story"
+                ? ["eyebrow", "heading", "body"]
+                : s.type === "gallery"
+                  ? ["heading"]
+                  : ["why_us", "stats", "how_it_works", "search_bar", "rich_text"].includes(s.type)
+                    ? ["heading", "body"]
+                    : ["heading", "body", "cta_label", "cta_href"]
+            ).map((key) => (
+              <label key={key} className="block capitalize">
+                {key.replaceAll("_", " ")}
+                <textarea
+                  className="admin-input"
+                  rows={key === "body" ? 4 : 1}
+                  value={String(s.content[key] ?? "")}
+                  onChange={(e) => update(i, { content: { ...s.content, [key]: e.target.value } })}
+                />
+              </label>
+            ))}
+            {(s.type === "hero" || s.type === "guide_story") && (
+              <div>
+                <p>{s.content.image ? "Image selected" : "No image"}</p>
+                <MediaPicker
+                  imagesOnly
+                  onSelect={(m) => update(i, { content: { ...s.content, image: m.id } })}
+                />
+                <button
+                  className="admin-button"
+                  type="button"
+                  onClick={() => update(i, { content: { ...s.content, image: null } })}
+                >
+                  Remove image
+                </button>
+              </div>
+            )}
+            {s.type === "hero" && (
+              <div>
+                <p>
+                  Optional background video (use a poster image too):{" "}
+                  {s.content.video ? "Selected" : "None"}
+                </p>
+                <MediaPicker
+                  onSelect={(m) => {
+                    if (m.mime_type.startsWith("video/"))
+                      update(i, { content: { ...s.content, video: m.id } });
+                  }}
+                />
+                <button
+                  type="button"
+                  className="admin-button"
+                  onClick={() => update(i, { content: { ...s.content, video: null } })}
+                >
+                  Remove video
+                </button>
+                <p className="admin-helper">
+                  Use a short, silent video. Reduced-motion visitors see the poster instead.
+                </p>
+              </div>
+            )}
+            {["featured_tours", "destinations", "reviews", "faq"].includes(s.type) && (
+              <label className="block">
+                Maximum items
+                <input
+                  type="number"
+                  min={1}
+                  max={24}
+                  className="admin-input"
+                  value={Number(s.content.limit ?? 6)}
+                  onChange={(e) =>
+                    update(i, { content: { ...s.content, limit: Number(e.target.value) } })
+                  }
+                />
+              </label>
+            )}
+            {s.type === "featured_tours" && (
+              <details>
+                <summary>Choose tours (empty selects published tours automatically)</summary>
+                {tours.map((t) => (
+                  <label key={t.value} className="flex gap-3">
+                    <input
+                      type="checkbox"
+                      checked={((s.content.tour_ids ?? []) as string[]).includes(t.value)}
+                      onChange={(e) =>
+                        update(i, {
+                          content: {
+                            ...s.content,
+                            tour_ids: e.target.checked
+                              ? [...((s.content.tour_ids ?? []) as string[]), t.value]
+                              : ((s.content.tour_ids ?? []) as string[]).filter(
+                                  (v) => v !== t.value,
+                                ),
+                          },
+                        })
+                      }
+                    />
+                    {t.label}
+                  </label>
+                ))}
+              </details>
+            )}
+            {s.type === "destinations" && (
+              <details>
+                <summary>
+                  Choose destinations (empty selects published places automatically)
+                </summary>
+                {places.map((p) => (
+                  <label key={p.id} className="flex gap-3">
+                    <input
+                      type="checkbox"
+                      checked={((s.content.place_ids ?? []) as string[]).includes(p.id)}
+                      onChange={(e) =>
+                        update(i, {
+                          content: {
+                            ...s.content,
+                            place_ids: e.target.checked
+                              ? [...((s.content.place_ids ?? []) as string[]), p.id]
+                              : ((s.content.place_ids ?? []) as string[]).filter((v) => v !== p.id),
+                          },
+                        })
+                      }
+                    />
+                    {p.name}
+                  </label>
+                ))}
+                <div className="space-y-3">
+                  {((s.content.place_ids ?? []) as string[]).map((id, n) => (
+                    <div key={id}>
+                      <p>{places.find((p) => p.id === id)?.name ?? "Unavailable place"}</p>
+                      <Reorder
+                        index={n}
+                        total={(s.content.place_ids as string[]).length}
+                        move={(from, to) => {
+                          const next = [...(s.content.place_ids as string[])];
+                          next.splice(to, 0, next.splice(from, 1)[0]);
+                          update(i, { content: { ...s.content, place_ids: next } });
+                        }}
+                        remove={() =>
+                          update(i, {
+                            content: {
+                              ...s.content,
+                              place_ids: (s.content.place_ids as string[]).filter((v) => v !== id),
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
+            {["why_us", "stats", "how_it_works"].includes(s.type) && (
+              <div className="space-y-4">
+                {((s.content.items ?? []) as { title: string; body: string }[]).map((item, n) => (
+                  <div key={n}>
+                    <label>
+                      Title
+                      <input
+                        className="admin-input"
+                        value={item.title}
+                        onChange={(e) =>
+                          update(i, {
+                            content: {
+                              ...s.content,
+                              items: (s.content.items as (typeof item)[]).map((v, k) =>
+                                k === n ? { ...v, title: e.target.value } : v,
+                              ),
+                            },
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      Body
+                      <textarea
+                        className="admin-input"
+                        value={item.body}
+                        onChange={(e) =>
+                          update(i, {
+                            content: {
+                              ...s.content,
+                              items: (s.content.items as (typeof item)[]).map((v, k) =>
+                                k === n ? { ...v, body: e.target.value } : v,
+                              ),
+                            },
+                          })
+                        }
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="admin-button"
+                      onClick={() =>
+                        update(i, {
+                          content: {
+                            ...s.content,
+                            items: (s.content.items as (typeof item)[]).filter((_, k) => k !== n),
+                          },
+                        })
+                      }
+                    >
+                      Remove item
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="admin-button"
+                  onClick={() =>
+                    update(i, {
+                      content: {
+                        ...s.content,
+                        items: [...((s.content.items ?? []) as object[]), { title: "", body: "" }],
+                      },
+                    })
+                  }
+                >
+                  Add item
+                </button>
+              </div>
+            )}
+            {s.type === "gallery" && (
+              <div className="space-y-2">
+                {((s.content.photos ?? []) as string[]).map((id, n) => (
+                  <div key={id}>
+                    Photo {n + 1}
+                    <button
+                      className="admin-button"
+                      type="button"
+                      onClick={() =>
+                        update(i, {
+                          content: {
+                            ...s.content,
+                            photos: (s.content.photos as string[]).filter((v) => v !== id),
+                          },
+                        })
+                      }
+                    >
+                      Remove
+                    </button>
+                    {n > 0 && (
+                      <button
+                        className="admin-button"
+                        type="button"
+                        onClick={() => {
+                          const list = [...(s.content.photos as string[])];
+                          [list[n - 1], list[n]] = [list[n], list[n - 1]];
+                          update(i, { content: { ...s.content, photos: list } });
+                        }}
+                      >
+                        Move up
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <MediaPicker
+                  imagesOnly
+                  onSelect={(m) =>
+                    update(i, {
+                      content: {
+                        ...s.content,
+                        photos: [...new Set([...((s.content.photos ?? []) as string[]), m.id])],
+                      },
+                    })
+                  }
+                />
+              </div>
+            )}
+          </article>
+        ))}
+      </div>
+      <button
+        type="button"
+        className="admin-button"
+        disabled={sections.length >= 100}
+        onClick={() =>
+          onChange([
+            ...sections,
+            {
+              id: crypto.randomUUID(),
+              type: "rich_text",
+              published: false,
+              content: { heading: "", body: "" },
+            },
+          ])
+        }
+      >
+        Add section
+      </button>
+    </section>
+  );
 }

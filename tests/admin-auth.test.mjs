@@ -20,7 +20,16 @@ test("throttle stays bounded instead of evicting blocked clients", () => {
 });
 test("login validation rejects invalid input and preserves password whitespace", () => {
   assert.equal(loginSchema.safeParse({ email: "invalid", password: "x" }).success, false);
-  assert.equal(loginSchema.safeParse({ email: "test@example.invalid", password: "" }).success, false);
-  assert.equal(loginSchema.safeParse({ email: "test@example.invalid", password: "x".repeat(257) }).success, false);
-  assert.equal(loginSchema.parse({ email: "test@example.invalid", password: " space matters " }).password, " space matters ");
+  assert.equal(
+    loginSchema.safeParse({ email: "test@example.invalid", password: "" }).success,
+    false,
+  );
+  assert.equal(
+    loginSchema.safeParse({ email: "test@example.invalid", password: "x".repeat(257) }).success,
+    false,
+  );
+  assert.equal(
+    loginSchema.parse({ email: "test@example.invalid", password: " space matters " }).password,
+    " space matters ",
+  );
 });

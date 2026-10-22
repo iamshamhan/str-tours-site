@@ -11,15 +11,20 @@ import { verifyTurnstile } from "@/lib/security/turnstile";
 export async function loginAction(input: unknown): Promise<{ error?: string; ok?: boolean }> {
   const requestHeaders = await headers();
   // Vercel overwrites its own forwarding header. Never trust arbitrary X-Forwarded-For.
-  const address = process.env.VERCEL === "1"
-    ? requestHeaders.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || "unknown"
-    : "local-shared";
+  const address =
+    process.env.VERCEL === "1"
+      ? requestHeaders.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+      : "local-shared";
   const key = createHash("sha256").update(address).digest("hex");
-  if (!allowLoginAttempt(key)) return { error: "Too many sign-in attempts. Please wait 10 minutes and try again." };
+  if (!allowLoginAttempt(key))
+    return { error: "Too many sign-in attempts. Please wait 10 minutes and try again." };
   const parsed = loginSchema.safeParse(input);
   if (!parsed.success) return { error: LOGIN_ERROR };
-  const token=input&&typeof input==="object"&&"challengeToken" in input?input.challengeToken:undefined;
-  if(!await verifyTurnstile(token,"admin_login"))return {error:LOGIN_ERROR};
+  const token =
+    input && typeof input === "object" && "challengeToken" in input
+      ? input.challengeToken
+      : undefined;
+  if (!(await verifyTurnstile(token, "admin_login"))) return { error: LOGIN_ERROR };
 
   try {
     const supabase = await createClient();
@@ -28,8 +33,11 @@ export async function loginAction(input: unknown): Promise<{ error?: string; ok?
       await clearAdminSession();
       return { error: LOGIN_ERROR };
     }
-    const { data: admin, error: membershipError } = await supabase.from("admin_users")
-      .select("user_id").eq("user_id", data.user.id).maybeSingle();
+    const { data: admin, error: membershipError } = await supabase
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id", data.user.id)
+      .maybeSingle();
     if (membershipError || !admin) {
       await clearAdminSession();
       return { error: LOGIN_ERROR };

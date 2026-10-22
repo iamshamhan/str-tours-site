@@ -3,21 +3,277 @@ import { useRef } from "react";
 import { Controller, type Control } from "react-hook-form";
 import { MediaPicker } from "./media-library";
 import type { Field } from "@/lib/editor/schema";
-export type Values=Record<string,unknown>;
-export function EditorFields({fields,control}:{fields:Field[];control:Control<Values>}) {
-  const group=(f:Field)=>f.name.startsWith("seo.")?"Search previews":f.type==="image"||f.type==="gallery"?"Photography":f.type==="long"?"The story":["title","name","author_name","slug","published","question","status"].includes(f.name)?"The essentials":"Details";
-  const groups=[...new Set(fields.map(group))];
-  return <div className="space-y-6">{groups.map(label=><section key={label} className="editor-field-group"><h2>{label}</h2><div className="grid gap-5 sm:grid-cols-2">{fields.filter(f=>group(f)===label).map(f=><Controller key={f.name} name={f.name} control={control} render={({field,fieldState})=><div className={f.type==="long"||f.type==="gallery"?"sm:col-span-2":""}>
-    <label className="block text-sm font-medium" htmlFor={f.name}>{f.label}</label>
-    {f.type==="image" || f.type==="gallery" ? <div className="space-y-2">
-      {[...new Set(f.type==="gallery" ? (field.value as string[]??[]) : field.value?[String(field.value)]:[])].map((id,i)=><div key={id} className="flex items-center gap-2 text-sm"><span>Image {i+1} · {id.slice(0,8)}</span><button type="button" className="admin-button" onClick={()=>field.onChange(f.type==="gallery"?(field.value as string[]).filter(v=>v!==id):null)}>Remove</button>{f.type==="gallery" && i>0 && <button type="button" className="admin-button" onClick={()=>{const v=[...new Set(field.value as string[])];[v[i-1],v[i]]=[v[i],v[i-1]];field.onChange(v);}}>Move up</button>}</div>)}
-      <MediaPicker imagesOnly onSelect={item=>field.onChange(f.type==="gallery"?[...new Set([...(field.value as string[]??[]),item.id])]:item.id)}/>
-    </div> : f.type==="checkbox" ? <input id={f.name} name={field.name} ref={field.ref} onBlur={field.onBlur} aria-invalid={!!fieldState.error} aria-describedby={fieldState.error?`${f.name}-error`:undefined} type="checkbox" checked={!!field.value} onChange={e=>field.onChange(e.target.checked)}/> : f.type==="select" ? <select id={f.name} name={field.name} ref={field.ref} onBlur={field.onBlur} aria-invalid={!!fieldState.error} aria-describedby={fieldState.error?`${f.name}-error`:undefined} className="admin-input" value={String(field.value??"")} onChange={e=>field.onChange(e.target.value || (f.nullable?null:""))}><option value="">Choose…</option>{f.options?.map(o=><option key={o.value} value={o.value}>{o.label}</option>)}</select> : f.type==="long"||f.type==="lines" ? <textarea id={f.name} name={field.name} ref={field.ref} onBlur={field.onBlur} aria-invalid={!!fieldState.error} aria-describedby={fieldState.error?`${f.name}-error`:undefined} rows={4} className="admin-input" value={f.type==="lines"?(field.value as string[]??[]).join("\n"):String(field.value??"")} onChange={e=>field.onChange(f.type==="lines"?e.target.value.split("\n"):e.target.value)} /> : <input id={f.name} name={field.name} ref={field.ref} onBlur={field.onBlur} aria-invalid={!!fieldState.error} aria-describedby={fieldState.error?`${f.name}-error`:undefined} className="admin-input" type={f.type==="number"?"number":f.type==="date"?"date":f.type==="color"?"color":"text"} step={f.type==="number"?"any":undefined} value={f.type==="date"?String(field.value??"").slice(0,10):String(field.value??"")} onChange={e=>field.onChange(f.type==="number"?(e.target.value===""&&f.nullable?null:e.target.value===""?NaN:Number(e.target.value)):e.target.value)}/>}
-    {(f.name==="slug"||f.name==="price_from"||f.name==="published"||f.type==="lines"||f.name.startsWith("seo."))&&<p className="admin-helper">{f.name==="slug"?"Used in the page URL. Keep it short and use hyphens.":f.name==="price_from"?"Leave blank until your starting price is confirmed.":f.name==="published"?"Visible on the website immediately after saving.":f.type==="lines"?"Add one item per line.":"Used when this page appears in search and social previews."}</p>}
-    {fieldState.error && <p id={`${f.name}-error`} role="alert" className="text-sm text-red-700">{fieldState.error.message}</p>}
-  </div>}/>)}</div></section>)}</div>;
+export type Values = Record<string, unknown>;
+export function EditorFields({ fields, control }: { fields: Field[]; control: Control<Values> }) {
+  const group = (f: Field) =>
+    f.name.startsWith("seo.")
+      ? "Search previews"
+      : f.type === "image" || f.type === "gallery"
+        ? "Photography"
+        : f.type === "long"
+          ? "The story"
+          : ["title", "name", "author_name", "slug", "published", "question", "status"].includes(
+                f.name,
+              )
+            ? "The essentials"
+            : "Details";
+  const groups = [...new Set(fields.map(group))];
+  return (
+    <div className="space-y-6">
+      {groups.map((label) => (
+        <section key={label} className="editor-field-group">
+          <h2>{label}</h2>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {fields
+              .filter((f) => group(f) === label)
+              .map((f) => (
+                <Controller
+                  key={f.name}
+                  name={f.name}
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <div
+                      className={f.type === "long" || f.type === "gallery" ? "sm:col-span-2" : ""}
+                    >
+                      <label className="block text-sm font-medium" htmlFor={f.name}>
+                        {f.label}
+                      </label>
+                      {f.type === "image" || f.type === "gallery" ? (
+                        <div className="space-y-2">
+                          {[
+                            ...new Set(
+                              f.type === "gallery"
+                                ? ((field.value as string[]) ?? [])
+                                : field.value
+                                  ? [String(field.value)]
+                                  : [],
+                            ),
+                          ].map((id, i) => (
+                            <div key={id} className="flex items-center gap-2 text-sm">
+                              <span>
+                                Image {i + 1} · {id.slice(0, 8)}
+                              </span>
+                              <button
+                                type="button"
+                                className="admin-button"
+                                onClick={() =>
+                                  field.onChange(
+                                    f.type === "gallery"
+                                      ? (field.value as string[]).filter((v) => v !== id)
+                                      : null,
+                                  )
+                                }
+                              >
+                                Remove
+                              </button>
+                              {f.type === "gallery" && i > 0 && (
+                                <button
+                                  type="button"
+                                  className="admin-button"
+                                  onClick={() => {
+                                    const v = [...new Set(field.value as string[])];
+                                    [v[i - 1], v[i]] = [v[i], v[i - 1]];
+                                    field.onChange(v);
+                                  }}
+                                >
+                                  Move up
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                          <MediaPicker
+                            imagesOnly
+                            onSelect={(item) =>
+                              field.onChange(
+                                f.type === "gallery"
+                                  ? [...new Set([...((field.value as string[]) ?? []), item.id])]
+                                  : item.id,
+                              )
+                            }
+                          />
+                        </div>
+                      ) : f.type === "checkbox" ? (
+                        <input
+                          id={f.name}
+                          name={field.name}
+                          ref={field.ref}
+                          onBlur={field.onBlur}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? `${f.name}-error` : undefined}
+                          type="checkbox"
+                          checked={!!field.value}
+                          onChange={(e) => field.onChange(e.target.checked)}
+                        />
+                      ) : f.type === "select" ? (
+                        <select
+                          id={f.name}
+                          name={field.name}
+                          ref={field.ref}
+                          onBlur={field.onBlur}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? `${f.name}-error` : undefined}
+                          className="admin-input"
+                          value={String(field.value ?? "")}
+                          onChange={(e) =>
+                            field.onChange(e.target.value || (f.nullable ? null : ""))
+                          }
+                        >
+                          <option value="">Choose…</option>
+                          {f.options?.map((o) => (
+                            <option key={o.value} value={o.value}>
+                              {o.label}
+                            </option>
+                          ))}
+                        </select>
+                      ) : f.type === "long" || f.type === "lines" ? (
+                        <textarea
+                          id={f.name}
+                          name={field.name}
+                          ref={field.ref}
+                          onBlur={field.onBlur}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? `${f.name}-error` : undefined}
+                          rows={4}
+                          className="admin-input"
+                          value={
+                            f.type === "lines"
+                              ? ((field.value as string[]) ?? []).join("\n")
+                              : String(field.value ?? "")
+                          }
+                          onChange={(e) =>
+                            field.onChange(
+                              f.type === "lines" ? e.target.value.split("\n") : e.target.value,
+                            )
+                          }
+                        />
+                      ) : (
+                        <input
+                          id={f.name}
+                          name={field.name}
+                          ref={field.ref}
+                          onBlur={field.onBlur}
+                          aria-invalid={!!fieldState.error}
+                          aria-describedby={fieldState.error ? `${f.name}-error` : undefined}
+                          className="admin-input"
+                          type={
+                            f.type === "number"
+                              ? "number"
+                              : f.type === "date"
+                                ? "date"
+                                : f.type === "color"
+                                  ? "color"
+                                  : "text"
+                          }
+                          step={f.type === "number" ? "any" : undefined}
+                          value={
+                            f.type === "date"
+                              ? String(field.value ?? "").slice(0, 10)
+                              : String(field.value ?? "")
+                          }
+                          onChange={(e) =>
+                            field.onChange(
+                              f.type === "number"
+                                ? e.target.value === "" && f.nullable
+                                  ? null
+                                  : e.target.value === ""
+                                    ? NaN
+                                    : Number(e.target.value)
+                                : e.target.value,
+                            )
+                          }
+                        />
+                      )}
+                      {(f.name === "slug" ||
+                        f.name === "price_from" ||
+                        f.name === "published" ||
+                        f.type === "lines" ||
+                        f.name.startsWith("seo.")) && (
+                        <p className="admin-helper">
+                          {f.name === "slug"
+                            ? "Used in the page URL. Keep it short and use hyphens."
+                            : f.name === "price_from"
+                              ? "Leave blank until your starting price is confirmed."
+                              : f.name === "published"
+                                ? "Visible on the website immediately after saving."
+                                : f.type === "lines"
+                                  ? "Add one item per line."
+                                  : "Used when this page appears in search and social previews."}
+                        </p>
+                      )}
+                      {fieldState.error && (
+                        <p id={`${f.name}-error`} role="alert" className="text-sm text-red-700">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
+              ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
 }
-export function Reorder({index,total,move,remove}:{index:number;total:number;move:(from:number,to:number)=>void;remove:()=>void}){
-  const start=useRef<{x:number;y:number}|null>(null);
-  return <div className="flex flex-wrap gap-2 mb-3"><button type="button" className="admin-button touch-none cursor-grab" aria-label={`Drag item ${index+1}`} onPointerDown={e=>{if(e.button!==0)return;start.current={x:e.clientX,y:e.clientY};e.currentTarget.setPointerCapture(e.pointerId);}} onPointerCancel={()=>{start.current=null;}} onPointerUp={e=>{const p=start.current;start.current=null;if(!p||Math.hypot(p.x-e.clientX,p.y-e.clientY)<8)return;const target=document.elementFromPoint(e.clientX,e.clientY)?.closest<HTMLElement>("[data-sort-index]");const group=e.currentTarget.closest("[data-sort-group]");if(target&&target.closest("[data-sort-group]")===group)move(index,Number(target.dataset.sortIndex));}}>↕</button><button type="button" className="admin-button" disabled={index===0} onClick={()=>move(index,index-1)}>Move up</button><button type="button" className="admin-button" disabled={index===total-1} onClick={()=>move(index,index+1)}>Move down</button><button type="button" className="admin-button" onClick={remove}>Remove</button></div>;
+export function Reorder({
+  index,
+  total,
+  move,
+  remove,
+}: {
+  index: number;
+  total: number;
+  move: (from: number, to: number) => void;
+  remove: () => void;
+}) {
+  const start = useRef<{ x: number; y: number } | null>(null);
+  return (
+    <div className="flex flex-wrap gap-2 mb-3">
+      <button
+        type="button"
+        className="admin-button touch-none cursor-grab"
+        aria-label={`Drag item ${index + 1}`}
+        onPointerDown={(e) => {
+          if (e.button !== 0) return;
+          start.current = { x: e.clientX, y: e.clientY };
+          e.currentTarget.setPointerCapture(e.pointerId);
+        }}
+        onPointerCancel={() => {
+          start.current = null;
+        }}
+        onPointerUp={(e) => {
+          const p = start.current;
+          start.current = null;
+          if (!p || Math.hypot(p.x - e.clientX, p.y - e.clientY) < 8) return;
+          const target = document
+            .elementFromPoint(e.clientX, e.clientY)
+            ?.closest<HTMLElement>("[data-sort-index]");
+          const group = e.currentTarget.closest("[data-sort-group]");
+          if (target && target.closest("[data-sort-group]") === group)
+            move(index, Number(target.dataset.sortIndex));
+        }}
+      >
+        ↕
+      </button>
+      <button
+        type="button"
+        className="admin-button"
+        disabled={index === 0}
+        onClick={() => move(index, index - 1)}
+      >
+        Move up
+      </button>
+      <button
+        type="button"
+        className="admin-button"
+        disabled={index === total - 1}
+        onClick={() => move(index, index + 1)}
+      >
+        Move down
+      </button>
+      <button type="button" className="admin-button" onClick={remove}>
+        Remove
+      </button>
+    </div>
+  );
 }

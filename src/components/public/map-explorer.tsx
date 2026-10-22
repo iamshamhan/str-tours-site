@@ -1,44 +1,441 @@
 "use client";
-import { useCallback,useEffect,useMemo,useRef,useState,type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { mediaUrl } from "@/lib/media/shared";
 import type { Catalogue } from "@/lib/public/types";
 import type { Ui } from "@/lib/public/ui";
-import { filterTours,tourRegions,distanceKm } from "@/lib/public/filters";
-import { routeModel,routeInk } from "@/lib/public/map-model";
+import { filterTours, tourRegions, distanceKm } from "@/lib/public/filters";
+import { routeModel, routeInk } from "@/lib/public/map-model";
 import { useMapSelection } from "./map-selection";
-export type PublicMapProps={catalogue:Catalogue;ui:Ui;center:[number,number];zoom:number;preview?:boolean;lockedTourId?:string};
-export type CanvasProps=PublicMapProps&{tourId:string|null;activeDay:string|null;places:Catalogue["places"];selectedPlace:string|null;onPlace:(id:string)=>void};
-const MapCanvas=dynamic<CanvasProps>(()=>import("./map-canvas"),{ssr:false,loading:()=> <div className="map-skeleton" aria-busy="true"/>});
-export function MapExplorer(props:PublicMapProps){
- const {catalogue,ui,preview=false,lockedTourId}=props,selection=useMapSelection(catalogue,lockedTourId),{tour,days,day}=selection;
- const container=useRef<HTMLDivElement>(null),[ready,setReady]=useState(!preview),[expanded,setExpanded]=useState(false);
- const [duration,setDuration]=useState(""),[region,setRegion]=useState(""),[month,setMonth]=useState(""),[type,setType]=useState("");
- const [selected,setSelected]=useState<{tourId:string|null;placeId:string}|null>(null);
- const selectedPlace=selected?.tourId===(tour?.id??null)?catalogue.places.find(p=>p.id===selected.placeId):null;
- const photo=catalogue.media.find(m=>m.id===selectedPlace?.cover_media_id&&m.mime_type.startsWith("image/")&&m.alt_text.trim());
- useEffect(()=>{if(!preview||!container.current)return;const observer=new IntersectionObserver(([entry])=>{if(entry.isIntersecting){setReady(true);observer.disconnect();}},{rootMargin:"300px"});observer.observe(container.current);return()=>observer.disconnect();},[preview]);
- const filtered=useMemo(()=>filterTours(catalogue,{duration,region,month}).filter(t=>!type||catalogue.stops.some(s=>s.tour_id===t.id&&catalogue.places.some(p=>p.id===s.place_id&&p.type===type))),[catalogue,duration,region,month,type]);
- const places=useMemo(()=>catalogue.places.filter(p=>(!type||p.type===type)&&(!region||p.region===region)&&(!month||p.best_months.includes(month)||catalogue.tours.some(t=>t.best_months.includes(month)&&catalogue.stops.some(s=>s.tour_id===t.id&&s.place_id===p.id)))&&(!duration||filtered.some(t=>catalogue.stops.some(s=>s.tour_id===t.id&&s.place_id===p.id)))),[catalogue,type,region,month,duration,filtered]);
- const route=useMemo(()=>tour?routeModel(catalogue,tour.id):null,[catalogue,tour]);
- const values={duration:[...new Set(catalogue.tours.map(t=>String(t.duration_days)))].sort((a,b)=>Number(a)-Number(b)),region:[...new Set(catalogue.tours.flatMap(t=>tourRegions(t,catalogue)).concat(catalogue.places.map(p=>p.region)))].filter(Boolean),month:[...new Set([...catalogue.tours.flatMap(t=>t.best_months),...catalogue.places.flatMap(p=>p.best_months)])],type:[...new Set(catalogue.places.map(p=>p.type))].filter(Boolean)};
- const change={duration:setDuration,region:setRegion,month:setMonth,type:setType};
- const tourId=tour?.id??null,onPlace=useCallback((placeId:string)=>setSelected({tourId,placeId}),[tourId]);
- const chooser=!lockedTourId&&catalogue.tours.length>0;
- const tourPhoto=tour&&catalogue.media.find(m=>m.id===tour.cover_media_id&&m.alt_text.trim());
- return <div ref={container} className={`map-explorer single-map ${preview?"map-preview":""} ${lockedTourId?"map-locked":""}`} style={{"--route-colour":tour?.route_colour??"var(--site-accent)","--route-ink":tour?routeInk(tour.route_colour):"var(--site-accentText)"} as CSSProperties}>
-  {(chooser||tour)&&<div className="map-compact-controls">
-   {chooser&&<label>{ui.mapSelectTour}<select value={tour?.id??""} onChange={event=>{selection.selectTour(event.target.value||null);setExpanded(false);setSelected(null);}}><option value="">{ui.mapOverview}</option>{catalogue.tours.map(item=><option key={item.id} value={item.id}>{item.title} · {item.duration_days} {ui.days}</option>)}</select></label>}
-   {tour&&<label>{ui.day}<select value={day?.id??""} onChange={event=>{selection.selectDay(event.target.value||null);setExpanded(false);setSelected(null);}}><option value="">{ui.mapAllDays}</option>{days.map(item=><option key={item.id} value={item.id}>{ui.day} {item.day_number} · {item.title}</option>)}</select></label>}
-  </div>}
-  {chooser&&<nav className="map-tour-bar" aria-label={ui.mapSelectTour}><div className="map-tour-chips"><button type="button" className="map-tour-chip" aria-pressed={!tour} onClick={()=>selection.selectTour(null)}>{ui.mapOverview}</button>{catalogue.tours.map(t=><button type="button" className="map-tour-chip" key={t.id} style={{"--route-colour":t.route_colour,"--route-ink":routeInk(t.route_colour)} as CSSProperties} aria-pressed={tour?.id===t.id} onClick={()=>selection.selectTour(t.id)}><i aria-hidden="true"/>{t.title}<small>{t.duration_days} {ui.days}</small></button>)}</div></nav>}
-  {tour&&<nav className="map-day-bar" aria-label={ui.itinerary}><button type="button" aria-pressed={!day} onClick={()=>selection.selectDay(null)}>{ui.mapAllDays}</button>{days.map(d=><button type="button" key={d.id} aria-pressed={day?.id===d.id} onClick={()=>selection.selectDay(d.id)}>{ui.day} {d.day_number}</button>)}</nav>}
-  {ready?<MapCanvas {...props} tourId={tour?.id??null} activeDay={day?.id??null} places={places} selectedPlace={selectedPlace?.id??null} onPlace={onPlace}/>:<div className="map-skeleton" aria-busy="true"/>}
-  {chooser&&!tour&&<details className="map-mobile-filters"><summary>{ui.search}</summary><div className="map-filter-grid">{Object.entries(values).map(([key,options])=><label key={key}>{ui[key]}<select value={{duration,region,month,type}[key as keyof typeof change]} onChange={e=>change[key as keyof typeof change](e.target.value)}><option value="">{ui.all}</option>{options.map(v=><option key={v}>{v}</option>)}</select></label>)}</div></details>}
-  {chooser&&<aside className="map-catalogue-panel"><h2>{ui.mapSelectTour}</h2><details className="map-catalogue-filters"><summary>{ui.search}</summary><div className="map-filter-grid">{Object.entries(values).map(([key,options])=><label key={key}>{ui[key]}<select value={{duration,region,month,type}[key as keyof typeof change]} onChange={e=>change[key as keyof typeof change](e.target.value)}><option value="">{ui.all}</option>{options.map(v=><option key={v}>{v}</option>)}</select></label>)}</div></details><div className="map-tour-list">{filtered.map(t=>{const image=catalogue.media.find(m=>m.id===t.cover_media_id&&m.alt_text.trim());return <button type="button" key={t.id} aria-pressed={tour?.id===t.id} onClick={()=>selection.selectTour(t.id)}>{image&&<Image src={mediaUrl(image.storage_path)} alt={image.alt_text} width={80} height={100} sizes="80px"/>}<span><strong>{t.title}</strong><small>{t.duration_days} {ui.days} · {distanceKm(routeModel(catalogue,t.id).points.map(p=>({latitude:p[0],longitude:p[1]})))} {ui.kilometres}</small></span><i style={{background:t.route_colour}} aria-hidden="true"/></button>;})}{!filtered.length&&<p>{ui.noResults}</p>}</div></aside>}
-  {tour&&route&&!selectedPlace&&<section className={`map-route-sheet ${expanded?"is-expanded":""}`} aria-label={ui.mapRouteDetails}><button type="button" className="map-sheet-handle" aria-expanded={expanded} onClick={()=>setExpanded(v=>!v)}><span/><strong>{tour.title}</strong><small>{tour.duration_days} {ui.days} · {distanceKm(route.points.map(p=>({latitude:p[0],longitude:p[1]})))} {ui.kilometres} · {ui.mapStops}: {route.stops.length}</small><i aria-hidden="true">{expanded?"⌄":"⌃"}</i></button><div className="map-route-sheet-body">{tourPhoto&&<Image src={mediaUrl(tourPhoto.storage_path)} alt={tourPhoto.alt_text} width={500} height={200} sizes="(max-width: 767px) 100vw, 320px"/>}<p>{tour.summary}</p>{day?.travel_time&&<p className="map-travel-time">{ui.travelTime}: {day.travel_time}</p>}<ol>{route.stops.map((stop,i)=>{const p=catalogue.places.find(p=>p.id===stop.place_id),d=days.find(d=>d.id===stop.itinerary_day_id);return <li key={stop.id} data-muted={!!day&&day.id!==d?.id}><button type="button" onClick={()=>onPlace(stop.place_id)}><b>{i+1}</b><span><strong>{p?.name??stop.label}</strong><small>{ui.day} {d?.day_number} · {d?.title}</small>{i>0&&<small>{ui.distance}: {distanceKm([route.points[i-1],route.points[i]].map(p=>({latitude:p[0],longitude:p[1]})))} {ui.kilometres}</small>}{d?.travel_time&&<small>{ui.travelTime}: {d.travel_time}</small>}</span></button></li>;})}</ol><p className="map-note">{ui.approximate}</p>{!lockedTourId&&<Link className="public-button" href={`/tours/${tour.slug}`}>{ui.mapViewTour} ↗</Link>}</div></section>}
-  {selectedPlace&&<section className="map-detail-sheet" aria-label={selectedPlace.name}><button type="button" className="icon-button" aria-label={ui.close} onClick={()=>setSelected(null)}>×</button><div className="map-popup">{photo&&<Image src={mediaUrl(photo.storage_path)} alt={photo.alt_text} width={500} height={180} sizes="100vw"/>}<p className="eyebrow">{selectedPlace.region}</p><h3><Link href={`/destinations/${selectedPlace.slug}`}>{selectedPlace.name} ↗</Link></h3><p>{selectedPlace.description}</p></div></section>}
- </div>;
+export type PublicMapProps = {
+  catalogue: Catalogue;
+  ui: Ui;
+  center: [number, number];
+  zoom: number;
+  preview?: boolean;
+  lockedTourId?: string;
+};
+export type CanvasProps = PublicMapProps & {
+  tourId: string | null;
+  activeDay: string | null;
+  places: Catalogue["places"];
+  selectedPlace: string | null;
+  onPlace: (id: string) => void;
+};
+const MapCanvas = dynamic<CanvasProps>(() => import("./map-canvas"), {
+  ssr: false,
+  loading: () => <div className="map-skeleton" aria-busy="true" />,
+});
+export function MapExplorer(props: PublicMapProps) {
+  const { catalogue, ui, preview = false, lockedTourId } = props,
+    selection = useMapSelection(catalogue, lockedTourId),
+    { tour, days, day } = selection;
+  const container = useRef<HTMLDivElement>(null),
+    [ready, setReady] = useState(!preview),
+    [expanded, setExpanded] = useState(false);
+  const [duration, setDuration] = useState(""),
+    [region, setRegion] = useState(""),
+    [month, setMonth] = useState(""),
+    [type, setType] = useState("");
+  const [selected, setSelected] = useState<{ tourId: string | null; placeId: string } | null>(null);
+  const selectedPlace =
+    selected?.tourId === (tour?.id ?? null)
+      ? catalogue.places.find((p) => p.id === selected.placeId)
+      : null;
+  const photo = catalogue.media.find(
+    (m) =>
+      m.id === selectedPlace?.cover_media_id &&
+      m.mime_type.startsWith("image/") &&
+      m.alt_text.trim(),
+  );
+  useEffect(() => {
+    if (!preview || !container.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setReady(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    observer.observe(container.current);
+    return () => observer.disconnect();
+  }, [preview]);
+  const filtered = useMemo(
+    () =>
+      filterTours(catalogue, { duration, region, month }).filter(
+        (t) =>
+          !type ||
+          catalogue.stops.some(
+            (s) =>
+              s.tour_id === t.id &&
+              catalogue.places.some((p) => p.id === s.place_id && p.type === type),
+          ),
+      ),
+    [catalogue, duration, region, month, type],
+  );
+  const places = useMemo(
+    () =>
+      catalogue.places.filter(
+        (p) =>
+          (!type || p.type === type) &&
+          (!region || p.region === region) &&
+          (!month ||
+            p.best_months.includes(month) ||
+            catalogue.tours.some(
+              (t) =>
+                t.best_months.includes(month) &&
+                catalogue.stops.some((s) => s.tour_id === t.id && s.place_id === p.id),
+            )) &&
+          (!duration ||
+            filtered.some((t) =>
+              catalogue.stops.some((s) => s.tour_id === t.id && s.place_id === p.id),
+            )),
+      ),
+    [catalogue, type, region, month, duration, filtered],
+  );
+  const route = useMemo(() => (tour ? routeModel(catalogue, tour.id) : null), [catalogue, tour]);
+  const values = {
+    duration: [...new Set(catalogue.tours.map((t) => String(t.duration_days)))].sort(
+      (a, b) => Number(a) - Number(b),
+    ),
+    region: [
+      ...new Set(
+        catalogue.tours
+          .flatMap((t) => tourRegions(t, catalogue))
+          .concat(catalogue.places.map((p) => p.region)),
+      ),
+    ].filter(Boolean),
+    month: [
+      ...new Set([
+        ...catalogue.tours.flatMap((t) => t.best_months),
+        ...catalogue.places.flatMap((p) => p.best_months),
+      ]),
+    ],
+    type: [...new Set(catalogue.places.map((p) => p.type))].filter(Boolean),
+  };
+  const change = { duration: setDuration, region: setRegion, month: setMonth, type: setType };
+  const tourId = tour?.id ?? null,
+    onPlace = useCallback((placeId: string) => setSelected({ tourId, placeId }), [tourId]);
+  const chooser = !lockedTourId && catalogue.tours.length > 0;
+  const tourPhoto =
+    tour && catalogue.media.find((m) => m.id === tour.cover_media_id && m.alt_text.trim());
+  return (
+    <div
+      ref={container}
+      className={`map-explorer single-map ${preview ? "map-preview" : ""} ${lockedTourId ? "map-locked" : ""}`}
+      style={
+        {
+          "--route-colour": tour?.route_colour ?? "var(--site-accent)",
+          "--route-ink": tour ? routeInk(tour.route_colour) : "var(--site-accentText)",
+        } as CSSProperties
+      }
+    >
+      {(chooser || tour) && (
+        <div className="map-compact-controls">
+          {chooser && (
+            <label>
+              {ui.mapSelectTour}
+              <select
+                value={tour?.id ?? ""}
+                onChange={(event) => {
+                  selection.selectTour(event.target.value || null);
+                  setExpanded(false);
+                  setSelected(null);
+                }}
+              >
+                <option value="">{ui.mapOverview}</option>
+                {catalogue.tours.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.title} · {item.duration_days} {ui.days}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {tour && (
+            <label>
+              {ui.day}
+              <select
+                value={day?.id ?? ""}
+                onChange={(event) => {
+                  selection.selectDay(event.target.value || null);
+                  setExpanded(false);
+                  setSelected(null);
+                }}
+              >
+                <option value="">{ui.mapAllDays}</option>
+                {days.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {ui.day} {item.day_number} · {item.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+        </div>
+      )}
+      {chooser && (
+        <nav className="map-tour-bar" aria-label={ui.mapSelectTour}>
+          <div className="map-tour-chips">
+            <button
+              type="button"
+              className="map-tour-chip"
+              aria-pressed={!tour}
+              onClick={() => selection.selectTour(null)}
+            >
+              {ui.mapOverview}
+            </button>
+            {catalogue.tours.map((t) => (
+              <button
+                type="button"
+                className="map-tour-chip"
+                key={t.id}
+                style={
+                  {
+                    "--route-colour": t.route_colour,
+                    "--route-ink": routeInk(t.route_colour),
+                  } as CSSProperties
+                }
+                aria-pressed={tour?.id === t.id}
+                onClick={() => selection.selectTour(t.id)}
+              >
+                <i aria-hidden="true" />
+                {t.title}
+                <small>
+                  {t.duration_days} {ui.days}
+                </small>
+              </button>
+            ))}
+          </div>
+        </nav>
+      )}
+      {tour && (
+        <nav className="map-day-bar" aria-label={ui.itinerary}>
+          <button type="button" aria-pressed={!day} onClick={() => selection.selectDay(null)}>
+            {ui.mapAllDays}
+          </button>
+          {days.map((d) => (
+            <button
+              type="button"
+              key={d.id}
+              aria-pressed={day?.id === d.id}
+              onClick={() => selection.selectDay(d.id)}
+            >
+              {ui.day} {d.day_number}
+            </button>
+          ))}
+        </nav>
+      )}
+      {ready ? (
+        <MapCanvas
+          {...props}
+          tourId={tour?.id ?? null}
+          activeDay={day?.id ?? null}
+          places={places}
+          selectedPlace={selectedPlace?.id ?? null}
+          onPlace={onPlace}
+        />
+      ) : (
+        <div className="map-skeleton" aria-busy="true" />
+      )}
+      {chooser && !tour && (
+        <details className="map-mobile-filters">
+          <summary>{ui.search}</summary>
+          <div className="map-filter-grid">
+            {Object.entries(values).map(([key, options]) => (
+              <label key={key}>
+                {ui[key]}
+                <select
+                  value={{ duration, region, month, type }[key as keyof typeof change]}
+                  onChange={(e) => change[key as keyof typeof change](e.target.value)}
+                >
+                  <option value="">{ui.all}</option>
+                  {options.map((v) => (
+                    <option key={v}>{v}</option>
+                  ))}
+                </select>
+              </label>
+            ))}
+          </div>
+        </details>
+      )}
+      {chooser && (
+        <aside className="map-catalogue-panel">
+          <h2>{ui.mapSelectTour}</h2>
+          <details className="map-catalogue-filters">
+            <summary>{ui.search}</summary>
+            <div className="map-filter-grid">
+              {Object.entries(values).map(([key, options]) => (
+                <label key={key}>
+                  {ui[key]}
+                  <select
+                    value={{ duration, region, month, type }[key as keyof typeof change]}
+                    onChange={(e) => change[key as keyof typeof change](e.target.value)}
+                  >
+                    <option value="">{ui.all}</option>
+                    {options.map((v) => (
+                      <option key={v}>{v}</option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+            </div>
+          </details>
+          <div className="map-tour-list">
+            {filtered.map((t) => {
+              const image = catalogue.media.find(
+                (m) => m.id === t.cover_media_id && m.alt_text.trim(),
+              );
+              return (
+                <button
+                  type="button"
+                  key={t.id}
+                  aria-pressed={tour?.id === t.id}
+                  onClick={() => selection.selectTour(t.id)}
+                >
+                  {image && (
+                    <Image
+                      src={mediaUrl(image.storage_path)}
+                      alt={image.alt_text}
+                      width={80}
+                      height={100}
+                      sizes="80px"
+                    />
+                  )}
+                  <span>
+                    <strong>{t.title}</strong>
+                    <small>
+                      {t.duration_days} {ui.days} ·{" "}
+                      {distanceKm(
+                        routeModel(catalogue, t.id).points.map((p) => ({
+                          latitude: p[0],
+                          longitude: p[1],
+                        })),
+                      )}{" "}
+                      {ui.kilometres}
+                    </small>
+                  </span>
+                  <i style={{ background: t.route_colour }} aria-hidden="true" />
+                </button>
+              );
+            })}
+            {!filtered.length && <p>{ui.noResults}</p>}
+          </div>
+        </aside>
+      )}
+      {tour && route && !selectedPlace && (
+        <section
+          className={`map-route-sheet ${expanded ? "is-expanded" : ""}`}
+          aria-label={ui.mapRouteDetails}
+        >
+          <button
+            type="button"
+            className="map-sheet-handle"
+            aria-expanded={expanded}
+            onClick={() => setExpanded((v) => !v)}
+          >
+            <span />
+            <strong>{tour.title}</strong>
+            <small>
+              {tour.duration_days} {ui.days} ·{" "}
+              {distanceKm(route.points.map((p) => ({ latitude: p[0], longitude: p[1] })))}{" "}
+              {ui.kilometres} · {ui.mapStops}: {route.stops.length}
+            </small>
+            <i aria-hidden="true">{expanded ? "⌄" : "⌃"}</i>
+          </button>
+          <div className="map-route-sheet-body">
+            {tourPhoto && (
+              <Image
+                src={mediaUrl(tourPhoto.storage_path)}
+                alt={tourPhoto.alt_text}
+                width={500}
+                height={200}
+                sizes="(max-width: 767px) 100vw, 320px"
+              />
+            )}
+            <p>{tour.summary}</p>
+            {day?.travel_time && (
+              <p className="map-travel-time">
+                {ui.travelTime}: {day.travel_time}
+              </p>
+            )}
+            <ol>
+              {route.stops.map((stop, i) => {
+                const p = catalogue.places.find((p) => p.id === stop.place_id),
+                  d = days.find((d) => d.id === stop.itinerary_day_id);
+                return (
+                  <li key={stop.id} data-muted={!!day && day.id !== d?.id}>
+                    <button type="button" onClick={() => onPlace(stop.place_id)}>
+                      <b>{i + 1}</b>
+                      <span>
+                        <strong>{p?.name ?? stop.label}</strong>
+                        <small>
+                          {ui.day} {d?.day_number} · {d?.title}
+                        </small>
+                        {i > 0 && (
+                          <small>
+                            {ui.distance}:{" "}
+                            {distanceKm(
+                              [route.points[i - 1], route.points[i]].map((p) => ({
+                                latitude: p[0],
+                                longitude: p[1],
+                              })),
+                            )}{" "}
+                            {ui.kilometres}
+                          </small>
+                        )}
+                        {d?.travel_time && (
+                          <small>
+                            {ui.travelTime}: {d.travel_time}
+                          </small>
+                        )}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+            <p className="map-note">{ui.approximate}</p>
+            {!lockedTourId && (
+              <Link className="public-button" href={`/tours/${tour.slug}`}>
+                {ui.mapViewTour} ↗
+              </Link>
+            )}
+          </div>
+        </section>
+      )}
+      {selectedPlace && (
+        <section className="map-detail-sheet" aria-label={selectedPlace.name}>
+          <button
+            type="button"
+            className="icon-button"
+            aria-label={ui.close}
+            onClick={() => setSelected(null)}
+          >
+            ×
+          </button>
+          <div className="map-popup">
+            {photo && (
+              <Image
+                src={mediaUrl(photo.storage_path)}
+                alt={photo.alt_text}
+                width={500}
+                height={180}
+                sizes="100vw"
+              />
+            )}
+            <p className="eyebrow">{selectedPlace.region}</p>
+            <h3>
+              <Link href={`/destinations/${selectedPlace.slug}`}>{selectedPlace.name} ↗</Link>
+            </h3>
+            <p>{selectedPlace.description}</p>
+          </div>
+        </section>
+      )}
+    </div>
+  );
 }

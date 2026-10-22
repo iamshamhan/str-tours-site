@@ -17,6 +17,7 @@ export async function clearAdminSession() {
   const cookieStore = await cookies();
   const prefix = `sb-${new URL(config.url).hostname.split(".")[0]}-auth-token`;
   for (const cookie of cookieStore.getAll()) {
-    if (cookie.name === prefix || cookie.name.startsWith(prefix + ".")) cookieStore.delete(cookie.name);
+    if (cookie.name === prefix || cookie.name.startsWith(prefix + "."))
+      cookieStore.delete(cookie.name);
   }
 }

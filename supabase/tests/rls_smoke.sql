@@ -59,7 +59,16 @@ begin
   exception when insufficient_privilege then null; end;
 end;
 $$;
-insert into public.inquiries (name,email,message) values ('Phase 2 test','phase2-test@example.invalid','Public submission test');
+do $$ begin
+  begin
+    insert into public.inquiries (name,email,message,consent) values ('Test','phase2-test@example.invalid','Denied submission',true);
+    raise exception 'FAIL: direct submission allowed';
+  exception when insufficient_privilege then null; end;
+  begin
+    insert into public.reviews (author_name,rating,body,consent) values ('Test',5,'Denied submission',true);
+    raise exception 'FAIL: direct review allowed';
+  exception when insufficient_privilege then null; end;
+end $$;
 
 reset role;
 -- Publish parents and confirm nested visibility changes without editing children.
@@ -121,9 +130,19 @@ begin
   get diagnostics affected = row_count;
   if affected <> 0 then raise exception 'FAIL: non-admin inquiry delete allowed'; end if;
 end; $$;
-insert into public.inquiries (name,email,message) values ('Non-admin','phase2-test@example.invalid','Non-admin submission');
+do $$ begin
+  begin
+    insert into public.inquiries (name,email,message,consent) values ('Test','phase2-test@example.invalid','Denied submission',true);
+    raise exception 'FAIL: direct submission allowed';
+  exception when insufficient_privilege then null; end;
+  begin
+    insert into public.reviews (author_name,rating,body,consent) values ('Test',5,'Denied submission',true);
+    raise exception 'FAIL: direct review allowed';
+  exception when insufficient_privilege then null; end;
+end $$;
 
 reset role;
+insert into public.inquiries (name,email,message) values ('Test one','phase2-test@example.invalid','Admin read fixture'), ('Test two','phase2-test@example.invalid','Admin read fixture');
 select set_config('request.jwt.claims','{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',true);
 set local role authenticated;
 do $$
@@ -164,4 +183,4 @@ do $$ begin
   ) then raise exception 'FAIL: public table without RLS'; end if;
 end; $$;
 rollback;
-select 'PASS: publication hierarchy, review moderation, anonymous submission, inquiry privacy, non-admin isolation, admin CRUD, singleton admin, foreign keys and coordinates. Fixtures rolled back.' as result;
+select 'PASS: publication hierarchy, review moderation, direct submission denial, inquiry privacy, non-admin isolation, admin CRUD, singleton admin, foreign keys and coordinates. Fixtures rolled back.' as result;

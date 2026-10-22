@@ -1,4 +1,5 @@
 # Project rules
+
 - Do not create guides, READMEs, testing docs or other documentation unless explicitly requested. Keep changes focused and responses short, plain text: what changed, what was tested, and remaining manual checks. No long reports or tables.
 - Run lint, typecheck and build, then commit and push for each requested task. When the owner explicitly authorizes consecutive parts, complete them without another approval pause; commit and push once per part.
 - Build a Sri Lankan travel showcase and inquiry site for international tourists: no payments, no customer accounts, one authorized admin login.
@@ -13,6 +14,7 @@
 - Git remote: https://github.com/iamshamhan/str-tours-site.git
 
 ## Phase 2 database rules
+
 - Database schema and RLS migrations live in supabase/migrations; local versions must match the applied remote migration ledger. Never edit already-applied migrations; add a new migration for schema changes.
 - The connected project is str-tours (kkfvajdsoucrxvkvvxkv). Do not modify other Supabase projects.
 - supabase/seed.sql is draft placeholder data only, rerunnable without overwriting owner edits. Business name, contact details, USD default and theme are editable site_settings data, not application constants.
@@ -26,6 +28,7 @@
 - Database test instructions and table descriptions are in supabase/README.md. RLS smoke tests roll back all synthetic fixtures and must use a fresh development database with no real admin.
 
 ## Phase 3 authentication rules
+
 - Next.js 16 uses src/proxy.ts. Protect all /admin paths except /admin/login and preserve refresh/signout cookies plus private/no-store headers on redirects.
 - Verify the user with Supabase Auth and check admin_users on the server. Every future admin page, Route Handler and mutating Server Action must enforce requireAdmin() at its data boundary; layout/proxy checks alone are insufficient.
 - Never authorize from getSession(), client state, email strings or editable user_metadata. Keep RLS enabled as the database enforcement layer.
@@ -38,6 +41,7 @@
 - Use docs/admin-auth.md for configuration, test instructions and verification limits. Never request the owner's password in chat; have the owner enter it directly in the local app for live tests.
 
 ## Phase 4A settings rules
+
 - `/admin/settings` uses RHF and a shared Zod schema. Both the page and save action requireAdmin(); writes use the owner's session and existing RLS, never privileged credentials.
 - The canonical settings record is `site_settings.slug = 'site-config'`. A single upsert saves the entire validated editor atomically. Original business/contact/theme/seo-defaults seed rows are preserved and imported into the editor only before the first canonical save. Do not use those legacy rows for public rendering.
 - Publication is explicit. Saving unpublished settings hides them immediately; there is no separate draft/live version. Do not publish unverified seed placeholders.
@@ -47,6 +51,7 @@
 - See docs/site-settings.md for test instructions and verification evidence.
 
 ## Phase 4B navigation and footer rules
+
 - Navigation and footer saves call requireAdmin() and shared Zod validation, then invoke save_site_links with the owner's session. This SECURITY INVOKER transaction retains RLS and applies explicit deleted IDs; it never deletes every row absent from a stale form.
 - nav_items supports one dropdown level via parent_id. The database rejects cycles/deeper nesting and cross-location parenting. Public RLS requires both child and root to be published. private.published_nav_parents exposes only published root IDs; anonymous users still cannot execute private.is_admin().
 - /admin/navigation edits main navigation and site_settings navigation-ui labels. /admin/footer edits grouped footer_links and site_settings footer text. Visibility and footer-text publication are independent. All edits/deletions are staged until Save; deleting a parent deletes its children. Discard only undoes unsaved changes.
@@ -64,3 +69,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Submission security exception and public caching
+
+- SUPABASE_SECRET_KEY is allowed only in src/lib/supabase/submissions.ts, marked server-only, for verified inquiries/reviews, their signed form tickets and private rate limits. Never expose, log, commit or use it elsewhere. This overrides earlier publishable-key-only submission rules; public reads and all admin writes retain publishable-key/session clients.
+- Anonymous inquiry/review inserts are revoked, including column grants. Non-admin authenticated inserts are denied. Turnstile, signed minimum-time tickets and Zod validation are required before the service-only transactional submission RPC.
+- Public reads use a cookie-free client and a 60-second tagged Next.js cache. Successful admin mutations invalidate public-content immediately. Database failures throw sanitized errors to retry boundaries; only successful missing-row queries produce not-found.

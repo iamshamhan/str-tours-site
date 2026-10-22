@@ -84,6 +84,7 @@ Use Node.js 22.18+ (Node 24 was used for the native TypeScript unit tests).
    expires and refresh. A valid refresh session should keep you signed in.
 
 Automated commands:
+
 - npm run lint
 - npm run typecheck
 - npm run test:auth
