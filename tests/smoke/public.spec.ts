@@ -38,7 +38,20 @@ for (const table of ["inquiries", "reviews"]) {
 }
 
 test("public pages return content and a tour detail", async ({ page }) => {
-  for (const path of ["/", "/tours", "/destinations", "/contact", "/admin/login"]) {
+  for (const path of [
+    "/",
+    "/tours",
+    "/destinations",
+    "/about",
+    "/faq",
+    "/blog",
+    "/reviews",
+    "/privacy",
+    "/terms",
+    "/cancellation",
+    "/contact",
+    "/admin/login",
+  ]) {
     const response = await page.goto(path);
     expect(response?.status()).toBe(200);
     await expect(page.locator("h1").first()).toBeVisible();
@@ -121,3 +134,61 @@ test("verified signed-in non-admin cannot enter admin routes", async ({ page, co
   await expect(page).toHaveURL(/\/admin\/login/);
   await expect(page.locator('input[type="password"]')).toBeVisible();
 });
+
+for (const width of [390, 1280]) {
+  test(`visitor discovers a tour, explores its route, and reaches its inquiry at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/tours");
+    const form = page.locator(".public-filters");
+    await form.locator('[name="q"]').fill("no-match-smoke-98765");
+    await form.locator('button[type="submit"]').click();
+    await expect(page.locator(".tour-card")).toHaveCount(0);
+    await expect(page.locator(".tour-result-count")).toContainText("0");
+    await page.locator(".filter-reset").click();
+    await expect(page.locator(".tour-card").first()).toBeVisible();
+    await form.locator('[name="sort"]').selectOption("duration-asc");
+    await form.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL(/sort=duration-asc/);
+    await page.locator(".tour-card .card-image").first().click();
+    await expect(page).toHaveURL(/\/tours\/[^/?#]+/);
+    await expect(page.locator(".tour-hero h1")).toBeVisible();
+    const title = await page.locator(".tour-hero h1").innerText();
+    const photo = page.locator(".gallery-tile").first();
+    if (await photo.count()) {
+      await photo.click();
+      await expect(page.locator(".gallery-dialog")).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(page.locator(".gallery-dialog")).not.toBeVisible();
+    }
+    await page.locator('.tour-section-links a[href="#tour-itinerary"]').click();
+    const day = page.locator(".itinerary-day button").first();
+    await day.click();
+    await expect(day).toHaveAttribute("aria-pressed", "true");
+    await expect(page).toHaveURL(/day=1/);
+    await page.locator(".journey-map").scrollIntoViewIfNeeded();
+    await expect(page.locator(".leaflet-container")).toBeVisible({ timeout: 30000 });
+    await page.locator('.tour-section-links a[href="#inquire"]').click();
+    await expect(page.locator(".inquiry-tour")).toContainText(title);
+    const submit = page.locator('#inquire button[type="submit"]');
+    await expect(submit).toBeEnabled({ timeout: 30000 });
+    await submit.click();
+    await expect(page.locator('#inquire [name="email"]')).toHaveAttribute("aria-invalid", "true");
+    if (width === 390) {
+      const inquiry = page.locator("#inquire form");
+      await inquiry.locator('[name="name"]').fill("Visitor journey smoke test — delete me");
+      await inquiry.locator('[name="email"]').fill(`journey-${Date.now()}@example.invalid`);
+      await inquiry.locator('[name="country"]').fill("Test");
+      await inquiry
+        .locator('[name="message"]')
+        .fill("Automated tour-linked visitor journey test. Please delete this entry.");
+      await inquiry.locator('[name="consent"]').check();
+      await submit.click();
+      await expect(page.locator("#inquire .form-success")).toBeVisible({ timeout: 20000 });
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+  });
+}

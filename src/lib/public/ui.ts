@@ -1,4 +1,13 @@
 export const uiKeys = [
+  "sort",
+  "sortRecommended",
+  "sortPriceLow",
+  "sortPriceHigh",
+  "sortDurationShort",
+  "sortDurationLong",
+  "clearFilters",
+  "resultsCount",
+  "tourNavigation",
   "mapOverview",
   "mapAllDays",
   "mapStops",

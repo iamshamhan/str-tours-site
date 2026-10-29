@@ -112,7 +112,25 @@ export default async function TourPage({ params }: { params: Promise<{ slug: str
           </a>
         )}
       </div>
-      <section className="public-section tour-overview reveal">
+      {ui.tourNavigation && (
+        <nav className="tour-section-links" aria-label={ui.tourNavigation}>
+          {[
+            ["summary", ui.summary, true],
+            ["gallery", ui.gallery, tour.gallery.length > 0],
+            ["tour-itinerary", ui.itinerary, days.length > 0],
+            ["tour-route-map", ui.map, days.length > 0],
+            ["tour-reviews", ui.reviews, ownReviews.length > 0],
+            ["inquire", ui.enquire || ui.planTrip, settings.inquiriesEnabled],
+          ]
+            .filter(([, label, show]) => label && show)
+            .map(([id, label]) => (
+              <a key={String(id)} href={`#${id}`}>
+                {label}
+              </a>
+            ))}
+        </nav>
+      )}
+      <section id="summary" className="public-section tour-overview reveal">
         <div>
           <h2>{ui.summary}</h2>
           <p className="section-body">{tour.description}</p>
@@ -149,7 +167,7 @@ export default async function TourPage({ params }: { params: Promise<{ slug: str
         </aside>
       </section>
       {tour.gallery.length > 0 && (
-        <section className="public-section reveal">
+        <section id="gallery" className="public-section reveal">
           <h2>{ui.gallery}</h2>
           <Gallery ids={tour.gallery} media={catalogue.media} ui={ui} />
         </section>
@@ -182,15 +200,17 @@ export default async function TourPage({ params }: { params: Promise<{ slug: str
         </section>
       )}
       {days.length > 0 && (
-        <Journey
-          catalogue={{ ...catalogue, tours: [tour], days, stops }}
-          ui={ui}
-          center={[settings.mapLatitude, settings.mapLongitude]}
-          zoom={settings.mapZoom}
-        />
+        <div id="tour-itinerary">
+          <Journey
+            catalogue={{ ...catalogue, tours: [tour], days, stops }}
+            ui={ui}
+            center={[settings.mapLatitude, settings.mapLongitude]}
+            zoom={settings.mapZoom}
+          />
+        </div>
       )}
       {ownReviews.length > 0 && (
-        <section className="public-section reveal">
+        <section id="tour-reviews" className="public-section reveal">
           <h2>{ui.reviews}</h2>
           <Reviews reviews={ownReviews} media={catalogue.media} ui={ui} />
         </section>
@@ -201,7 +221,9 @@ export default async function TourPage({ params }: { params: Promise<{ slug: str
           <Faqs faqs={ownFaqs} />
         </section>
       )}
-      {settings.inquiriesEnabled && <Inquiry ui={ui} tourId={tour.id} privacy={!!privacy} />}
+      {settings.inquiriesEnabled && (
+        <Inquiry ui={ui} tourId={tour.id} tourTitle={tour.title} privacy={!!privacy} />
+      )}
       {settings.inquiriesEnabled && (
         <MobileBookingBar
           price={

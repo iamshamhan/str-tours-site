@@ -236,9 +236,36 @@ export function FiltersForm({
           </select>
         </label>
       ))}
-      <button className="public-button" type="submit">
-        {ui.search}
-      </button>
+      {ui.sort && (
+        <label className="filter-sort">
+          {ui.sort}
+          <select name="sort" defaultValue={current.sort ?? ""}>
+            {[
+              ["", ui.sortRecommended],
+              ["price-asc", ui.sortPriceLow],
+              ["price-desc", ui.sortPriceHigh],
+              ["duration-asc", ui.sortDurationShort],
+              ["duration-desc", ui.sortDurationLong],
+            ]
+              .filter(([, label]) => label)
+              .map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+          </select>
+        </label>
+      )}
+      <div className="filter-actions">
+        <button className="public-button" type="submit">
+          {ui.search}
+        </button>
+        {Object.values(current).some(Boolean) && ui.clearFilters && (
+          <Link href="/tours" className="filter-reset">
+            {ui.clearFilters}
+          </Link>
+        )}
+      </div>
     </form>
   );
 }

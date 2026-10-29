@@ -16,11 +16,13 @@ const subscribe = () => () => {};
 export function Inquiry({
   ui,
   tourId = null,
+  tourTitle,
   tours = [],
   privacy = false,
 }: {
   ui: Ui;
   tourId?: string | null;
+  tourTitle?: string;
   tours?: { id: string; title: string }[];
   privacy?: boolean;
 }) {
@@ -79,6 +81,11 @@ export function Inquiry({
   return (
     <section id="inquire" className="trip-form public-section">
       <h2>{ui.formHeading}</h2>
+      {tourId && tourTitle && (
+        <p className="inquiry-tour">
+          {ui.tour}: <strong>{tourTitle}</strong>
+        </p>
+      )}
       {sent ? (
         <p role="status" className="form-success">
           {ui.success}

@@ -493,3 +493,45 @@ test("deleting a middle route stop reconnects and renumbers remaining stops", ()
     [7, 80],
   ]);
 });
+
+test("tour discovery sorts missing prices last, searches linked places, and preserves catalogue order", () => {
+  const { filterTours, normalizeFilters } = sourceModule("src/lib/public/filters.ts");
+  const tours = [null, 250, 100].map((price, i) => ({
+    id: String(i),
+    title: "Journey",
+    summary: "Island",
+    tags: [],
+    regions: [],
+    best_months: [],
+    price_from: price,
+    currency: "USD",
+    duration_days: i + 1,
+  }));
+  const c = {
+    tours,
+    places: [{ id: "ella", name: "Ella", region: "Hill country" }],
+    stops: [{ tour_id: "1", place_id: "ella" }],
+  };
+  assert.deepEqual(
+    filterTours(c, { sort: "price-asc" }).map((t) => t.id),
+    ["2", "1", "0"],
+  );
+  assert.deepEqual(
+    filterTours(c, { sort: "price-desc" }).map((t) => t.id),
+    ["1", "2", "0"],
+  );
+  assert.deepEqual(
+    filterTours(c, { sort: "duration-desc" }).map((t) => t.id),
+    ["2", "1", "0"],
+  );
+  assert.deepEqual(
+    filterTours(c, { q: "ELLA" }).map((t) => t.id),
+    ["1"],
+  );
+  assert.deepEqual(
+    tours.map((t) => t.id),
+    ["0", "1", "2"],
+  );
+  assert.equal(normalizeFilters({ q: ["Ella", "Galle"] }).q, "Ella");
+  assert.equal(filterTours(c, { sort: "unknown" }).length, 3);
+});

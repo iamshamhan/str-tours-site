@@ -64,7 +64,7 @@ export function Journey({
             </article>
           ))}
         </div>
-        <div className="journey-map">
+        <div className="journey-map" id="tour-route-map">
           <MapExplorer
             catalogue={catalogue}
             ui={ui}
