@@ -94,6 +94,7 @@ export async function saveRecord(
   }
   invalidatePublicContent();
   revalidatePath(`/admin/${section}`);
+  if (section === "places") revalidatePath("/admin/tours");
   return { ok: true, message: "Saved.", id };
 }
 export async function deleteRecord(section: string, id: string, expected: string) {
@@ -116,5 +117,6 @@ export async function deleteRecord(section: string, id: string, expected: string
     };
   invalidatePublicContent();
   revalidatePath(`/admin/${section}`);
+  if (section === "places") revalidatePath("/admin/tours");
   return { ok: true, message: "Deleted." };
 }

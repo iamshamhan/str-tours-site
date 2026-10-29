@@ -452,3 +452,44 @@ test("login HTML keeps credentials out of URLs and waits for hydration", () => {
   assert.match(html, /<button[^>]*disabled/);
   assert.match(html, /type="password"/);
 });
+
+test("deleting a middle route stop reconnects and renumbers remaining stops", () => {
+  const { routeModel } = sourceModule("src/lib/public/map-model.ts");
+  const stops = [0, 1, 2].map((i) => ({
+    id: String(i),
+    tour_id: "tour",
+    place_id: `place-${i}`,
+    latitude: 7 + i,
+    longitude: 80 + i,
+    sort_order: i,
+    itinerary_day_id: "day",
+  }));
+  const route = routeModel({ places: [], stops: stops.filter((s) => s.id !== "1") }, "tour");
+  assert.deepEqual(
+    route.groups.map((g) => g.numbers),
+    [[1], [2]],
+  );
+  assert.deepEqual(
+    route.segments.map((s) => s.points),
+    [
+      [
+        [7, 80],
+        [9, 82],
+      ],
+    ],
+  );
+  const reversed = routeModel(
+    {
+      places: [],
+      stops: [
+        { ...stops[0], sort_order: 4 },
+        { ...stops[2], sort_order: 0 },
+      ],
+    },
+    "tour",
+  );
+  assert.deepEqual(reversed.points, [
+    [9, 82],
+    [7, 80],
+  ]);
+});

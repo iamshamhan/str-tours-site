@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { EditorMap } from "./map";
 import { Reorder } from "./editor-fields";
 import type { Day, PlaceOption, Stop } from "@/lib/editor/schema";
@@ -27,19 +28,30 @@ export function RouteEditor({
     return p ? [{ ...p, id: stop.id, label: stop.label }] : [];
   });
   return (
-    <section className="space-y-4">
-      <h2 className="text-xl font-semibold">Route stops</h2>
+    <section className="route-editor space-y-4" id="route-editor">
+      <div className="route-editor-heading">
+        <div>
+          <h2 className="text-xl font-semibold">Route stops</h2>
+          <p className="admin-helper">
+            Drag stops or use Move up/down. Removing a stop here only changes this tour.
+          </p>
+        </div>
+        <Link
+          className="admin-button"
+          href="/admin/places/new"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Create a place
+        </Link>
+      </div>
       <label className="block">
         Route colour
         <input type="color" value={colour} onChange={(e) => onColour(e.target.value)} />
       </label>
       <div data-sort-group className="space-y-3">
         {stops.map((stop, i) => (
-          <article
-            data-sort-index={i}
-            key={stop.id}
-            className="rounded-xl border bg-white p-4 space-y-3"
-          >
+          <article data-sort-index={i} key={stop.id} className="route-stop-card">
             <h3>Stop {i + 1}</h3>
             <Reorder
               index={i}
@@ -54,67 +66,71 @@ export function RouteEditor({
                 onChange(stops.filter((s) => s.id !== stop.id));
               }}
             />
-            <label className="block">
-              Place
-              <select
-                className="admin-input"
-                value={stop.place_id}
-                onChange={(e) => {
-                  const p = places.find((p) => p.id === e.target.value);
-                  update(i, { place_id: e.target.value, label: p?.name ?? "" });
-                }}
-              >
-                <option value="">Choose place</option>
-                {places.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block">
-              Itinerary day
-              <select
-                className="admin-input"
-                value={stop.itinerary_day_id}
-                onChange={(e) => update(i, { itinerary_day_id: e.target.value })}
-              >
-                <option value="">Choose day</option>
-                {days.map((d, n) => (
-                  <option key={d.id} value={d.id}>
-                    Day {n + 1}: {d.title}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block">
-              Label
-              <input
-                className="admin-input"
-                value={stop.label}
-                onChange={(e) => update(i, { label: e.target.value })}
-              />
-            </label>
-            <label className="block">
-              Travel mode
-              <select
-                className="admin-input"
-                value={stop.travel_mode}
-                onChange={(e) => update(i, { travel_mode: e.target.value as Stop["travel_mode"] })}
-              >
-                {["road", "rail", "walk", "boat", "safari"].map((mode) => (
-                  <option key={mode}>{mode}</option>
-                ))}
-              </select>
-            </label>
-            <label className="block">
-              Description
-              <textarea
-                className="admin-input"
-                value={stop.description}
-                onChange={(e) => update(i, { description: e.target.value })}
-              />
-            </label>
+            <div className="route-stop-fields">
+              <label className="block">
+                Place
+                <select
+                  className="admin-input"
+                  value={stop.place_id}
+                  onChange={(e) => {
+                    const p = places.find((p) => p.id === e.target.value);
+                    update(i, { place_id: e.target.value, label: p?.name ?? "" });
+                  }}
+                >
+                  <option value="">Choose place</option>
+                  {places.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                Itinerary day
+                <select
+                  className="admin-input"
+                  value={stop.itinerary_day_id}
+                  onChange={(e) => update(i, { itinerary_day_id: e.target.value })}
+                >
+                  <option value="">Choose day</option>
+                  {days.map((d, n) => (
+                    <option key={d.id} value={d.id}>
+                      Day {n + 1}: {d.title}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                Label
+                <input
+                  className="admin-input"
+                  value={stop.label}
+                  onChange={(e) => update(i, { label: e.target.value })}
+                />
+              </label>
+              <label className="block">
+                Travel mode
+                <select
+                  className="admin-input"
+                  value={stop.travel_mode}
+                  onChange={(e) =>
+                    update(i, { travel_mode: e.target.value as Stop["travel_mode"] })
+                  }
+                >
+                  {["road", "rail", "walk", "boat", "safari"].map((mode) => (
+                    <option key={mode}>{mode}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="block">
+                Description
+                <textarea
+                  className="admin-input"
+                  value={stop.description}
+                  onChange={(e) => update(i, { description: e.target.value })}
+                />
+              </label>
+            </div>
           </article>
         ))}
       </div>

@@ -41,6 +41,11 @@ export function RecordList({
               Edit
             </Link>
             <ConfirmButton
+              message={
+                section === "places"
+                  ? "Delete this place and its stops from every tour? All tours and itinerary days are kept. The remaining stops reconnect in their existing order."
+                  : undefined
+              }
               disabled={pending}
               onConfirm={() =>
                 start(async () => {

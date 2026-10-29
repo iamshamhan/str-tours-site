@@ -228,7 +228,7 @@ export function Reorder({
 }) {
   const start = useRef<{ x: number; y: number } | null>(null);
   return (
-    <div className="flex flex-wrap gap-2 mb-3">
+    <div className="reorder-actions">
       <button
         type="button"
         className="admin-button touch-none cursor-grab"

@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin/auth";
 import { entityConfig, isEntity, type Section } from "@/lib/editor/schema";
+import { PlaceRoutes } from "@/components/admin/place-routes";
+import { placeRouteOptions } from "@/lib/editor/data";
 import { editorOptions } from "@/lib/editor/data";
 import { RecordForm } from "@/components/admin/record-form";
 export default async function RecordPage({
@@ -49,6 +51,7 @@ export default async function RecordPage({
     if (r.error) return <p role="alert">Unable to load sections.</p>;
     sections = r.data as Section[];
   }
+  const routeChoices = section === "places" ? await placeRouteOptions(id) : [];
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-semibold">Edit · {config.label}</h1>
@@ -60,6 +63,14 @@ export default async function RecordPage({
         tours={options.tours}
         places={options.places}
       />
+      {section === "places" && (
+        <PlaceRoutes
+          key={data.updated_at}
+          placeId={id}
+          expected={data.updated_at}
+          routes={routeChoices}
+        />
+      )}
     </div>
   );
 }
