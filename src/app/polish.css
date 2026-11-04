@@ -606,3 +606,223 @@
     padding-inline: 20px;
   }
 }
+
+/* Mobile editorial layout: readable type, consistent gutters and reachable actions. */
+html:has(.mobile-navigation[open]) {
+  overflow: hidden;
+}
+.mobile-navigation[open] {
+  display: flex;
+  flex-direction: column;
+  inset: 0;
+  height: 100dvh;
+  padding: max(20px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+}
+.mobile-menu-top {
+  flex-shrink: 0;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--line);
+}
+.mobile-navigation > nav {
+  margin: 24px 0 32px;
+}
+.mobile-navigation > nav > ul {
+  gap: 0;
+  padding: 0;
+}
+.mobile-navigation > nav > ul > li {
+  border-bottom: 1px solid var(--line);
+}
+.mobile-navigation > nav > ul > li > a,
+.mobile-navigation > nav > ul > li > details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 0;
+  font-size: clamp(25px, 6.5vw, 34px);
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  overflow-wrap: anywhere;
+}
+.mobile-navigation > nav > ul > li > a::after {
+  content: "↗";
+  font: 400 20px var(--site-body-font);
+  color: var(--site-muted);
+}
+.mobile-navigation a[aria-current="page"] {
+  color: var(--site-accent);
+}
+.mobile-menu-bottom {
+  margin-top: auto;
+  flex-shrink: 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.mobile-menu-bottom .nav-cta {
+  min-height: 52px;
+  font-size: 15px;
+}
+@media (max-width: 767px) {
+  .site-header-inner {
+    min-height: 72px;
+    padding: 12px 20px;
+    gap: 12px;
+  }
+  .site-brand {
+    min-width: 0;
+    gap: 8px;
+    font-size: 17px;
+    line-height: 1.2;
+  }
+  .site-brand span {
+    overflow-wrap: anywhere;
+  }
+  .site-brand img {
+    max-width: 72px;
+    height: auto;
+  }
+  .brand-symbol {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+  .header-actions {
+    flex-shrink: 0;
+    gap: 8px;
+  }
+  .menu-toggle {
+    min-height: 44px;
+    gap: 8px;
+    font-size: 12px;
+  }
+  .cinematic-hero,
+  .tour-hero,
+  .public-hero {
+    height: auto;
+    min-height: min(680px, calc(100svh - 72px));
+    max-height: none;
+  }
+  .cinematic-hero .hero-copy,
+  .tour-hero .hero-copy,
+  .public-hero .hero-copy {
+    padding: 80px 24px 112px;
+    margin-block: auto;
+  }
+  .cinematic-hero h1,
+  .tour-hero h1,
+  .public-hero h1 {
+    font-size: clamp(40px, 11vw, 56px);
+    line-height: 1.06;
+    letter-spacing: -0.045em;
+    white-space: normal;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  .cinematic-hero .hero-copy > p,
+  .tour-hero .hero-copy > p,
+  .public-hero .hero-copy > p {
+    font-size: 16px;
+    line-height: 1.65;
+    margin-top: 22px;
+    white-space: normal;
+    text-wrap: pretty;
+  }
+  .cinematic-hero .hero-copy > .eyebrow,
+  .tour-hero .hero-copy > .eyebrow,
+  .public-hero .hero-copy > .eyebrow {
+    font-size: 10px;
+    line-height: 1.6;
+    letter-spacing: 0.13em;
+    margin: 0 0 22px;
+  }
+  .hero-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    max-width: 360px;
+    margin-top: 28px;
+  }
+  .hero-copy .public-button {
+    min-height: 50px;
+    padding: 14px 20px;
+    font-size: 14px;
+    justify-content: center;
+  }
+  .scroll-cue {
+    left: 24px;
+    bottom: 28px;
+    max-width: calc(100% - 100px);
+  }
+  .public-section {
+    width: calc(100% - 40px);
+    margin-top: 64px;
+  }
+  .public-page-header {
+    padding: 48px 20px 24px;
+  }
+  .public-page-header h1 {
+    font-size: clamp(36px, 10vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+  }
+  .public-page-header p {
+    margin-top: 20px;
+    line-height: 1.7;
+  }
+  .public-site h2 {
+    font-size: clamp(28px, 7.5vw, 36px);
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .public-site .card-copy h2,
+  .public-site .card-copy h3 {
+    font-size: 18px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  .public-grid {
+    gap: 20px 12px;
+  }
+  .card-copy {
+    padding: 14px 12px;
+    min-width: 0;
+  }
+  .card-copy > p {
+    overflow-wrap: anywhere;
+  }
+  .section-heading {
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .public-filters,
+  .trip-form form,
+  .tour-overview aside {
+    padding: 20px;
+  }
+  .public-filters > label,
+  .form-grid > label {
+    min-width: 0;
+    font-size: 13px;
+  }
+  .form-grid {
+    gap: 20px;
+  }
+  .form-grid :is(input, select, textarea) {
+    width: 100%;
+    min-width: 0;
+  }
+  .form-grid .consent input {
+    width: auto;
+    flex-shrink: 0;
+  }
+  .public-button {
+    min-height: 48px;
+    font-size: 14px;
+    white-space: normal;
+  }
+}

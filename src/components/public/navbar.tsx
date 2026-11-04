@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { safeLink, type EditableLink } from "@/lib/navigation/schema";
 import type { Ui } from "@/lib/public/ui";
@@ -24,11 +25,12 @@ export function Navbar({
   ctaLabel?: string;
   ctaHref?: string;
 }) {
+  const pathname = usePathname();
   const dialog = useRef<HTMLDialogElement>(null),
     opener = useRef<HTMLButtonElement>(null),
     roots = items.filter((i) => !i.parent_id && (!ctaLabel || i.href !== ctaHref));
   useEffect(() => {
-    const mq = matchMedia("(min-width: 1000px)");
+    const mq = matchMedia("(min-width: 1100px)");
     const close = () => {
       if (mq.matches) dialog.current?.close();
     };
@@ -70,6 +72,7 @@ export function Navbar({
   const link = (i: EditableLink) => (
     <a
       href={i.href}
+      aria-current={pathname === i.href ? "page" : undefined}
       target={i.open_in_new_tab ? "_blank" : undefined}
       rel={i.open_in_new_tab ? "noopener noreferrer" : undefined}
       onClick={close}
