@@ -1,0 +1,2905 @@
+CODEX AND CLAUDE PROJECT CHAT HISTORY
+Visit Sri Lanka travel website
+Created: 7 November 2026, Asia/Colombo
+Project folder: D:\MyProjects\tours
+
+PURPOSE AND HOW TO CONTINUE
+This is the portable conversation and project history for the owner and any future coding agent. Read this file together with AGENTS.md before continuing. Inspect the actual repository before assuming that a described feature or deployment is still current.
+
+CONTINUING RECORD RULE
+From now on, append each owner request, the user-facing response, actions taken, files changed, decisions, check results, commit/deployment results and unfinished work to this file. Use the actual date in Asia/Colombo. Preserve prior entries. Record meaningful actions and outcomes, not private internal reasoning. Never record passwords, secret keys, tokens, cookies, personal inquiry payloads or environment-file values. Redact credentials even when the owner sends them in chat. Do not claim a check ran unless it did. Distinguish proposals from completed work and historical evidence from fresh verification.
+This instruction is stored in this file; another app must read it to follow it. It does not automatically capture messages outside agents that follow the instruction. If context is missing, say so explicitly.
+
+HISTORY ACCURACY
+This is a detailed reconstructed history from the conversation available to the current agent and the repository inspection performed for the handover. It is NOT a verbatim export of every historical message. Many earlier assistant responses and tool results are absent from the available context. They cannot be recovered by guessing. Owner requests below are condensed faithfully; available recent assistant replies are quoted near the end. Dates for older messages are unavailable unless explicitly recorded. Migration timestamps and commit ordering must not be treated as exact chat timestamps.
+Credential messages occurred during development. Their values are deliberately omitted here. This file is safe to share only after the owner checks that project identifiers and business contact details are appropriate for the recipient.
+
+1. PROJECT IDENTITY AND REQUIREMENTS
+Business: Visit Sri Lanka; business identity must remain editable in admin.
+Audience: international tourists planning Sri Lankan tours.
+Purpose: showcase tours, destinations and travel information, then collect inquiries.
+No payments, no customer accounts, one authorized administrator.
+Default currency: USD, editable through settings.
+Owner-supplied admin/contact email: shamhanahamed4@gmail.com.
+Owner-supplied WhatsApp: +94763871280.
+Supabase project: str-tours; reference kkfvajdsoucrxvkvvxkv.
+Public Supabase URL: https://kkfvajdsoucrxvkvvxkv.supabase.co.
+Vercel project: str-tours. The production domain was not freshly verified during the handover; do not invent a live URL.
+Git remote: https://github.com/iamshamhan/str-tours-site.git.
+Main branch: main.
+Current folder: D:\MyProjects\tours. Initial request used C:\Users\shamh\Desktop\my\tours; other historical workspace paths appear in older work.
+
+Golden rule: production content and presentation settings come from Supabase and are editable in admin, including navbar, footer, business copy, hero, SEO, colors, fonts, tours and destinations. Internal admin interface labels can be application UI.
+Stack: Next.js App Router, TypeScript, Tailwind CSS, Supabase Postgres/Auth/Storage, React Hook Form, Zod, Leaflet, OpenStreetMap, Vercel. Application source stays under src/.
+Owner prefers focused changes, concise plain-text replies, no long reports or tables, and no extra documentation unless explicitly requested. Handover and this history are explicitly requested exceptions.
+Normal completion rule: lint, typecheck, build, commit and push; never force-push or overwrite owner work. Explicit task-specific requests can change that rule. This history task specifically asks to write the file without command-line work.
+Work in approved phases unless consecutive parts have already been authorized. Never request the owner's password in chat. Never print or commit secrets.
+
+2. CHRONOLOGICAL OWNER REQUEST HISTORY
+Dates for this section are unknown unless stated otherwise. These entries preserve request order and intent; absent assistant replies are not reconstructed as quotes.
+
+Initial planning
+Owner tagged Vercel, Supabase, Codex Security and Code Review and asked for a senior full-stack developer. Requested a database-driven Sri Lankan tourism website using the stack above, working in the existing folder and remote. Asked for a short phase plan only, no code, and an AGENTS.md recording rules.
+
+Phase 1 setup
+Owner authorized initialization with App Router, TypeScript, Tailwind, ESLint and src. Requested Supabase browser/server helpers; Supabase JS/SSR, RHF, Zod, Leaflet/react-leaflet; .env.local with project URL and a key supplied privately by the owner; empty .env.example names; ignored .env.local; a temporary database connection homepage; initial Git commit and push; startup instructions.
+Owner later said the webpage worked and the key was pasted, and asked for everything changed, done and encountered. The corresponding full assistant response is unavailable here.
+
+Phase 2 database
+Requested migrations for site_settings, nav_items, footer_links, pages, page_sections, media, tours, itinerary_days, places, route_stops, vehicles, team_members, reviews, blog_posts, faqs, inquiries and admin_users. Requested slugs, publication, sorting and timestamps; ordered typed JSON sections; tour/day/place-linked route stops with coordinates; approved/pending reviews; private inquiry statuses and notes.
+Requested RLS with published public reads, initial anonymous inquiry inserts, and admin-only writes/private reads. Later security work superseded anonymous insert permission.
+Requested draft seeds for navigation/footer/theme/contact and five routes: classic seven-day island circuit, Cultural Triangle, Kandy-to-Ella train, south coast/Galle and Yala. Coordinates and content were to be clearly marked placeholders.
+Requested application to connected Supabase, admin bootstrap SQL, explanations, AGENTS update, lint/typecheck/build, commit/push and pause.
+
+Phase 3 admin authentication
+Requested minimal email/password RHF/Zod login with generic errors and loading; SSR refresh middleware/proxy appropriate to Next version; verified server membership in admin_users on all protected routes; unauthorized signout/redirect; admin sidebar/topbar/logout; counts for tours, places, reviews and new inquiries; noindex/robots; reasonable login throttling. Public URL/publishable key only at that stage.
+Requested wrong-password, correct-password, logout and logged-out direct-route tests, then checks and Git delivery. Several 'continue' messages followed.
+Owner reported the temporary homepage connection check failed while admin login/dashboard worked, then asked for an audit and to move on.
+
+Phase 4A site settings
+Requested identity/contact/social/SLTDA/currency/SEO settings; logo/favicon placeholders; editable accent/background/text/fonts/radius; server-applied CSS variables; neutral text-free fallback for missing settings; database business name/tagline homepage; removal of the old schema-endpoint diagnostic; read-only public-table query. All admin writes through session/RLS. Requested checks, commit/push and pause.
+
+Phase 4B navigation and footer
+Owner approved add/edit/hide/delete/drag ordering for navigation including one dropdown level/new-tab links, grouped footer links and editable footer/copyright text. Requested mobile menu, sticky blurred minimal navbar, floating settings-driven WhatsApp and clean empty fallbacks. Requested checks and Git delivery.
+Browser returned to login during live tests; owner was asked to sign in at localhost:3000/admin/login and replied 'Signed in'. Further 'continue' messages followed.
+
+Expanded admin part 1
+Owner set standing rules: no unrequested guides/docs, concise updates, focused work, lint/typecheck/build then commit/push.
+Requested media library with multiple image/video uploads, image resizing/compression, alt text/captions, search/delete and reusable picker wired to settings logo/favicon. Public Storage bucket with admin-only writes via migration.
+Requested tours CRUD/search/publish/duplicate; editable auto slug; descriptions/duration/USD from-price/difficulty/months/tags/highlights/inclusions/exclusions/vehicle/cover/gallery/SEO; day editor with title, description, locations, travel time, photos and reordering. Zod/save feedback.
+
+Expanded admin part 2
+Requested places CRUD with photos, tips, region, best time and draggable map coordinates; per-tour ordered route stops linked to days, route color and live numbered map; reviews CRUD; inquiries filters/status/private notes/detail; team, vehicles, FAQ and page CRUD with typed reorderable sections. Authorized both parts consecutively, one commit/push per part.
+For live checks, owner was asked to sign in at localhost:3104. A password was mistakenly sent in chat [REDACTED]. Assistant instructed owner to enter it only in the app. Owner subsequently replied 'signed in'.
+
+Public website and deployment
+Requested all public pages and map together: section-driven home; searchable/filterable tours and tour details; destinations and details; full-screen Sri Lanka map; about/team/vehicles; FAQ/blog/reviews/contact; generic pages. Published-only content and database SEO.
+Requested hero, featured tours, why-us, guide story, map preview, reviews, FAQ, CTA section types, also editable in admin. Responsive next/image, accessible mobile-first design and animations.
+Requested Plan my trip form with name/email/country/WhatsApp/dates/travelers/interests/budget/message, consent, honeypot, validation/rate limit, tour prefilling and editable labels; optional environment-configured owner email; optional public pending-review form off by default; sitemap/robots/canonical/OG/structured data; media alt checks; cookie/privacy/terms/cancellation and editable SLTDA area.
+Requested deploy and live checks for home/tour/map/inquiry/admin login. Vercel connection initially listed other projects and returned 403 for tours. Owner identified str-tours and supplied public connection details [key value omitted]. CLI device authorization was requested and owner replied 'done'; expired device code/link omitted.
+Asked whether to publish only a clean shell because content was draft. Owner instead authorized publishing everything to see the site and wanted Git pushes to deploy automatically.
+
+First full design upgrade
+Requested premium Apple-style tourism look with cinematic photography, large typography, rounded cards, spacing, depth/blur, neutral palette plus ocean teal and warm sunset accents at that time. Requested complete navbar/hero/cards/gallery/sticky inquiry/timeline/map/footer/WhatsApp/design-system polish, light/dark/system preference and no flash, reduced-motion support and responsive performance.
+Admin redesign request included consistent sidebar/topbar, grouped forms, sticky save bar/unsaved warning, feedback, skeletons, helpful empty states, tables/search/badges, delete confirmation, obvious drag handles and mobile usability; useful dashboard counts/recent inquiries/shortcuts.
+Owner authorized freely licensed landscape photos. Browser upload extension blocked local files; owner enabled file access, then was asked to upload five prepared JPGs from the temporary tours-design-photos folder manually. Owner replied 'Uploaded'. Credits/attachments were part of subsequent work; exact original tool transcript is unavailable.
+
+Mock data and quality check
+Requested realistic mock marketing copy throughout, editable legal drafts, team/vehicles, at least six complete tours including hill-country/tea trail, fifteen places, eight mock reviews and three blog posts, every home section, properly licensed downloaded/compressed/Storage-hosted photos with credits and alt text.
+Requested is_placeholder=true, no invented real identities/licensing claims, and confirmed 'Remove all mock data' action removing mock rows/media while preserving real data.
+Requested full quality/security review, missing-data safety, accessibility, performance, anonymous/non-admin RLS checks, optional environment-configured Turnstile for login/inquiry, unused code removal, deployment and desktop/mobile light/dark checks. Later security request made public submissions fail closed if required security configuration is absent.
+Owner asked how to share a Vercel link without Vercel login. This concerns Deployment Protection/using the intended production domain, separate from application admin authentication.
+
+Sapphire mobile-first redesign
+Owner said UI still basic and requested serious visual work at 360, 390, 430, 768, 1280 and 1536 widths in both themes.
+Explicitly replaced teal/green, including saved database values, with sapphire blue (about #0B5FD6 light/#4C9AFF dark), sunset coral/amber (#FF7A45), Apple neutrals (#FBFBFD/#FFFFFF/#1D1D1F light; #0B0B0F/#151519/#F5F5F7 dark). Values remain editable. Updated map colors/badges/focus.
+Requested binary animated light/dark toggle following device preference initially, remembered thereafter; two compact tour/destination cards per mobile row, three tablet, three/four desktop; 4:5 imagery, clamped titles, compact tags; smaller lower WhatsApp respecting safe area and sticky booking; mobile price/enquiry bar; big tap targets/full-screen menu/100svh hero.
+Requested rich home with floating search, featured grid, stats, three steps, bento destinations, map, guide story, swipe reviews, FAQ and sunset CTA; refined font pairing; transform/opacity-only animations and reduced motion. Admin same palette/toggle/mobile attention. Requested deployment/mobile production checks.
+
+Single-tour map redesign and polish
+Requested Overview plus published tour selector; only one selected route shown; overview clustered places only; desktop thumbnail panel/mobile detail sheet; fit route, numbered stops/day labels/distances/drive-time information.
+Requested merged repeated coordinates such as '1 · 5', spiderfying/label collision handling, outlined colored pins, day highlighting/faded others, destination popup/link, shareable ?tour=slug&day=2, matching themes, same behavior on tour detail.
+Requested public/admin visual review at 360/390/768/1280/1536 both modes; consistent cards/forms/tables/feedback/spacing/contrast/keyboard/overflow; deploy.
+Owner subsequently asked push to main, noted Vercel did not show it, asked whether a branch needed merging and to push again, then said it worked. Exact intermediate deployment/merge replies are unavailable.
+Owner requested a better floating WhatsApp button and push. Then requested much larger visible mobile map with compact dropdown tour/day controls because chips consumed available space.
+
+Submission security, performance and maintenance
+Owner prioritized removal of anonymous inquiry inserts, including grants/policy and header-trusting trigger. Authorized SUPABASE_SECRET_KEY ONLY in a new server-only submissions module for verified inquiry/review writes. Missing variable must fail closed. This explicit exception superseded the original universal publishable-key-only rule.
+Requested server-verified Cloudflare Turnstile; database per-IP hashed and per-email rate limits with expiry; overall warning cap rather than globally blocking visitors; server minimum-time check, honeypot and Zod. Direct anonymous Data API inserts must fail while local website forms work using Cloudflare test keys.
+Requested same for public reviews, always pending; scoped tour detail queries; cookie-free public reads cached/tagged and invalidated by admin mutations; explicit database errors to retry boundaries, not empty results/not-found.
+Requested Prettier/repo format script, short accurate README, automated smoke coverage for denied inserts, valid inquiry, non-admin rejection, public content and map selection; AGENTS secret-module exception. Owner configured non-admin smoke-test credentials privately in .env.local and replied 'configured'. Credentials are omitted.
+Owner then asked whether all issues were fixed. Full response is unavailable, so this file does not assert all issues were resolved.
+
+Shared places and routes
+Owner asked whether admin could add/edit map places, connect one to several/all tours, reorder route dots and delete shared dots without deleting tours, reconnecting surrounding stops. Also requested desktop button alignment then mobile polish.
+Owner signed in at localhost:3114 for live route checks. Historical report describes a draft place connected to two tours and removed without deleting tours.
+
+Visitor journey review
+Owner requested a 'full login test' and comparison with leading tourism websites, adding useful functions/details/logics incrementally. Clarification answer: 'Full visitor journey', meaning browse tours to map to inquiry.
+Subsequent work included price/duration sorting, destination-name search, clear filters, results counts, section shortcuts and tour-linked inquiry text. Owner later asked whether more was needed and whether places support adding photos, including new places. Yes, the implemented places form has photography fields via the reusable picker.
+
+Keep-alive
+Owner asked to inspect the Proedge project's Supabase keep-alive approach and add a similar file without wasting credits, then asked if tours had it. Historical implementation evidence: daily Vercel keep-alive route, described below. It is not a guarantee against project pausing.
+
+Latest mobile screenshots
+Owner supplied two screenshots dated 5 November 2026 showing the mobile homepage and full-screen menu and said alignment/UI looked poor. Requested use of installed skills and international tourism references, conserve quota, fix mobile alignments and bugs, skip tests, then push. Latest inspected application commit for that task was 5009203, 'Refine mobile tourism layouts and navigation'. Tests were intentionally skipped for that original UI task; checks were run later for the handover.
+
+Handover document request
+Owner explicitly requested a complete Word handover: important details, current state, work done, work remaining, technologies, commands, future ideas/plans/requirements and every necessary project detail.
+The next sections summarize the verified handover work on 6 November 2026.
+
+3. HANDOVER INSPECTION AND DELIVERY ON 6 NOVEMBER 2026
+Initial inspection saw application revision e4fb241 and uncommitted UI work in public layout, design.css, map-explorer and mobile-booking-bar. Lint passed but typecheck/build failed with an undefined day in map-explorer.tsx around line 184. Review also found experimental nested html/font-mapping/optional Map.get concerns. These findings applied to that interim checkout, not the final application snapshot.
+While preparing the document, the repository changed externally back to commit 5009203 with a clean working tree. The agent did not restore or overwrite those changes. The handover was revised to describe the actual final checkout and distinguish the abandoned/interim code.
+Assistant update: 'The repository changed while the document was being prepared: it is now back at the earlier mobile-layout revision, with the unfinished edits gone. I’m updating the handover and rerunning the checks so it describes the files currently present.'
+Final application snapshot 5009203 passed lint, typecheck and production build. No new live browser/production audit was performed for the document.
+Created docs/Visit-Sri-Lanka-Project-Handover.docx: 17 pages, approximately 5,487 words, 17 numbered sections plus introduction. Covered identity/scope, rules, status, history, architecture, public/admin workflows, maps, database/storage, authentication/submissions, themes/content, environment/commands, testing/deployment, recovery/launch risks, roadmap, acceptance and migration/source inventories.
+Document was generated using the bundled Python document library. Packaged LibreOffice rendering was unavailable; hidden Microsoft Word export produced a QA PDF, converted to PNGs. Every page was visually inspected; heading colors and an unwanted title border were corrected. QA intermediates remained under ignored test-results. Only the Word deliverable was committed.
+Assistant update: 'The handover is written, and lint, typecheck and build pass. I’m checking the Word document’s layout before committing and pushing it.'
+Assistant update: 'The document covers the project’s features, architecture, database, security, commands, deployment, remaining checks and future roadmap. It separates verified results from older test reports and proposed work.'
+Commit 063bdb1: Add comprehensive project handover document.
+Push succeeded: origin/main advanced from 5009203 to 063bdb1.
+Final assistant reply: 'Created the 17-page handover covering features, technologies, database, security, commands, deployment, current status, remaining work and future plans. No secrets included. Lint, typecheck and build passed. Committed and pushed to main. Production checks still needed are listed inside.' A link to the Word file was included.
+
+4. IMPLEMENTED ARCHITECTURE AND HOW THE PROJECT WORKS
+Next.js Server Components load public content. Client components handle interactive forms, theme switching, galleries, maps and editor interactions. Server Actions perform validated mutations. Public and admin rendering are separated by route groups and authorization boundaries.
+Last inspected package versions: Next 16.4.2, React 19.3.0, TypeScript ^5, Tailwind 4.3.3, Supabase JS 2.118.0, Supabase SSR 0.12.7, React Hook Form 7.90.0, Zod 4.6.7, Leaflet 1.9.4, react-leaflet 5.0.0, leaflet.markercluster 1.5.3, Playwright 1.64.1, Prettier 3.9.10. Check package.json/lockfile for future changes.
+
+Public routes
+Home renders published home page_sections. /tours supports search/filter/sort. /tours/[slug] loads the requested tour with related itinerary, route, places and media. /destinations and /destinations/[slug] show places. /places is a compatibility route. /map shows the route explorer. /blog and /blog/[slug] show stories. About, FAQ, reviews, contact and legal pages use published page records and generic /[slug] rendering. Sitemap/robots/SEO metadata support discovery. /api/keep-alive makes a minimal anonymous database read.
+Visitor flow: home/navigation -> tour/destination discovery -> details/itinerary/photos -> route/map -> inquiry, with tour context carried into the form. No checkout.
+
+Admin routes and workflows
+/admin/login is the public login entry. Protected admin includes dashboard, settings, navigation, footer, media, tours, places, reviews, inquiries, team, vehicles, FAQs, blog and pages. Verify current route files for exact naming.
+Settings control business identity, contact details, currency, default SEO, colors, curated fonts, radius, trust fields, feature switches and public UI/form labels. Navigation/footer changes are staged and saved transactionally. Media uploads supply reusable records. Tour editors manage itinerary, galleries and route stops. Places can be shared by multiple tours. Reviews require approval and publication. Inquiry statuses and notes are private; changing status does not automatically email the visitor. Generic editors manage remaining content and typed page sections.
+Saving published content changes live data rather than maintaining a separate review/draft revision. Successful writes invalidate public cache. Slug changes may break old links; a general redirect manager is future work. Concurrent edits use optimistic timestamps where implemented; reload/reconcile stale conflicts.
+
+Data model
+site_settings: editable JSON configuration; canonical slug site-config. navigation-ui and footer settings carry additional editable UI/text. Preserve legacy rows; do not use them as competing public truth.
+nav_items: ordered navigation, one child level, visibility/new-tab/link data.
+footer_links: ordered grouped links.
+pages: route metadata and publication.
+page_sections: ordered typed JSON content and visibility tied to parent page.
+media: Storage path, MIME/type, dimensions, alt text, caption/credits and mock provenance.
+tours: title/slug/descriptions/duration/from-price/currency/difficulty/seasons/tags/transport/gallery/SEO/publication.
+itinerary_days: ordered daily title/description/locations/travel time/photos.
+places: description, region, tips, best time, photos and coordinates.
+route_stops: ordered tour/day/place connection and route coordinate/display data.
+vehicles, team_members: editable business presentation.
+reviews: guest display/country/rating/date/tour/photo/source, approved/pending and publication.
+blog_posts: editorial stories/media/SEO.
+faqs: questions and answers.
+inquiries: private trip/contact requests, selected tour, status new/replied/booked and internal notes.
+admin_users: private Auth user-ID allow-list, constrained to one administrator.
+Private support tables/functions handle submission rate limits, older submission-window records and mock media cleanup. Inspect migrations for exact names rather than exposing them publicly.
+Editorial data uses slugs, sorting, timestamps, publication and placeholder flags as appropriate. Private inquiries/admin membership deliberately do not behave as public editorial content.
+
+Database policies
+RLS is required. Public reads require published content and published parents; reviews also need approval. An itinerary day referenced by a route stop must belong to the same tour. private.is_admin() stays in a non-exposed schema with no arbitrary-user lookup. Membership comes from verified Auth user ID, never user-editable metadata/email alone.
+Anonymous and non-admin inquiry/review insert access is denied, including direct Data API/privileged RPC access. Earlier public insert policies were superseded. Admin writes use the owner session with publishable-key clients and RLS. Do not use the privileged submission client for general admin CRUD/public reads.
+Migrations are immutable once applied. Add new files under supabase/migrations, and reconcile local versions with the connected remote ledger. Do not apply destructive fixture SQL to the owner-populated project. supabase/seed.sql is starter/draft data; do not overwrite owner content. supabase/admin-bootstrap.sql is for the owner-created Auth user.
+
+Authentication
+Next.js 16 uses src/proxy.ts for refresh/protection. Every admin data boundary/action must independently call requireAdmin(); layout/proxy alone is insufficient. Verified Auth user plus admin_users membership is required. Unauthorized sessions are cleared/redirected with correct cookies and private/no-store headers. Logout is POST, uses Supabase signOut and clears local session cookies. Login errors remain generic. Public signup should stay disabled. Admin is noindex and disallowed in robots, but those do not provide security.
+Login throttle is per-process: 10 attempts per 10 minutes per identity, bounded to 10,000 tracked entries; it does not replace platform/Auth limits. Keep Server Action origin protection and development argument logging disabled so credentials are not logged.
+
+Submission security
+Only src/lib/supabase/submissions.ts may create a SUPABASE_SECRET_KEY client; it imports server-only. It handles verified inquiries/reviews, signed form tickets and private rate limiting. Never expose/log/commit/reuse the secret elsewhere.
+Browser obtains signed ticket, waits minimum time, completes Turnstile and submits validated data. Server verifies ticket signature/time, challenge token/action/hostname and Zod payload. Ticket minimum is 1,500ms; maximum age 24 hours. Honeypot produces a success-shaped response without saving. Missing required configuration fails closed.
+Production IP identity uses the Vercel-controlled forwarding header, not arbitrary visitor-supplied headers. Identifiers are HMAC-hashed. Transactional database limits are 6 submissions per IP per kind per hour and 3 inquiries per email per hour; expired buckets are removed. Overall 1,000 threshold and each following 100 emit warnings rather than blocking every visitor.
+Saved inquiries start new with no visitor-supplied private notes. Submitted public reviews start pending; feature setting defaults off. Consent is required. Optional Resend/Postmark notification runs after saved inquiry; missing provider config skips silently. Last inspected notification helper did not inspect provider HTTP success; real delivery and observability remain follow-up work.
+
+Public reads and errors
+Cookie-free publishable client; 60-second tagged Next.js cache. Admin mutations invalidate public-content. Detail queries scope to requested records instead of loading the full catalogue. Database failures must throw sanitized server-logged errors into retry boundaries. Only successful missing-row results lead to not-found. Do not restore old blanket no-store public behavior or silently turn database failures into empty arrays.
+
+Media
+Public site-media bucket is intentional; never put private documents/secrets/inquiry attachments there. Public can read; only admin may write. Supported JPEG/PNG/WebP/MP4/WebM. Client rejects over 50 MiB; scales images to at most 2,400px longest edge and compresses at quality 0.82. Video is uploaded, not transcoded. Use meaningful alt text and photo-license credits in captions. Images are stored in Supabase, not hotlinked. Logo/favicon accept appropriate project Storage image URLs. Storage policies and database policies are separate. Back up both objects and database metadata.
+
+Maps and shared places
+Overview shows clustered place markers without every route. Choosing a tour shows its numbered stops and line only, fits bounds and supports day highlighting. Selection is shareable with ?tour=slug&day=2. Mobile has compact selectors/detail sheet; desktop has route panel. Tour detail is locked to its own tour.
+Repeated/nearby stops are grouped; clustering/spiderfy reduces overlap. Route lines join ordered coordinates; geographic distances are approximate, not authoritative road routing. Owner travel-time values and approximations require verification.
+Create/save a place, then connect to one/several/all eligible tours and a day per tour. Reorder in the tour editor. Bulk connection limits: 100 tours per request; RPC caps 500 stops per tour. Existing place/tour connections are skipped in bulk operation; deliberate repeated visits remain editable in tour editor.
+Deleting a stop affects that tour. Deleting a place cascades associated stops while keeping tours and itinerary days. Remaining ordered stops reconnect and renumber. Moving place coordinates propagates to connected stops and changes affected tour timestamps to protect stale editors.
+
+Themes and sections
+Database CSS variables control surface/text/muted/border/accent/buttons/overlays/status/font/radius. Current design direction is sapphire plus sunset accents, not the older teal. First visit follows device theme; subsequent light/dark choice persists; pre-paint script avoids flash. System is not a third visible toggle option. Respect reduced motion, contrast and keyboard focus.
+Supported section types observed: hero, rich_text, gallery, cta, search_bar, stats, how_it_works, destinations, featured_tours, why_us, guide_story, map_preview, reviews, faq, call_to_action. Content is validated by type; collections use published entities. Section count limit 100 with duplicate-ID rejection.
+Latest mobile styling still needs a fresh visual production pass; successful compilation alone does not establish design quality.
+
+Mock data
+Sample routes include classic island, Cultural Triangle, scenic train, south coast/Galle, Yala and tea-country. Live counts/publication were not re-audited during handover. is_placeholder and visible demo notices distinguish sample content. Do not present invented reviews/staff/prices/license numbers as verified facts.
+Remove all mock data requires exact confirmation REMOVE MOCK DATA. RPC refuses unsafe real-content references. Data deletion and durable media queue commit together; Storage cleanup is separately retried/acknowledged. Real inquiries/login/real content remain. Back up first and replace shared dependencies before cleanup.
+
+5. FILES AND COMMANDS FOR THE NEXT AGENT
+Rules: AGENTS.md and C:\Users\shamh\.codex\RTK.md. Read installed Next docs in node_modules/next/dist/docs before version-sensitive code changes.
+Public implementation: src/lib/public/content.ts, cache.ts, types.ts, ui.ts, filters.ts, map-model.ts, map-selection.ts, submission-schema.ts, notify.ts.
+Supabase clients/security: src/lib/supabase/public.ts, server.ts, proxy.ts, submissions.ts; src/lib/admin/auth.ts, login-schema.ts, clear-session.ts, rate-limit.ts; src/lib/security/turnstile.ts and turnstile-core.ts.
+Settings: src/lib/settings/schema.ts, theme.ts, public.ts.
+Editors: src/lib/editor/schema.ts, data.ts, place-route-actions.ts, place-route-types.ts; src/components/admin/place-routes.tsx, route-editor.tsx, media-library.tsx, record-form.tsx.
+Public components: navbar.tsx, map-explorer.tsx, map-canvas.tsx, journey.tsx, inquiry.tsx under src/components/public.
+Other anchors: src/app/(public)/tours/[slug]/page.tsx; src/app/api/keep-alive/route.ts; next.config.ts; vercel.json; playwright.config.ts; package.json; .env.example.
+Styles include globals.css, design.css, map.css and polish.css. Accumulated overrides need careful consolidation, not a blind rewrite.
+Handover: docs/Visit-Sri-Lanka-Project-Handover.docx.
+
+Environment variable names only
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+NEXT_PUBLIC_TURNSTILE_SITE_KEY
+TURNSTILE_SECRET_KEY
+SUPABASE_SECRET_KEY
+INQUIRY_EMAIL_PROVIDER
+INQUIRY_EMAIL_API_KEY
+INQUIRY_EMAIL_FROM
+INQUIRY_EMAIL_TO
+SMOKE_NON_ADMIN_EMAIL
+SMOKE_NON_ADMIN_PASSWORD
+NEXT_DIST_DIR
+VERCEL is platform context, not a user authentication substitute.
+Keep local values in ignored .env.local and empty placeholders in tracked .env.example. Configure production values in Vercel; redeploy after build-time public values change. Cloudflare test keys only on localhost/127.0.0.1, never production. Match sender-domain verification for email providers. Never print environment files.
+
+PowerShell/local commands (reference only; not run for this history request)
+Set-Location D:\MyProjects\tours
+rtk proxy npm ci
+rtk proxy npm run dev
+rtk proxy npm run dev -- --port 3114
+rtk proxy npm run lint
+rtk proxy npm run typecheck
+rtk proxy npm run build
+rtk proxy npm run start -- --port 3115
+rtk proxy npm test
+rtk proxy npm run test:auth
+rtk proxy npm run format:check
+rtk proxy npm run format
+rtk proxy npx playwright install chromium
+rtk proxy npm run test:smoke
+rtk git status --short
+rtk git diff
+rtk git log -10 --oneline
+rtk git fetch origin
+rtk git add <explicit intended files>
+rtk git commit -m "Describe completed change"
+rtk git push origin main
+Use installed package scripts as truth. Run build/type generation sequentially; do not run dev/build into the same .next directory concurrently. NEXT_DIST_DIR supports isolation. Format changes files; inspect the diff. Use .cjs for scratch CommonJS scripts where appropriate, and confirm package module settings. No Node engine pin was found during handover; align supported local/Vercel Node versions.
+
+Testing and deployment
+Playwright smoke configuration uses localhost:3133, .next-smoke, one worker and default 390x844 viewport. Cases include denied anonymous inserts/RPC, public content, map selection, successful test-key inquiry, signed-in non-admin rejection and visitor discovery. Inquiry smoke cases create marked real database rows in the configured project; identify and clean only synthetic entries. Destructive SQL fixtures require a separate safe database.
+Historical evidence: an earlier security revision reported 39 unit/6 browser smokes; later discovery work reported 41 unit/8 browser cases across completed runs. These are not fresh production guarantees.
+Push to main is not proof of deployment. Verify Vercel Ready and exact commit, then inspect the production URL signed out. Vercel-authentication prompts indicate protection/preview-domain configuration, not application login. Never share admin credentials to bypass hosting protection.
+vercel.json schedules /api/keep-alive daily at 0 0 * * * UTC (nominally 05:30 Asia/Colombo). It queries a published site_settings ID using the public client; writes nothing; success reports awake, failure 503; response is no-store. Deployment/cron logs must be checked. This cannot recover an already paused project or guarantee free-tier uptime.
+
+6. HISTORICAL COMMIT LANDMARKS
+These were recorded in the inspected handover history; inspect Git before relying on them for changes/recovery.
+44aae11: project foundation and connection helpers.
+5ba9d48: schema, RLS and seed.
+dd47911: verified admin login/dashboard.
+90e3ffb: settings and database theme.
+ff35647: navigation/footer.
+5fa689b: media/tours.
+89257ca: remaining admin editors/routes.
+a652fd3: public pages/inquiries.
+788c2a9: public/admin design and palettes.
+d195d3b: removable mock showcase.
+2603308: form protection/resilience.
+b3e53ac: sapphire responsive styling.
+33f5840: single-tour map/clustering/day filters.
+ea6b242: server-only submissions/cache/error/smoke work.
+7e33208: shared places/routes and safe deletion.
+7f0b9a6: discovery sorting/search/visitor journey enhancements.
+040b555: daily keep-alive.
+5009203: mobile layout/navigation refinement; final inspected application snapshot.
+e4fb241: interim UI refactor observed during handover, absent from final checkout; do not assume delivered.
+063bdb1: Word handover, pushed to main on 6 November 2026.
+
+7. REMAINING WORK AND FUTURE PLAN
+Immediate verification: confirm current repository/deployment commit; inspect mobile home/menu/tour grid/tour detail/map/contact in both themes, including 360/390/430 widths and tablet/desktop. Verify real production Turnstile inquiry receipt, owner notification, public cache propagation after an admin edit, protected admin and anonymous/non-admin denials. Confirm live domain, canonical URLs, current remote migration ledger, environment configuration and cron execution. These were not freshly established by the document task.
+If recovering interim UI work: fix undefined RouteSheet day, optional route-model lookup, nested html and forced font mappings before merging. Those were interim defects, not proven remaining defects of 5009203.
+Business launch: verify prices, routes/driving times, real photos/licenses, staff/vehicle claims, real approved reviews, contact details and any SLTDA number. Review legal drafts with owner. Decide whether clearly labeled demo content remains visible. Do not claim genuine credentials or operational facts without verification.
+Operations: back up database and Storage separately and rehearse restoration; record account/domain ownership in owner's password manager; review inquiry retention; rotate exposed credentials; monitor build/cron/form failures; verify Auth password-leak protection and actual backup entitlements in dashboards. Do not assume paid settings exist.
+Recommended next phase: local-device shortlist/favorites without accounts, compare two or three published tours, robust stale/draft/removed handling and editable labels.
+Following phase: owner-managed seasonal guide, related tours based on tags/region/duration with override, packing/accessibility/family information after agreeing schema and editorial responsibilities.
+Reliability phase: notification status/retry visibility, sanitized monitoring, redirect manager, image focal points, editorial preview, migration-drift checks, safe fixtures and CI gates.
+Optional later growth: multilingual content, privacy-conscious analytics, downloadable itineraries, richer search and licensed real-road routing provider with budget/quota decisions. OpenStreetMap tiles alone do not supply driving routes.
+Payments, customer accounts, inventory and multiple admin roles remain outside current scope and require separate approval/design/security work.
+
+8. ENTRY FOR 7 NOVEMBER 2026 — PORTABLE CHAT HISTORY REQUEST
+Owner request (transcribed with spelling preserved):
+"this is good, can you do one thing, can you create a file names codex/claude project chat hostory, and write everything in  there in a text format, from the start to end, every chat, what i asked, what you reply, what we did, how this projec works, and everything, and, add the date as well, and from now on, for the every msg i send, and everything you do, have to save in the file as well, so if a switvh to another agen app or anythig, i should be able to say that\" read the file\" and every detail about the project and this chat should be there, did you get it? you dont have to run any commands in cmd to make this wight? just create a txt file insdie and write evrything you know about theprojrct. and tell me, dont waste the credits, just write it, incluide everthing., if you have any doubt that what is need to include in that, ask me before starting."
+
+Assistant progress reply:
+"I’ll create a dated text history with the requests, available replies, completed work and project details. Some earlier replies aren’t available in this chat context, so I’ll mark those gaps rather than invent them. I’ll also record the rule to keep this file updated, with passwords and keys excluded."
+
+Actions: Created this root-level plain-text file using the file-editing tool. Used a hyphen instead of the requested slash because slash denotes a directory separator. Included all available project history, condensed older requests, recent available responses, handover evidence, architecture/security/workflows, environment names, commands, operational limits, remaining checks and future ideas. No application/database changes. No shell commands, tests, commit, push or deployment were performed for this request, following the owner's instruction to just create the text file. No secrets included. Exact missing historical assistant messages remain unavailable.
+
+Assistant completion reply:
+"Created codex-claude-project-chat-history.txt with dated history, project details, commands, remaining work and future plans. I’ll keep appending future requests and work here. Missing older replies are clearly marked; secrets are excluded. No commands or tests run. Other agents should read this file and AGENTS.md before continuing."
+
+APPEND FUTURE DATED ENTRIES BELOW THIS LINE
+
+
+9. EXPANDED REPOSITORY REFERENCE — 7 NOVEMBER 2026
+Owner request: "i think the data is not enough, can you add everything you know, and every details of the project please"
+Assistant response: "I’ll expand it with details from the actual project files: routes, database migrations, settings, forms, security, tests and deployment configuration. I’ll keep secrets out and clearly mark anything that hasn’t been verified live."
+
+Method: read-only local inspection of AGENTS.md, package.json, configuration, source schemas, public queries, test definitions and migration filenames. The only intended deliverable change is this history. No remote database queries, credential files, customer records or live browser sessions were accessed. The earlier task's no-test/no-push instruction is retained for this continuation of the text-file task. Read-only shell commands WERE used this time to obtain accurate detail; the prior entry saying no commands applies only to the initial file creation.
+
+IMPORTANT CORRECTIONS TO EARLIER SECTIONS
+Playwright actually uses localhost:3113, not localhost:3133. Both baseURL and the launched dev server use 3113 in the inspected config. The earlier history/handover port was a transcription error.
+map-selection.ts is under src/components/public, not src/lib/public. Use the file inventory below as the authoritative local-path snapshot.
+The existing history file was untracked at this inspection. It has not yet been committed merely because earlier application/handover commits were pushed.
+There is no .github directory in this inspected checkout; do not assume an existing GitHub Actions pipeline. Git integration hosting and automated CI checks are different things.
+The historic green palette and old anonymous-submission/no-store rules are obsolete directions. Current rule precedence is the final security/cache exception in AGENTS.md, then newer explicit owner instructions. Historical SQL may contain policies/triggers later removed. Always interpret migrations in order, not independently as current deployed policy.
+
+EXACT EDITOR DETAILS AND EDGE CASES
+Slug generation normalizes Unicode NFKD, removes combining accents, lowercases, replaces non-ASCII-alphanumeric sequences with hyphens, trims hyphens and truncates generated slugs to 150 characters. Explicit slugs permit lowercase letters/numbers separated by single hyphens, up to 180 characters.
+Common short text max 300; long text max 20,000. Titles require nonempty trimmed text. Lists have at most 100 entries, each up to 1,000 characters; photo ID arrays max 100. IDs are UUIDs.
+Tour days: integer 1–365; nights nullable integer 0–365; from price nullable 0–9,999,999,999.99. Zero price is valid in the schema and is not equivalent to null. Summary max 1,000. SEO title max 160 and description max 320. OG media is nullable UUID.
+Tour editor accepts up to 365 days and explicit deleted-day IDs; up to 500 stops and deleted-stop IDs. Rejects duplicate day/stop IDs, a day both present and deleted, itinerary longer than duration and stops assigned to missing days. Route colors require six-digit hex. Travel modes: road, rail, walk, boat, safari.
+Places: latitude -90 to 90, longitude -180 to 180; separate approximate-coordinate flag; type, best-months and region; cover and photos; best-time text and tips; SEO. Empty editor map starts near Sri Lanka at 7.8731, 80.7718. This is an editor default, not a verified destination location.
+Reviews: integer rating 1–5; body required; nullable tour/date/photo/country; source URL HTTPS only with no credentials, controls, whitespace or backslash bypass. Team includes role, biography and languages. Vehicles: passenger capacity 1–200; luggage nullable 0–200. FAQ supports category and optional tour. Blog stores body in a content object plus author, date, excerpt, cover and SEO.
+Admin inquiry update accepts only ID, expected updated_at, new/replied/booked status and notes max 20,000. It is separate from the public submission schema.
+Page section types are not arbitrary executable components. Known type validation controls content. Section collections cap limit at 24, default 6. why_us max 12 items; stats max 8; how_it_works max 6. Hero supports media/video, eyebrow, primary/secondary links and scroll cue. CTA links accept safe internal paths or HTTPS. Render text escaped; never use arbitrary stored HTML/CSS/scripts.
+
+PUBLIC FORM DETAILS
+Trip name 1–150, valid email max 254, country 1–100, optional WhatsApp max 50 with phone-like characters, optional ISO start/end dates, 1–100 integer travelers, interests max 2,000, budget max 300, message 10–5,000, explicit true consent, optional UUID tour, honeypot max 300 and positive integer startedAt. End cannot precede start; start cannot be in past under current UTC-date comparison. Server signed timing is additional protection; browser startedAt alone is not trusted.
+Review name 1–150, country max 100, integer stars 1–5, message 10–5,000, optional ISO date not in future, optional tour, explicit consent and anti-bot fields. Exact source follows below.
+
+THEME AND SETTINGS DETAILS
+Curated font choices currently are system sans, Georgia serif and Arial sans; arbitrary font names are not accepted. Empty editor defaults use Georgia headings, system body and radius 24. Radius allowed 0–40. A future font feature must extend validation, admin choices and public mapping together.
+Published themes check 4.5:1 contrast for configured text/background, text/surface, muted/surface, accent-text/accent, sunset text/sunset, light/dark soft surfaces, hero text/overlay and success/error pairs. This validation does not substitute for checking real photograph overlays or every browser state.
+Identity limits: business name 120, tagline 300, address 600, SLTDA 100, contact email 254, phone 32, social links max 12 with 60-character labels. Currency three uppercase letters. URLs up to 2,048 and HTTPS where required. Published settings require business name.
+Feature settings include demoMode, publicReviews, inquiriesEnabled, cookieNoticeEnabled, siteUrl, OG image and arbitrary named UI label values (keys max 100, values max 2,000). Map latitude/longitude use global valid bounds and zoom 2–16.
+
+SEARCH AND SORT DETAILS
+Allowed filters: q, duration, tag, region, month, type, sort. Repeated query params normalize to the first value, capped at 200 characters. Search is case-insensitive across tour title, summary, tags and linked place names. Duration is exact day count. Tags/month match stored values. Regions combine explicit tour regions with linked place regions, deduplicated. Filters combine rather than independently overriding one another.
+Price ordering puts missing prices last, groups by currency alphabetically and then applies requested numeric direction; it does not perform currency conversion. Duration ascending/descending supported; default retains source ordering. Map distance uses haversine with Earth radius 6,371 km and rounds summed kilometers; this is not driving distance.
+
+ONGOING DESIGN REQUIREMENTS AND UNVERIFIED CLAIMS
+Owner expects phone-first quality, two mobile cards per row, useful visible map height, compact mobile tour/day selection, safe-area-aware floating WhatsApp, nonoverlapping sticky enquiry bar, full-screen navigation and readable light/dark themes. Device viewport checks requested historically included 360, 390, 430, 768, 1280 and 1536 widths. Do not mark all these verified based on lint or screenshots of one width.
+Royalty-free means license terms still apply. Keep original credits and verify rights per image. Original source URLs for every uploaded image are not in this available chat; inspect media captions and licensing records rather than inventing them. Never reconstruct mock reviews as real testimonials.
+No live database row counts, current production URL, latest Vercel status, enabled subscription features, remote migration ledger or actual email delivery were established by this expansion. Credentials belong in the owner's secure store, not this history.
+
+HOW TO READ THE TECHNICAL APPENDICES
+The following exact local source excerpts and generated inventories provide portable detail without reproducing the entire repository. They are historical snapshots as of this entry. They are reference data, not commands to execute automatically. Future edited source supersedes them. Never replay historical SQL blindly. Excerpts intentionally omit environment files, keys, generated output, customer data and dependency folders.
+A. COMPLETE APPLICATION AND TEST FILE INVENTORY
+src/app/(public)/[slug]/page.tsx
+src/app/(public)/actions.ts
+src/app/(public)/blog/[slug]/page.tsx
+src/app/(public)/blog/page.tsx
+src/app/(public)/destinations/[slug]/page.tsx
+src/app/(public)/destinations/page.tsx
+src/app/(public)/error.tsx
+src/app/(public)/layout.tsx
+src/app/(public)/loading.tsx
+src/app/(public)/map/page.tsx
+src/app/(public)/page.tsx
+src/app/(public)/places/page.tsx
+src/app/(public)/tours/[slug]/page.tsx
+src/app/(public)/tours/page.tsx
+src/app/admin/(protected)/[section]/[id]/page.tsx
+src/app/admin/(protected)/[section]/actions.ts
+src/app/admin/(protected)/[section]/page.tsx
+src/app/admin/(protected)/footer/page.tsx
+src/app/admin/(protected)/inquiries/[id]/page.tsx
+src/app/admin/(protected)/inquiries/actions.ts
+src/app/admin/(protected)/inquiries/page.tsx
+src/app/admin/(protected)/layout.tsx
+src/app/admin/(protected)/loading.tsx
+src/app/admin/(protected)/media/actions.ts
+src/app/admin/(protected)/media/page.tsx
+src/app/admin/(protected)/mock-data/actions.ts
+src/app/admin/(protected)/mock-data/cleanup-form.tsx
+src/app/admin/(protected)/mock-data/page.tsx
+src/app/admin/(protected)/navigation/actions.ts
+src/app/admin/(protected)/navigation/page.tsx
+src/app/admin/(protected)/page.tsx
+src/app/admin/(protected)/settings/actions.ts
+src/app/admin/(protected)/settings/page.tsx
+src/app/admin/(protected)/settings/settings-form.tsx
+src/app/admin/(protected)/tours/[id]/page.tsx
+src/app/admin/(protected)/tours/actions.ts
+src/app/admin/(protected)/tours/page.tsx
+src/app/admin/actions.ts
+src/app/admin/layout.tsx
+src/app/admin/login/actions.ts
+src/app/admin/login/login-form.tsx
+src/app/admin/login/page.tsx
+src/app/api/keep-alive/route.ts
+src/app/design.css
+src/app/error.tsx
+src/app/global-error.tsx
+src/app/globals.css
+src/app/layout.tsx
+src/app/map.css
+src/app/not-found.tsx
+src/app/polish.css
+src/app/robots.ts
+src/app/sitemap.ts
+src/components/admin/admin-shell.tsx
+src/components/admin/confirm-button.tsx
+src/components/admin/editor-fields.tsx
+src/components/admin/inquiry-form.tsx
+src/components/admin/link-editor.tsx
+src/components/admin/logout-button.tsx
+src/components/admin/map.tsx
+src/components/admin/map-canvas.tsx
+src/components/admin/media-library.tsx
+src/components/admin/place-routes.tsx
+src/components/admin/record-form.tsx
+src/components/admin/record-list.tsx
+src/components/admin/route-editor.tsx
+src/components/admin/save-bar.tsx
+src/components/admin/sections-editor.tsx
+src/components/admin/tour-form.tsx
+src/components/admin/tour-list.tsx
+src/components/public/cards.tsx
+src/components/public/cookie-notice.tsx
+src/components/public/floating-contact.tsx
+src/components/public/footer.tsx
+src/components/public/gallery.tsx
+src/components/public/hero-video.tsx
+src/components/public/image-gallery.tsx
+src/components/public/inquiry.tsx
+src/components/public/journey.tsx
+src/components/public/map-canvas.tsx
+src/components/public/map-explorer.tsx
+src/components/public/map-selection.ts
+src/components/public/mobile-booking-bar.tsx
+src/components/public/navbar.tsx
+src/components/public/photo.tsx
+src/components/public/reveal.tsx
+src/components/public/sections.tsx
+src/components/theme-toggle.tsx
+src/components/turnstile.tsx
+src/lib/admin/auth.ts
+src/lib/admin/clear-session.ts
+src/lib/admin/login-schema.ts
+src/lib/admin/navigation.ts
+src/lib/admin/rate-limit.ts
+src/lib/editor/data.ts
+src/lib/editor/place-route-actions.ts
+src/lib/editor/place-route-types.ts
+src/lib/editor/schema.ts
+src/lib/media/admin.ts
+src/lib/media/shared.ts
+src/lib/navigation/admin.ts
+src/lib/navigation/public.ts
+src/lib/navigation/schema.ts
+src/lib/public/cache.ts
+src/lib/public/content.ts
+src/lib/public/filters.ts
+src/lib/public/map-model.ts
+src/lib/public/notify.ts
+src/lib/public/seo.ts
+src/lib/public/submission-schema.ts
+src/lib/public/types.ts
+src/lib/public/ui.ts
+src/lib/security/turnstile.ts
+src/lib/security/turnstile-core.ts
+src/lib/settings/public.ts
+src/lib/settings/schema.ts
+src/lib/settings/theme.ts
+src/lib/supabase/client.ts
+src/lib/supabase/env.ts
+src/lib/supabase/proxy.ts
+src/lib/supabase/public.ts
+src/lib/supabase/server.ts
+src/lib/supabase/submissions.ts
+src/proxy.ts
+tests/admin-auth.test.mjs
+tests/editor.test.mjs
+tests/navigation.test.mjs
+tests/public-footer.test.mjs
+tests/public-site.test.mjs
+tests/settings.test.mjs
+tests/smoke/public.spec.ts
+tests/source-module.mjs
+tests/submissions.test.mjs
+tests/turnstile.test.mjs
+supabase/.gitignore
+supabase/.temp/cli-latest
+supabase/admin-bootstrap.sql
+supabase/migrations/20261016170125_content_schema.sql
+supabase/migrations/20261016170144_content_access_policies.sql
+supabase/migrations/20261016170425_restrict_platform_trigger_function.sql
+supabase/migrations/20261017141324_navigation_footer_editors.sql
+supabase/migrations/20261019031445_media_tour_management.sql
+supabase/migrations/20261019032540_remaining_admin_editors.sql
+supabase/migrations/20261019142253_public_website_submissions.sql
+supabase/migrations/20261019143553_publish_website_content.sql
+supabase/migrations/20261019150554_polished_theme_design.sql
+supabase/migrations/20261019181018_removable_mock_showcase.sql
+supabase/migrations/20261019181414_preserve_mock_editor_provenance.sql
+supabase/migrations/20261019181831_quality_form_labels.sql
+supabase/migrations/20261019182116_consolidate_review_insert_policies.sql
+supabase/migrations/20261019182441_repair_itinerary_media_references.sql
+supabase/migrations/20261019191400_sapphire_premium_design.sql
+supabase/migrations/20261019192225_sapphire_design_refinements.sql
+supabase/migrations/20261019193546_distinct_tour_cover.sql
+supabase/migrations/20261020080628_single_tour_map_labels.sql
+supabase/migrations/20261021223249_server_only_submissions.sql
+supabase/migrations/20261029123348_shared_place_routes.sql
+supabase/migrations/20261029193014_tour_discovery_labels.sql
+supabase/README.md
+supabase/seed.sql
+supabase/tests/navigation_rls.sql
+supabase/tests/rls_smoke.sql
+supabase/tests/shared_place_routes.sql
+
+B. EXACT SAFE CONFIGURATION AND DATA CONTRACT SNAPSHOTS
+
+BEGIN SOURCE SNAPSHOT: package.json
+{
+  "name": "tours",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build --webpack",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test:auth": "node --test tests/admin-auth.test.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --test tests/*.test.mjs",
+    "test:smoke": "playwright test"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "5.9.1",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.118.0",
+    "leaflet": "1.9.4",
+    "leaflet.markercluster": "1.5.3",
+    "next": "16.4.2",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.90.0",
+    "react-leaflet": "5.0.0",
+    "server-only": "0.0.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/leaflet": "1.9.22",
+    "@types/leaflet.markercluster": "1.5.6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.2",
+    "prettier": "3.9.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
+
+END SOURCE SNAPSHOT: package.json
+
+
+BEGIN SOURCE SNAPSHOT: next.config.ts
+import type { NextConfig } from "next";
+const nextConfig: NextConfig = {
+  // Next.js 16.4 logs Server Function arguments by default in development.
+  // Login arguments contain passwords: never forward them to terminal logs.
+  logging: false,
+  distDir: process.env.NEXT_DIST_DIR || ".next",
+  images: {
+    remotePatterns: process.env.NEXT_PUBLIC_SUPABASE_URL
+      ? [
+          {
+            protocol: "https",
+            hostname: new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname,
+            pathname: "/storage/v1/object/public/site-media/**",
+          },
+        ]
+      : [],
+    formats: ["image/avif", "image/webp"],
+  },
+};
+export default nextConfig;
+
+END SOURCE SNAPSHOT: next.config.ts
+
+
+BEGIN SOURCE SNAPSHOT: vercel.json
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "crons": [{ "path": "/api/keep-alive", "schedule": "0 0 * * *" }]
+}
+
+END SOURCE SNAPSHOT: vercel.json
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/settings/schema.ts
+import { z } from "zod";
+
+export const fonts = {
+  system: {
+    label: "System sans",
+    css: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  georgia: { label: "Georgia serif", css: 'Georgia, "Times New Roman", serif' },
+  arial: { label: "Arial sans", css: "Arial, Helvetica, sans-serif" },
+} as const;
+const text = (max: number) => z.string().trim().max(max);
+const url = text(2048).refine((value) => {
+  if (!value) return true;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "https:" && !parsed.username && !parsed.password;
+  } catch {
+    return false;
+  }
+}, "Enter a full HTTPS URL, or leave blank.");
+const phone = text(32).refine(
+  (v) => !v || /^\+?[0-9 ()-]{7,32}$/.test(v),
+  "Enter a valid phone number.",
+);
+const color = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a six-digit hex colour, such as #0B5FD6.");
+export function contrastRatio(a: string, b: string) {
+  const luminance = (hex: string) => {
+    const rgb = [1, 3, 5]
+      .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
+  };
+  const x = luminance(a),
+    y = luminance(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+export const themeDefaults = {
+  secondary: "#FF7A45",
+  soft: "#F0F3FA",
+  surface: "#FFFFFF",
+  muted: "#64646F",
+  accentText: "#FFFFFF",
+  secondaryText: "#28180E",
+  darkBackground: "#0B0B0F",
+  darkText: "#F5F5F7",
+  darkAccent: "#4C9AFF",
+  darkSecondary: "#FF925F",
+  darkSurface: "#151519",
+  darkSoft: "#202027",
+  darkMuted: "#A9A9B5",
+  darkAccentText: "#0B0B0F",
+  darkSecondaryText: "#28180E",
+  heroOverlay: "#10162B",
+  heroText: "#FFFFFF",
+  successColor: "#0B5FD6",
+  errorColor: "#AA3441",
+  darkSuccessColor: "#89B8FF",
+  darkErrorColor: "#FFABB5",
+} as const;
+export const themeColorLabels: Record<keyof typeof themeDefaults, string> = {
+  secondary: "Sunset highlight",
+  soft: "Soft neutral tint",
+  surface: "Card background",
+  muted: "Secondary text",
+  accentText: "Text on accent",
+  secondaryText: "Text on sunset highlight",
+  darkBackground: "Background",
+  darkText: "Text",
+  darkAccent: "Sapphire accent",
+  darkSecondary: "Sunset highlight",
+  darkSurface: "Card background",
+  darkSoft: "Soft neutral tint",
+  darkMuted: "Secondary text",
+  darkAccentText: "Text on accent",
+  darkSecondaryText: "Text on sunset highlight",
+  heroOverlay: "Hero gradient",
+  heroText: "Text on hero",
+  successColor: "Success message",
+  errorColor: "Error message",
+  darkSuccessColor: "Success message",
+  darkErrorColor: "Error message",
+};
+const themeColors = Object.fromEntries(
+  Object.entries(themeDefaults).map(([key, value]) => [key, color.default(value)]),
+) as { [K in keyof typeof themeDefaults]: z.ZodDefault<typeof color> };
+export const settingsSchema = z
+  .object({
+    demoMode: z.boolean().default(false),
+    ...themeColors,
+    navCtaLabel: text(100).default(""),
+    navCtaHref: url.or(z.string().regex(/^\/(?!\/)[a-zA-Z0-9/#?=_-]*$/)).default(""),
+    businessName: text(120),
+    tagline: text(300),
+    logo: url,
+    favicon: url,
+    contactEmail: z.union([z.literal(""), z.email().max(254)]),
+    phone,
+    whatsapp: phone,
+    address: text(600),
+    sltda: text(100),
+    currency: z.string().regex(/^[A-Z]{3}$/, "Use a three-letter currency code, such as USD."),
+    socialLinks: z
+      .array(
+        z.object({
+          label: text(60).min(1, "Add a label."),
+          url: url.refine(Boolean, "Add a URL."),
+        }),
+      )
+      .max(12),
+    seoTitle: text(160),
+    seoDescription: text(320),
+    accent: color,
+    background: color,
+    textColor: color,
+    headingFont: z.enum(["system", "georgia", "arial"]),
+    bodyFont: z.enum(["system", "georgia", "arial"]),
+    radius: z.number().int().min(0).max(40),
+    published: z.boolean(),
+    siteUrl: url.default(""),
+    ogImageId: z.uuid().nullable().default(null),
+    publicReviews: z.boolean().default(false),
+    inquiriesEnabled: z.boolean().default(true),
+    cookieNoticeEnabled: z.boolean().default(true),
+    ui: z.record(z.string().max(100), text(2000)).default({}),
+    mapLatitude: z.number().min(-90).max(90).default(7.8731),
+    mapLongitude: z.number().min(-180).max(180).default(80.7718),
+    mapZoom: z.number().int().min(2).max(16).default(7),
+  })
+  .refine((v) => !v.published || !!v.businessName, {
+    path: ["businessName"],
+    message: "Add the business name before publishing.",
+  })
+  .superRefine((v, ctx) => {
+    if (v.published) {
+      const pairs = [
+        ["textColor", "background"],
+        ["accent", "background"],
+        ["muted", "background"],
+        ["textColor", "surface"],
+        ["muted", "surface"],
+        ["accentText", "accent"],
+        ["secondaryText", "secondary"],
+        ["darkText", "darkBackground"],
+        ["darkText", "darkSurface"],
+        ["darkMuted", "darkBackground"],
+        ["darkMuted", "darkSurface"],
+        ["darkAccent", "darkBackground"],
+        ["darkAccentText", "darkAccent"],
+        ["darkSecondaryText", "darkSecondary"],
+        ["heroText", "heroOverlay"],
+        ["textColor", "soft"],
+        ["muted", "soft"],
+        ["darkText", "darkSoft"],
+        ["darkMuted", "darkSoft"],
+        ["successColor", "surface"],
+        ["errorColor", "surface"],
+        ["darkSuccessColor", "darkSurface"],
+        ["darkErrorColor", "darkSurface"],
+      ] as const;
+      for (const [fg, bg] of pairs)
+        if (contrastRatio(v[fg], v[bg]) < 4.5)
+          ctx.addIssue({
+            code: "custom",
+            path: [fg],
+            message: `Needs 4.5:1 contrast against ${bg}.`,
+          });
+    }
+  });
+export type SiteSettings = z.infer<typeof settingsSchema>;
+// Blank content and neutral editor defaults are not public brand content.
+export const emptySettings: SiteSettings = {
+  demoMode: false,
+  ...themeDefaults,
+  navCtaLabel: "",
+  navCtaHref: "",
+  businessName: "",
+  tagline: "",
+  logo: "",
+  favicon: "",
+  contactEmail: "",
+  phone: "",
+  whatsapp: "",
+  address: "",
+  sltda: "",
+  currency: "USD",
+  socialLinks: [],
+  seoTitle: "",
+  seoDescription: "",
+  accent: "#0B5FD6",
+  background: "#FBFBFD",
+  textColor: "#1D1D1F",
+  headingFont: "georgia",
+  bodyFont: "system",
+  radius: 24,
+  published: false,
+  siteUrl: "",
+  ogImageId: null,
+  publicReviews: false,
+  inquiriesEnabled: true,
+  cookieNoticeEnabled: true,
+  ui: {},
+  mapLatitude: 7.8731,
+  mapLongitude: 80.7718,
+  mapZoom: 7,
+};
+export const SETTINGS_SLUG = "site-config";
+
+type Row = { slug: string; value: unknown; published: boolean };
+function object(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+export function settingsForEditor(rows: Row[]): SiteSettings | null {
+  const current = rows.find((r) => r.slug === SETTINGS_SLUG);
+  if (current) {
+    const result = settingsSchema.safeParse({
+      ...object(current.value),
+      published: current.published,
+    });
+    return result.success ? result.data : null;
+  }
+  const group = (slug: string) => object(rows.find((r) => r.slug === slug)?.value);
+  const business = group("business"),
+    contact = group("contact"),
+    seo = group("seo-defaults"),
+    theme = group("theme");
+  const colors = object(theme.colors),
+    layout = object(theme.layout);
+  const raw = {
+    ...emptySettings,
+    businessName: business.name,
+    tagline: business.tagline,
+    currency: business.currency,
+    contactEmail: contact.email,
+    phone: contact.phone,
+    whatsapp: contact.whatsapp_number,
+    address: contact.address,
+    seoTitle: seo.title,
+    seoDescription: seo.description,
+    accent: colors.accent,
+    background: colors.background,
+    textColor: colors.text,
+    radius: layout.card_radius_px,
+  };
+  const defined = Object.fromEntries(Object.entries(raw).filter(([, v]) => v !== undefined));
+  const result = settingsSchema.safeParse({ ...emptySettings, ...defined });
+  return result.success ? result.data : null;
+}
+
+END SOURCE SNAPSHOT: src/lib/settings/schema.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/settings/theme.ts
+import type { CSSProperties } from "react";
+import { fonts, type SiteSettings } from "./schema";
+export function themeStyle(s: SiteSettings): CSSProperties {
+  const light = {
+    background: s.background,
+    text: s.textColor,
+    accent: s.accent,
+    secondary: s.secondary,
+    soft: s.soft,
+    surface: s.surface,
+    muted: s.muted,
+    accentText: s.accentText,
+    secondaryText: s.secondaryText,
+    success: s.successColor,
+    error: s.errorColor,
+  };
+  const dark = {
+    background: s.darkBackground,
+    text: s.darkText,
+    accent: s.darkAccent,
+    secondary: s.darkSecondary,
+    soft: s.darkSoft,
+    surface: s.darkSurface,
+    muted: s.darkMuted,
+    accentText: s.darkAccentText,
+    secondaryText: s.darkSecondaryText,
+    success: s.darkSuccessColor,
+    error: s.darkErrorColor,
+  };
+  return {
+    ...Object.fromEntries(
+      Object.entries({ light, dark }).flatMap(([mode, colors]) =>
+        Object.entries(colors).map(([key, v]) => [`--${mode}-${key}`, v]),
+      ),
+    ),
+    "--site-heading-font": fonts[s.headingFont].css,
+    "--site-body-font": fonts[s.bodyFont].css,
+    "--site-radius": `${s.radius}px`,
+    "--hero-overlay": s.heroOverlay,
+    "--hero-text": s.heroText,
+  } as CSSProperties;
+}
+// Synchronous, constant script runs before the body is painted. No user content is interpolated.
+export const themeScript = `(()=>{let p='system';try{const s=localStorage.getItem('site-theme-v1');if(['light','dark','system'].includes(s))p=s}catch{}const r=document.documentElement;r.dataset.preference=p;r.dataset.theme=p==='system'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):p})()`;
+
+END SOURCE SNAPSHOT: src/lib/settings/theme.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/navigation/schema.ts
+import { z } from "zod";
+
+export function safeLink(value: string): boolean {
+  if (!value || /[\s\\\u0000-\u001f\u007f]/.test(value)) return false;
+  if (/%(?:0[0-9a-f]|1[0-9a-f]|7f|5c)/i.test(value)) return false;
+  if (value.startsWith("/") && !value.startsWith("//") && !/^\/%2f/i.test(value)) return true;
+  if (/^#[A-Za-z0-9_-]+$/.test(value)) return true;
+  if (/^mailto:[^@?]+@[^@?]+\.[^@?]+$/.test(value)) return true;
+  if (/^tel:\+?[0-9()-]+$/.test(value)) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && !!url.hostname && !url.username && !url.password;
+  } catch {
+    return false;
+  }
+}
+export const linkSchema = z.object({
+  id: z.uuid(),
+  label: z.string().trim().min(1, "Add a label.").max(100),
+  href: z
+    .string()
+    .trim()
+    .max(2048)
+    .refine(safeLink, "Use /path, #section, https://, mailto: or tel:."),
+  published: z.boolean(),
+  open_in_new_tab: z.boolean(),
+  parent_id: z.uuid().nullable(),
+  group_name: z.string().trim().max(100),
+});
+export type EditableLink = z.infer<typeof linkSchema>;
+export const copySchema = z.object({
+  heading: z.string().trim().max(160),
+  description: z.string().trim().max(2000),
+  copyright: z.string().trim().max(400),
+  legal_notice: z.string().trim().max(2000),
+  published: z.boolean(),
+  menu_label: z.string().trim().min(1).max(60),
+  close_label: z.string().trim().min(1).max(60),
+  whatsapp_label: z.string().trim().min(1).max(100),
+});
+// Internal editor defaults: these labels are persisted, not public fallbacks.
+export const emptyCopy = {
+  heading: "",
+  description: "",
+  copyright: "",
+  legal_notice: "",
+  published: false,
+  menu_label: "Menu",
+  close_label: "Close menu",
+  whatsapp_label: "Chat on WhatsApp",
+};
+export const editorSchema = z
+  .object({
+    kind: z.enum(["navigation", "footer"]),
+    items: z.array(linkSchema).max(100),
+    deleted: z.array(z.uuid()).max(100),
+    copy: copySchema,
+  })
+  .superRefine((value, ctx) => {
+    const ids = new Set(value.items.map((item) => item.id));
+    if (ids.size !== value.items.length)
+      ctx.addIssue({
+        code: "custom",
+        path: ["items"],
+        message: "Duplicate items are not allowed.",
+      });
+    value.items.forEach((item, index) => {
+      if (value.deleted.includes(item.id))
+        ctx.addIssue({
+          code: "custom",
+          path: ["items", index, "label"],
+          message: "Reload before saving this deleted item.",
+        });
+      if (value.kind === "navigation" && item.parent_id) {
+        const parent = value.items.find((other) => other.id === item.parent_id);
+        if (!parent || parent.parent_id || item.id === item.parent_id)
+          ctx.addIssue({
+            code: "custom",
+            path: ["items", index, "parent_id"],
+            message: "Choose a top-level item. Only one dropdown level is supported.",
+          });
+      }
+      if (value.kind === "footer" && !item.group_name)
+        ctx.addIssue({
+          code: "custom",
+          path: ["items", index, "group_name"],
+          message: "Add a group name.",
+        });
+    });
+  });
+export type LinkEditorData = z.infer<typeof editorSchema>;
+
+export function whatsappHref(number: string): string | null {
+  const digits = number.replace(/[ ()+-]/g, "");
+  return /^[1-9][0-9]{6,14}$/.test(digits) ? `https://wa.me/${digits}` : null;
+}
+
+END SOURCE SNAPSHOT: src/lib/navigation/schema.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/editor/schema.ts
+import { z } from "zod";
+export const slugify = (value: string) =>
+  value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 150)
+    .replace(/-$/g, "");
+export const short = z.string().trim().max(300),
+  long = z.string().trim().max(20000),
+  title = short.min(1, "Required"),
+  slug = z
+    .string()
+    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and hyphens")
+    .max(180);
+export const mediaId = z.uuid().nullable(),
+  photos = z.array(z.uuid()).max(100),
+  lines = z.array(z.string().trim().max(1000)).max(100);
+export const seo = z
+  .object({
+    title: z.string().max(160).default(""),
+    description: z.string().max(320).default(""),
+    og_media_id: mediaId.default(null),
+  })
+  .passthrough();
+export const base = {
+  id: z.uuid(),
+  slug,
+  published: z.boolean(),
+  updated_at: z.string().nullable(),
+};
+export const daySchema = z.object({
+  id: z.uuid(),
+  title,
+  description: long,
+  locations: short,
+  travel_time: short,
+  photos,
+});
+export const routeColour = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Use a six-digit hex colour");
+export const stopSchema = z.object({
+  id: z.uuid(),
+  place_id: z.uuid(),
+  itinerary_day_id: z.uuid(),
+  label: title,
+  travel_mode: z.enum(["road", "rail", "walk", "boat", "safari"]),
+  description: long,
+});
+export type Stop = z.infer<typeof stopSchema>;
+export type PlaceOption = { id: string; name: string; latitude: number; longitude: number };
+export const tourSchema = z.object({
+  ...base,
+  title,
+  summary: z.string().max(1000),
+  description: long,
+  duration_days: z.number().int().min(1).max(365),
+  duration_nights: z.number().int().min(0).max(365).nullable(),
+  price_from: z.number().min(0).max(9999999999.99).nullable(),
+  cover_media_id: mediaId,
+  gallery: photos,
+  difficulty: short,
+  best_months: lines,
+  tags: lines,
+  regions: lines.default([]),
+  highlights: lines,
+  inclusions: lines,
+  exclusions: lines,
+  vehicle_type: short,
+  seo,
+  route_colour: routeColour,
+});
+export const tourEditorSchema = z
+  .object({
+    tour: tourSchema,
+    days: z.array(daySchema).max(365),
+    deleted: z.array(z.uuid()).max(365),
+    stops: z.array(stopSchema).max(500).default([]),
+    deletedStops: z.array(z.uuid()).max(500).default([]),
+  })
+  .superRefine((v, ctx) => {
+    const ids = v.days.map((d) => d.id);
+    if (new Set(ids).size !== ids.length || v.deleted.some((id) => ids.includes(id)))
+      ctx.addIssue({
+        code: "custom",
+        path: ["days"],
+        message: "Duplicate or deleted itinerary day.",
+      });
+    if (v.days.length > v.tour.duration_days)
+      ctx.addIssue({ code: "custom", path: ["days"], message: "Itinerary exceeds tour duration." });
+    if (v.stops.some((s) => !ids.includes(s.itinerary_day_id)))
+      ctx.addIssue({
+        code: "custom",
+        path: ["stops"],
+        message: "Assign each stop to an existing itinerary day.",
+      });
+    if (
+      new Set(v.stops.map((s) => s.id)).size !== v.stops.length ||
+      v.stops.some((s) => v.deletedStops.includes(s.id))
+    )
+      ctx.addIssue({
+        code: "custom",
+        path: ["stops"],
+        message: "Duplicate or deleted route stop.",
+      });
+  });
+export type Tour = z.infer<typeof tourSchema>;
+export type Day = z.infer<typeof daySchema>;
+export const emptyTour: Omit<Tour, "id"> = {
+  slug: "",
+  published: false,
+  updated_at: null,
+  title: "",
+  summary: "",
+  description: "",
+  duration_days: 1,
+  duration_nights: 0,
+  price_from: null,
+  cover_media_id: null,
+  gallery: [],
+  difficulty: "",
+  best_months: [],
+  tags: [],
+  regions: [],
+  highlights: [],
+  inclusions: [],
+  exclusions: [],
+  vehicle_type: "",
+  seo: { title: "", description: "", og_media_id: null },
+  route_colour: "#0B5FD6",
+};
+export type Field = {
+  name: string;
+  label: string;
+  type?:
+    | "text"
+    | "long"
+    | "number"
+    | "lines"
+    | "image"
+    | "gallery"
+    | "checkbox"
+    | "select"
+    | "date"
+    | "color";
+  options?: { value: string; label: string }[];
+  nullable?: boolean;
+};
+export const tourFields: Field[] = [
+  { name: "title", label: "Title" },
+  { name: "slug", label: "Slug" },
+  { name: "published", label: "Published", type: "checkbox" },
+  { name: "summary", label: "Short description", type: "long" },
+  { name: "description", label: "Long description", type: "long" },
+  { name: "duration_days", label: "Duration (days)", type: "number" },
+  { name: "duration_nights", label: "Nights", type: "number", nullable: true },
+  { name: "price_from", label: "From price (USD)", type: "number", nullable: true },
+  { name: "difficulty", label: "Difficulty" },
+  { name: "best_months", label: "Best months (one per line)", type: "lines" },
+  { name: "tags", label: "Tags (one per line)", type: "lines" },
+  { name: "highlights", label: "Highlights (one per line)", type: "lines" },
+  { name: "inclusions", label: "Inclusions (one per line)", type: "lines" },
+  { name: "exclusions", label: "Exclusions (one per line)", type: "lines" },
+  { name: "vehicle_type", label: "Vehicle type" },
+  { name: "cover_media_id", label: "Cover image", type: "image" },
+  { name: "gallery", label: "Gallery", type: "gallery" },
+  { name: "seo.title", label: "SEO title" },
+  { name: "seo.description", label: "SEO description", type: "long" },
+];
+
+const https = z
+  .string()
+  .max(2048)
+  .refine((v) => {
+    if (!v) return true;
+    try {
+      const u = new URL(v);
+      return u.protocol === "https:" && !u.username && !u.password && !/[\u0000-\u0020\\]/.test(v);
+    } catch {
+      return false;
+    }
+  }, "Use a full HTTPS URL")
+  .nullable();
+const date = z.union([z.literal(""), z.iso.date()]).nullable();
+const position = {
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+};
+export const entitySchemas = {
+  places: z.object({
+    ...base,
+    name: title,
+    description: long,
+    region: short,
+    type: short.default(""),
+    best_months: lines.default([]),
+    ...position,
+    coordinates_approximate: z.boolean(),
+    cover_media_id: mediaId,
+    photos,
+    best_time: short,
+    tips: long,
+    seo,
+  }),
+  reviews: z.object({
+    ...base,
+    author_name: title,
+    country: short.nullable(),
+    rating: z.number().int().min(1).max(5),
+    body: long.min(1),
+    status: z.enum(["approved", "pending"]),
+    source_link: https,
+    tour_id: mediaId,
+    reviewed_on: date,
+    photo_media_id: mediaId,
+  }),
+  team: z.object({
+    ...base,
+    name: title,
+    role: title,
+    bio: long,
+    languages: lines,
+    photo_media_id: mediaId,
+  }),
+  vehicles: z.object({
+    ...base,
+    name: title,
+    description: long,
+    passenger_capacity: z.number().int().min(1).max(200),
+    luggage_capacity: z.number().int().min(0).max(200).nullable(),
+    features: lines,
+    cover_media_id: mediaId,
+  }),
+  faqs: z.object({
+    ...base,
+    question: title,
+    answer: long.min(1),
+    category: short,
+    tour_id: mediaId,
+  }),
+  pages: z.object({ ...base, title, seo }),
+  blog: z.object({
+    ...base,
+    title,
+    excerpt: short,
+    content: z.object({ body: long.default("") }).passthrough(),
+    author_name: short,
+    cover_media_id: mediaId,
+    published_at: z.string().nullable(),
+    seo,
+  }),
+};
+export type Entity = keyof typeof entitySchemas;
+const commonFields: Field[] = [
+  { name: "slug", label: "Slug" },
+  { name: "published", label: "Published", type: "checkbox" },
+];
+export const entityConfig: Record<
+  Entity,
+  {
+    table: string;
+    label: string;
+    titleKey: string;
+    defaults: Record<string, unknown>;
+    fields: Field[];
+  }
+> = {
+  places: {
+    table: "places",
+    label: "Places",
+    titleKey: "name",
+    defaults: {
+      name: "",
+      description: "",
+      region: "",
+      latitude: 7.8731,
+      longitude: 80.7718,
+      coordinates_approximate: true,
+      cover_media_id: null,
+      photos: [],
+      best_time: "",
+      tips: "",
+      seo: {},
+    },
+    fields: [
+      { name: "name", label: "Name" },
+      ...commonFields,
+      { name: "description", label: "Description", type: "long" },
+      { name: "region", label: "Region" },
+      { name: "best_time", label: "Best time to visit" },
+      { name: "tips", label: "Tips", type: "long" },
+      { name: "latitude", label: "Latitude", type: "number" },
+      { name: "longitude", label: "Longitude", type: "number" },
+      { name: "coordinates_approximate", label: "Coordinates are approximate", type: "checkbox" },
+      { name: "cover_media_id", label: "Cover image", type: "image" },
+      { name: "photos", label: "Photos", type: "gallery" },
+    ],
+  },
+  reviews: {
+    table: "reviews",
+    label: "Reviews",
+    titleKey: "author_name",
+    defaults: {
+      author_name: "",
+      country: "",
+      rating: 5,
+      body: "",
+      status: "pending",
+      source_link: null,
+      tour_id: null,
+      reviewed_on: null,
+      photo_media_id: null,
+    },
+    fields: [
+      { name: "author_name", label: "Guest name" },
+      ...commonFields,
+      { name: "country", label: "Country" },
+      { name: "rating", label: "Rating (1–5)", type: "number" },
+      { name: "body", label: "Review", type: "long" },
+      { name: "reviewed_on", label: "Date", type: "date" },
+      { name: "tour_id", label: "Linked tour", type: "select", nullable: true },
+      { name: "source_link", label: "Source link (HTTPS)" },
+      { name: "photo_media_id", label: "Guest photo", type: "image" },
+      {
+        name: "status",
+        label: "Approval",
+        type: "select",
+        options: [
+          { value: "pending", label: "Pending" },
+          { value: "approved", label: "Approved" },
+        ],
+      },
+    ],
+  },
+  team: {
+    table: "team_members",
+    label: "Team",
+    titleKey: "name",
+    defaults: { name: "", role: "", bio: "", languages: [], photo_media_id: null },
+    fields: [
+      { name: "name", label: "Name" },
+      ...commonFields,
+      { name: "role", label: "Role" },
+      { name: "bio", label: "Biography", type: "long" },
+      { name: "languages", label: "Languages (one per line)", type: "lines" },
+      { name: "photo_media_id", label: "Photo", type: "image" },
+    ],
+  },
+  vehicles: {
+    table: "vehicles",
+    label: "Vehicles",
+    titleKey: "name",
+    defaults: {
+      name: "",
+      description: "",
+      passenger_capacity: 1,
+      luggage_capacity: null,
+      features: [],
+      cover_media_id: null,
+    },
+    fields: [
+      { name: "name", label: "Name" },
+      ...commonFields,
+      { name: "description", label: "Description", type: "long" },
+      { name: "passenger_capacity", label: "Passenger capacity", type: "number" },
+      { name: "luggage_capacity", label: "Luggage capacity", type: "number", nullable: true },
+      { name: "features", label: "Features (one per line)", type: "lines" },
+      { name: "cover_media_id", label: "Image", type: "image" },
+    ],
+  },
+  faqs: {
+    table: "faqs",
+    label: "FAQs",
+    titleKey: "question",
+    defaults: { question: "", answer: "", category: "general", tour_id: null },
+    fields: [
+      { name: "question", label: "Question" },
+      ...commonFields,
+      { name: "answer", label: "Answer", type: "long" },
+      { name: "category", label: "Category" },
+      { name: "tour_id", label: "Linked tour", type: "select", nullable: true },
+    ],
+  },
+  pages: {
+    table: "pages",
+    label: "Pages",
+    titleKey: "title",
+    defaults: { title: "", seo: {} },
+    fields: [
+      { name: "title", label: "Title" },
+      ...commonFields,
+      { name: "seo.title", label: "SEO title" },
+      { name: "seo.description", label: "SEO description", type: "long" },
+    ],
+  },
+  blog: {
+    table: "blog_posts",
+    label: "Blog",
+    titleKey: "title",
+    defaults: {
+      title: "",
+      excerpt: "",
+      content: { body: "" },
+      author_name: "",
+      cover_media_id: null,
+      published_at: null,
+      seo: {},
+    },
+    fields: [
+      { name: "title", label: "Title" },
+      ...commonFields,
+      { name: "excerpt", label: "Excerpt", type: "long" },
+      { name: "content.body", label: "Article text", type: "long" },
+      { name: "author_name", label: "Author" },
+      { name: "cover_media_id", label: "Cover image", type: "image" },
+      { name: "published_at", label: "Publish date", type: "date" },
+      { name: "seo.title", label: "SEO title" },
+      { name: "seo.description", label: "SEO description", type: "long" },
+    ],
+  },
+};
+tourFields.push(
+  { name: "regions", label: "Regions (one per line)", type: "lines" },
+  { name: "seo.og_media_id", label: "Open Graph image", type: "image" },
+);
+entityConfig.places.fields.push(
+  { name: "type", label: "Place type" },
+  { name: "best_months", label: "Best months (one per line)", type: "lines" },
+  { name: "seo.title", label: "SEO title" },
+  { name: "seo.description", label: "SEO description", type: "long" },
+);
+for (const key of ["places", "pages", "blog"] as const)
+  entityConfig[key].fields.push({
+    name: "seo.og_media_id",
+    label: "Open Graph image",
+    type: "image",
+  });
+export function isEntity(value: string): value is Entity {
+  return Object.prototype.hasOwnProperty.call(entityConfig, value);
+}
+const ctaLink = z
+  .string()
+  .max(2048)
+  .refine(
+    (v) => !v || (/^\/(?!\/)/.test(v) && !/[\s\\%]/.test(v)) || (https.safeParse(v).success && !!v),
+    "Use an internal path or HTTPS URL",
+  );
+const contentBase = { heading: short.default(""), body: long.default("") };
+const collectionContent = z
+  .object({
+    ...contentBase,
+    limit: z.number().int().min(1).max(24).default(6),
+    cta_label: short.default(""),
+    cta_href: ctaLink.default(""),
+  })
+  .passthrough();
+export const sectionContents = {
+  hero: z
+    .object({
+      ...contentBase,
+      eyebrow: short.default(""),
+      cta_label: short.default(""),
+      cta_href: ctaLink.default(""),
+      image: mediaId.default(null),
+      video: mediaId.default(null),
+      secondary_label: short.default(""),
+      secondary_href: ctaLink.default(""),
+      scroll_label: short.default(""),
+    })
+    .passthrough(),
+  rich_text: z.object(contentBase).passthrough(),
+  gallery: z.object({ heading: short.default(""), photos: photos.default([]) }).passthrough(),
+  cta: z
+    .object({ ...contentBase, cta_label: short.default(""), cta_href: ctaLink.default("") })
+    .passthrough(),
+  featured_tours: collectionContent.extend({ tour_ids: photos.default([]) }),
+  why_us: z
+    .object({
+      ...contentBase,
+      items: z
+        .array(z.object({ title: short, body: long }))
+        .max(12)
+        .default([]),
+    })
+    .passthrough(),
+  guide_story: z
+    .object({ ...contentBase, image: mediaId.default(null), eyebrow: short.default("") })
+    .passthrough(),
+  search_bar: z.object(contentBase).passthrough(),
+  stats: z
+    .object({
+      ...contentBase,
+      items: z
+        .array(z.object({ title: short, body: short }))
+        .max(8)
+        .default([]),
+    })
+    .passthrough(),
+  how_it_works: z
+    .object({
+      ...contentBase,
+      items: z
+        .array(z.object({ title: short, body: long }))
+        .max(6)
+        .default([]),
+    })
+    .passthrough(),
+  destinations: collectionContent.extend({ place_ids: photos.default([]) }),
+  map_preview: collectionContent,
+  reviews: collectionContent,
+  faq: collectionContent,
+  call_to_action: z
+    .object({ ...contentBase, cta_label: short.default(""), cta_href: ctaLink.default("") })
+    .passthrough(),
+};
+export type SectionType = keyof typeof sectionContents;
+export type Section = {
+  id: string;
+  type: SectionType;
+  published: boolean;
+  content: Record<string, unknown>;
+};
+export const sectionsSchema = z
+  .array(
+    z.object({
+      id: z.uuid(),
+      type: z.enum([
+        "hero",
+        "rich_text",
+        "gallery",
+        "cta",
+        "search_bar",
+        "stats",
+        "how_it_works",
+        "destinations",
+        "featured_tours",
+        "why_us",
+        "guide_story",
+        "map_preview",
+        "reviews",
+        "faq",
+        "call_to_action",
+      ]),
+      published: z.boolean(),
+      content: z.record(z.string(), z.unknown()),
+    }),
+  )
+  .max(100)
+  .superRefine((sections, ctx) => {
+    if (new Set(sections.map((s) => s.id)).size !== sections.length)
+      ctx.addIssue({ code: "custom", message: "Duplicate section IDs" });
+    sections.forEach((s, i) => {
+      const parsed = sectionContents[s.type].safeParse(s.content);
+      if (!parsed.success)
+        parsed.error.issues.forEach((issue) =>
+          ctx.addIssue({
+            code: "custom",
+            path: [i, "content", ...issue.path],
+            message: issue.message,
+          }),
+        );
+    });
+  });
+export const inquirySchema = z.object({
+  id: z.uuid(),
+  updated_at: z.string(),
+  status: z.enum(["new", "replied", "booked"]),
+  notes: z.string().max(20000),
+});
+
+END SOURCE SNAPSHOT: src/lib/editor/schema.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/submission-schema.ts
+import { z } from "zod";
+const optionalDate = z.union([z.literal(""), z.iso.date()]);
+export const tripSchema = z
+  .object({
+    name: z.string().trim().min(1).max(150),
+    email: z.email().max(254),
+    country: z.string().trim().min(1).max(100),
+    whatsapp: z
+      .string()
+      .trim()
+      .max(50)
+      .refine((v) => !v || /^\+?[0-9 ()-]{7,40}$/.test(v)),
+    startDate: optionalDate,
+    endDate: optionalDate,
+    travellers: z.number().int().min(1).max(100),
+    interests: z.string().trim().max(2000),
+    budget: z.string().trim().max(300),
+    message: z.string().trim().min(10).max(5000),
+    consent: z.literal(true),
+    tourId: z.uuid().nullable(),
+    website: z.string().max(300),
+    startedAt: z.number().int().positive(),
+  })
+  .superRefine((v, ctx) => {
+    if (v.startDate && v.endDate && v.endDate < v.startDate)
+      ctx.addIssue({ code: "custom", path: ["endDate"], message: "Invalid date range" });
+    if (v.startDate && v.startDate < new Date().toISOString().slice(0, 10))
+      ctx.addIssue({ code: "custom", path: ["startDate"], message: "Date is in the past" });
+  });
+export const reviewSubmissionSchema = z
+  .object({
+    name: z.string().trim().min(1).max(150),
+    country: z.string().trim().max(100),
+    rating: z.number().int().min(1).max(5),
+    message: z.string().trim().min(10).max(5000),
+    date: optionalDate,
+    tourId: z.uuid().nullable(),
+    consent: z.literal(true),
+    website: z.string().max(300),
+    startedAt: z.number().int().positive(),
+  })
+  .refine((v) => !v.date || v.date <= new Date().toISOString().slice(0, 10), {
+    path: ["date"],
+    message: "Date is in the future",
+  });
+export type TripInput = z.infer<typeof tripSchema>;
+export type ReviewInput = z.infer<typeof reviewSubmissionSchema>;
+
+END SOURCE SNAPSHOT: src/lib/public/submission-schema.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/ui.ts
+export const uiKeys = [
+  "sort",
+  "sortRecommended",
+  "sortPriceLow",
+  "sortPriceHigh",
+  "sortDurationShort",
+  "sortDurationLong",
+  "clearFilters",
+  "resultsCount",
+  "tourNavigation",
+  "mapOverview",
+  "mapAllDays",
+  "mapStops",
+  "mapSelectTour",
+  "mapRouteDetails",
+  "mapViewTour",
+  "enquire",
+  "discover",
+  "reviewCarousel",
+  "verification",
+  "verificationFailed",
+  "demoNotice",
+  "demoReview",
+  "demoPrice",
+  "search",
+  "all",
+  "duration",
+  "tag",
+  "region",
+  "month",
+  "type",
+  "routes",
+  "places",
+  "day",
+  "days",
+  "nights",
+  "from",
+  "details",
+  "itinerary",
+  "gallery",
+  "inclusions",
+  "exclusions",
+  "highlights",
+  "reviews",
+  "source",
+  "faq",
+  "team",
+  "vehicles",
+  "bestTime",
+  "tips",
+  "linkedTours",
+  "approximate",
+  "distance",
+  "kilometres",
+  "map",
+  "planTrip",
+  "noResults",
+  "loading",
+  "notFoundTitle",
+  "notFoundBody",
+  "backHome",
+  "next",
+  "previous",
+  "close",
+  "skipContent",
+  "passengers",
+  "luggage",
+  "difficulty",
+  "travelTime",
+  "summary",
+  "author",
+  "publishedOn",
+  "tour",
+  "formHeading",
+  "name",
+  "email",
+  "country",
+  "whatsapp",
+  "startDate",
+  "endDate",
+  "travellers",
+  "interests",
+  "budget",
+  "message",
+  "consent",
+  "submit",
+  "sending",
+  "success",
+  "error",
+  "validation",
+  "rateLimited",
+  "privacyLabel",
+  "termsLabel",
+  "cancellationLabel",
+  "cookieNotice",
+  "cookieAccept",
+  "cookieDismiss",
+  "sltdaLabel",
+  "submitReview",
+  "reviewHeading",
+  "rating",
+  "reviewBody",
+  "reviewDate",
+  "reviewConsent",
+  "reviewSuccess",
+  "routeToggle",
+  "zoomIn",
+  "zoomOut",
+  "emailSubject",
+  "emailBody",
+  "theme",
+  "light",
+  "dark",
+  "system",
+  "scrollCue",
+  "videoPause",
+  "videoPlay",
+] as const;
+export type Ui = Record<string, string>;
+
+END SOURCE SNAPSHOT: src/lib/public/ui.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/media/shared.ts
+import { z } from "zod";
+export const MEDIA_BUCKET = "site-media";
+export const mediaTypes = [
+  "image/webp",
+  "image/jpeg",
+  "image/png",
+  "video/mp4",
+  "video/webm",
+] as const;
+export const mediaSchema = z.object({
+  id: z.uuid(),
+  alt_text: z.string().trim().max(500),
+  caption: z.string().trim().max(2000),
+});
+export type Media = {
+  id: string;
+  storage_path: string;
+  alt_text: string;
+  caption: string;
+  mime_type: string;
+  url: string;
+};
+export function mediaUrl(path: string) {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${MEDIA_BUCKET}/${path.split("/").map(encodeURIComponent).join("/")}`;
+}
+export function publicImageUrl(value: string) {
+  const base = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${MEDIA_BUCKET}/`;
+  return value.startsWith(base) &&
+    /^https:/.test(value) &&
+    /^[a-f0-9-]{36}\.(webp|png|jpg|jpeg)$/.test(value.slice(base.length))
+    ? value
+    : undefined;
+}
+
+END SOURCE SNAPSHOT: src/lib/media/shared.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/types.ts
+import { z } from "zod";
+const id = z.uuid(),
+  text = z.string(),
+  ids = z.preprocess(
+    (v) => (Array.isArray(v) ? v.filter((value) => id.safeParse(value).success) : v),
+    z.array(id),
+  ),
+  strings = z.array(text),
+  image = id.nullable();
+const base = { id, slug: text, published: z.literal(true), updated_at: text };
+const seo = z.record(z.string(), z.unknown());
+export const contentSchemas = {
+  tours: z.object({
+    ...base,
+    title: text,
+    summary: text,
+    description: text,
+    duration_days: z.number(),
+    duration_nights: z.number().nullable(),
+    price_from: z.coerce.number().nullable(),
+    currency: text,
+    cover_media_id: image,
+    gallery: ids,
+    difficulty: text,
+    best_months: strings,
+    tags: strings,
+    regions: strings,
+    highlights: strings,
+    inclusions: strings,
+    exclusions: strings,
+    vehicle_type: text,
+    route_colour: text.regex(/^#[a-f0-9]{6}$/i),
+    seo,
+  }),
+  places: z.object({
+    ...base,
+    name: text,
+    description: text,
+    region: text,
+    type: text,
+    best_months: strings,
+    latitude: z.coerce.number().min(-90).max(90),
+    longitude: z.coerce.number().min(-180).max(180),
+    coordinates_approximate: z.boolean(),
+    cover_media_id: image,
+    photos: ids,
+    best_time: text,
+    tips: text,
+    seo,
+  }),
+  itinerary_days: z.object({
+    ...base,
+    tour_id: id,
+    day_number: z.number(),
+    title: text,
+    description: text,
+    locations: text,
+    travel_time: text,
+    photos: ids,
+  }),
+  route_stops: z.object({
+    ...base,
+    tour_id: id,
+    itinerary_day_id: id,
+    place_id: id,
+    label: text,
+    description: text,
+    latitude: z.coerce.number(),
+    longitude: z.coerce.number(),
+    sort_order: z.number(),
+    travel_mode: text,
+    coordinates_approximate: z.boolean(),
+  }),
+  media: z.object({
+    ...base,
+    bucket_id: z.literal("site-media"),
+    storage_path: text.regex(/^[a-f0-9-]{36}\.(webp|png|jpg|jpeg|mp4|webm)$/),
+    alt_text: text,
+    caption: text,
+    mime_type: text,
+    width: z.number().nullable(),
+    height: z.number().nullable(),
+  }),
+  pages: z.object({ ...base, title: text, seo }),
+  page_sections: z.object({
+    ...base,
+    page_id: id,
+    type: text,
+    content: z.record(z.string(), z.unknown()),
+    sort_order: z.number(),
+  }),
+  reviews: z.object({
+    ...base,
+    author_name: text,
+    country: text.nullable(),
+    rating: z.number().int().min(1).max(5),
+    body: text,
+    status: z.literal("approved"),
+    source_link: text.nullable(),
+    tour_id: image,
+    reviewed_on: text.nullable(),
+    photo_media_id: image,
+  }),
+  faqs: z.object({ ...base, question: text, answer: text, category: text, tour_id: image }),
+  team_members: z.object({
+    ...base,
+    name: text,
+    role: text,
+    bio: text,
+    languages: strings,
+    photo_media_id: image,
+  }),
+  vehicles: z.object({
+    ...base,
+    name: text,
+    description: text,
+    passenger_capacity: z.number(),
+    luggage_capacity: z.number().nullable(),
+    features: strings,
+    cover_media_id: image,
+  }),
+  blog_posts: z.object({
+    ...base,
+    title: text,
+    excerpt: text,
+    content: z.record(z.string(), z.unknown()),
+    author_name: text,
+    cover_media_id: image,
+    published_at: text.nullable(),
+    seo,
+  }),
+};
+export type ContentTable = keyof typeof contentSchemas;
+export type ContentRows = { [K in ContentTable]: z.infer<(typeof contentSchemas)[K]> };
+export type Tour = ContentRows["tours"];
+export type Place = ContentRows["places"];
+export type MediaAsset = ContentRows["media"];
+export type Catalogue = {
+  tours: Tour[];
+  places: Place[];
+  days: ContentRows["itinerary_days"][];
+  stops: ContentRows["route_stops"][];
+  media: MediaAsset[];
+};
+
+END SOURCE SNAPSHOT: src/lib/public/types.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/content.ts
+import "server-only";
+import { cache } from "react";
+import { cachedPublic, dataFailure, publicRead } from "./cache";
+import { z } from "zod";
+import { createPublicClient } from "@/lib/supabase/public";
+import { getPublicSettings } from "@/lib/settings/public";
+import {
+  contentSchemas,
+  type ContentTable,
+  type ContentRows,
+  type Catalogue,
+  type MediaAsset,
+} from "./types";
+import { mediaUrl } from "@/lib/media/shared";
+const columns: Record<ContentTable, string> = {
+  tours:
+    "id,slug,published,updated_at,title,summary,description,duration_days,duration_nights,price_from,currency,cover_media_id,gallery,difficulty,best_months,tags,regions,highlights,inclusions,exclusions,vehicle_type,route_colour,seo",
+  places:
+    "id,slug,published,updated_at,name,description,region,type,best_months,latitude,longitude,coordinates_approximate,cover_media_id,photos,best_time,tips,seo",
+  itinerary_days:
+    "id,slug,published,updated_at,tour_id,day_number,title,description,locations,travel_time,photos",
+  route_stops:
+    "id,slug,published,updated_at,tour_id,itinerary_day_id,place_id,label,description,latitude,longitude,sort_order,travel_mode,coordinates_approximate",
+  media:
+    "id,slug,published,updated_at,bucket_id,storage_path,alt_text,caption,mime_type,width,height",
+  pages: "id,slug,published,updated_at,title,seo",
+  page_sections: "id,slug,published,updated_at,page_id,type,content,sort_order",
+  reviews:
+    "id,slug,published,updated_at,author_name,country,rating,body,status,source_link,tour_id,reviewed_on,photo_media_id",
+  faqs: "id,slug,published,updated_at,question,answer,category,tour_id",
+  team_members: "id,slug,published,updated_at,name,role,bio,languages,photo_media_id",
+  vehicles:
+    "id,slug,published,updated_at,name,description,passenger_capacity,luggage_capacity,features,cover_media_id",
+  blog_posts:
+    "id,slug,published,updated_at,title,excerpt,content,author_name,cover_media_id,published_at,seo",
+};
+type Filter = { column: "id" | "slug" | "tour_id" | "page_id"; value: string | string[] };
+export const readPublished = cache(
+  async <K extends ContentTable>(table: K, filter?: Filter): Promise<ContentRows[K][]> => {
+    if (!(await getPublicSettings())) return [];
+    if (filter && Array.isArray(filter.value) && !filter.value.length) return [];
+    return cachedPublic(table + ":" + JSON.stringify(filter ?? null), () =>
+      publicRead(table, async () => {
+        const client = createPublicClient(),
+          rows: ContentRows[K][] = [];
+        for (let offset = 0; ; offset += 1000) {
+          let query = client
+            .from(table)
+            .select(columns[table])
+            .eq("published", true)
+            .order("sort_order")
+            .order("id");
+          if (filter)
+            query = Array.isArray(filter.value)
+              ? query.in(filter.column, filter.value)
+              : query.eq(filter.column, filter.value);
+          if (table === "reviews") query = query.eq("status", "approved");
+          if (table === "blog_posts")
+            query = query.or("published_at.is.null,published_at.lte." + new Date().toISOString());
+          const { data, error } = await query.range(offset, offset + 999);
+          if (error) dataFailure(table, error);
+          for (const row of data ?? []) {
+            const parsed = contentSchemas[table].safeParse(row);
+            if (!parsed.success) dataFailure(table + ".validation");
+            rows.push(parsed.data as ContentRows[K]);
+          }
+          if (!data || data.length < 1000) break;
+        }
+        return rows;
+      }),
+    );
+  },
+);
+export const getPage = cache(
+  async (slug: string) =>
+    (await readPublished("pages", { column: "slug", value: slug }))[0] ?? null,
+);
+export const getSections = cache((pageId: string) =>
+  readPublished("page_sections", { column: "page_id", value: pageId }),
+);
+export function getMedia(ids: (string | null | undefined)[]) {
+  return readPublished("media", {
+    column: "id",
+    value: [
+      ...new Set(
+        ids.filter((id): id is string => typeof id === "string" && z.uuid().safeParse(id).success),
+      ),
+    ].sort(),
+  });
+}
+export const getTour = cache(
+  async (slug: string) =>
+    (await readPublished("tours", { column: "slug", value: slug }))[0] ?? null,
+);
+function visibleCatalogue(catalogue: Catalogue): Catalogue {
+  const tourIds = new Set(catalogue.tours.map((t) => t.id)),
+    placeIds = new Set(catalogue.places.map((p) => p.id));
+  const days = catalogue.days.filter((d) => tourIds.has(d.tour_id));
+  return {
+    ...catalogue,
+    days,
+    stops: catalogue.stops.filter(
+      (s) =>
+        tourIds.has(s.tour_id) &&
+        placeIds.has(s.place_id) &&
+        days.some((d) => d.id === s.itinerary_day_id && d.tour_id === s.tour_id),
+    ),
+  };
+}
+export const getCatalogue = cache(async (): Promise<Catalogue> => {
+  const [tours, places, days, stops, media] = await Promise.all([
+    readPublished("tours"),
+    readPublished("places"),
+    readPublished("itinerary_days"),
+    readPublished("route_stops"),
+    readPublished("media"),
+  ]);
+  return visibleCatalogue({ tours, places, days, stops, media });
+});
+export const getTourDetail = cache(async (slug: string) => {
+  const tour = await getTour(slug);
+  if (!tour) return null;
+  const filter = { column: "tour_id" as const, value: tour.id };
+  const [days, stops, reviews, faqs] = await Promise.all([
+    readPublished("itinerary_days", filter),
+    readPublished("route_stops", filter),
+    readPublished("reviews", filter),
+    readPublished("faqs", filter),
+  ]);
+  const places = await readPublished("places", {
+    column: "id",
+    value: [...new Set(stops.map((s) => s.place_id))].sort(),
+  });
+  const media = await getMedia([
+    tour.cover_media_id,
+    ...tour.gallery,
+    typeof tour.seo.og_media_id === "string" ? tour.seo.og_media_id : null,
+    ...days.flatMap((d) => d.photos),
+    ...places.flatMap((p) => [p.cover_media_id, ...p.photos]),
+    ...reviews.map((r) => r.photo_media_id),
+  ]);
+  return {
+    catalogue: visibleCatalogue({ tours: [tour], places, days, stops, media }),
+    reviews,
+    faqs,
+  };
+});
+export function imageAsset(media: MediaAsset[], id: string | null | undefined) {
+  const asset = media.find(
+    (m) => m.id === id && m.mime_type.startsWith("image/") && m.alt_text.trim(),
+  );
+  return asset ? { ...asset, url: mediaUrl(asset.storage_path) } : null;
+}
+
+END SOURCE SNAPSHOT: src/lib/public/content.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/cache.ts
+import "server-only";
+import { unstable_cache, revalidateTag } from "next/cache";
+export const PUBLIC_CONTENT_TAG = "public-content";
+export function cachedPublic<T>(key: string, load: () => Promise<T>) {
+  return unstable_cache(load, ["public-v2", key], {
+    revalidate: 60,
+    tags: [PUBLIC_CONTENT_TAG, "public:" + key.split(":")[0]],
+  })();
+}
+export function invalidatePublicContent() {
+  revalidateTag(PUBLIC_CONTENT_TAG, { expire: 0 });
+}
+export class PublicDataError extends Error {
+  constructor() {
+    super("Something went wrong, please try again.");
+    this.name = "PublicDataError";
+  }
+}
+export function dataFailure(operation: string, error?: { code?: string } | null): never {
+  console.error("Public data unavailable", {
+    operation,
+    code: error?.code ?? "FETCH_OR_VALIDATION_FAILED",
+  });
+  throw new PublicDataError();
+}
+export async function publicRead<T>(operation: string, read: () => Promise<T>): Promise<T> {
+  try {
+    return await read();
+  } catch (error) {
+    if (error instanceof PublicDataError) throw error;
+    return dataFailure(operation);
+  }
+}
+
+END SOURCE SNAPSHOT: src/lib/public/cache.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/seo.ts
+import "server-only";
+import type { Metadata } from "next";
+import { getPublicSettings } from "@/lib/settings/public";
+import { imageAsset, getMedia } from "./content";
+export async function metadataFor(
+  path: string,
+  entity?: {
+    title?: string;
+    name?: string;
+    summary?: string;
+    description?: string;
+    excerpt?: string;
+    seo?: Record<string, unknown>;
+    cover_media_id?: string | null;
+  } | null,
+): Promise<Metadata> {
+  const settings = await getPublicSettings();
+  if (!settings || !entity) return { robots: { index: false, follow: false } };
+  const title =
+    typeof entity.seo?.title === "string" && entity.seo.title
+      ? entity.seo.title
+      : entity.title || entity.name || settings.seoTitle || settings.businessName;
+  const description =
+    typeof entity.seo?.description === "string" && entity.seo.description
+      ? entity.seo.description
+      : entity.summary || entity.excerpt || entity.description || settings.seoDescription;
+  const imageId =
+    typeof entity.seo?.og_media_id === "string"
+      ? entity.seo.og_media_id
+      : (entity.cover_media_id ?? settings.ogImageId);
+  const media = await getMedia([imageId]),
+    image = imageAsset(media, imageId);
+  const canonical = settings.siteUrl
+    ? new URL(path, settings.siteUrl.endsWith("/") ? settings.siteUrl : `${settings.siteUrl}/`).href
+    : undefined;
+  return {
+    title,
+    description,
+    alternates: canonical ? { canonical } : undefined,
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      url: canonical,
+      siteName: settings.businessName,
+      images: image
+        ? [
+            {
+              url: image.url,
+              alt: image.alt_text,
+              width: image.width ?? undefined,
+              height: image.height ?? undefined,
+            },
+          ]
+        : [],
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description,
+      images: image ? [image.url] : [],
+    },
+    robots: { index: !settings.demoMode, follow: !settings.demoMode },
+  };
+}
+export function jsonLd(value: unknown) {
+  return JSON.stringify(value)
+    .replace(/</g, "\\u003c")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
+}
+
+END SOURCE SNAPSHOT: src/lib/public/seo.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/filters.ts
+import type { Catalogue, Tour } from "./types";
+export type Filters = {
+  q?: string;
+  duration?: string;
+  tag?: string;
+  region?: string;
+  month?: string;
+  type?: string;
+  sort?: string;
+};
+export function normalizeFilters(input: Record<string, string | string[] | undefined>): Filters {
+  return Object.fromEntries(
+    ["q", "duration", "tag", "region", "month", "type", "sort"].map((key) => {
+      const value = input[key];
+      return [key, (Array.isArray(value) ? value[0] : value)?.slice(0, 200)];
+    }),
+  );
+}
+export function tourRegions(tour: Tour, catalogue: Catalogue) {
+  return [
+    ...new Set([
+      ...tour.regions,
+      ...catalogue.stops
+        .filter((s) => s.tour_id === tour.id)
+        .map((s) => catalogue.places.find((p) => p.id === s.place_id)?.region ?? ""),
+    ]),
+  ].filter(Boolean);
+}
+export function filterTours(catalogue: Catalogue, filters: Filters) {
+  const matches = catalogue.tours.filter((t) => {
+    const search = (filters.q ?? "").trim().toLowerCase();
+    const placeIds = new Set(
+      catalogue.stops.filter((s) => s.tour_id === t.id).map((s) => s.place_id),
+    );
+    const destinations = catalogue.places
+      .filter((p) => placeIds.has(p.id))
+      .map((p) => p.name)
+      .join(" ");
+    return (
+      (!search ||
+        `${t.title} ${t.summary} ${t.tags.join(" ")} ${destinations}`
+          .toLowerCase()
+          .includes(search)) &&
+      (!filters.duration || t.duration_days === Number(filters.duration)) &&
+      (!filters.tag || t.tags.includes(filters.tag)) &&
+      (!filters.region || tourRegions(t, catalogue).includes(filters.region)) &&
+      (!filters.month || t.best_months.includes(filters.month))
+    );
+  });
+  const direction = filters.sort === "price-desc" ? -1 : 1;
+  if (filters.sort === "price-asc" || filters.sort === "price-desc")
+    matches.sort((a, b) => {
+      if (a.price_from == null) return b.price_from == null ? 0 : 1;
+      if (b.price_from == null) return -1;
+      return a.currency.localeCompare(b.currency) || direction * (a.price_from - b.price_from);
+    });
+  if (filters.sort === "duration-asc") matches.sort((a, b) => a.duration_days - b.duration_days);
+  if (filters.sort === "duration-desc") matches.sort((a, b) => b.duration_days - a.duration_days);
+  return matches;
+}
+export function distanceKm(points: { latitude: number; longitude: number }[]) {
+  let total = 0;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1],
+      b = points[i],
+      r = Math.PI / 180,
+      dlat = (b.latitude - a.latitude) * r,
+      dlng = (b.longitude - a.longitude) * r,
+      h =
+        Math.sin(dlat / 2) ** 2 +
+        Math.cos(a.latitude * r) * Math.cos(b.latitude * r) * Math.sin(dlng / 2) ** 2;
+    total += 6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(Math.max(0, 1 - h)));
+  }
+  return Math.round(total);
+}
+
+END SOURCE SNAPSHOT: src/lib/public/filters.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/public/map-model.ts
+import type { Catalogue } from "./types";
+export function routeInk(colour: string) {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const v = parseInt(colour.slice(i, i + 2), 16) / 255;
+    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  });
+  return r * 0.2126 + g * 0.7152 + b * 0.0722 < 0.179 ? "#ffffff" : "#111111";
+}
+export function mapSelection(
+  catalogue: Catalogue,
+  slug: string | null,
+  day: string | null,
+  locked?: string,
+) {
+  const tour = catalogue.tours.find((t) => (locked ? t.id === locked : t.slug === slug)) ?? null;
+  const days = tour
+    ? catalogue.days
+        .filter((d) => d.tour_id === tour.id)
+        .sort((a, b) => a.day_number - b.day_number)
+    : [];
+  return { tour, days, day: days.find((d) => String(d.day_number) === day) ?? null };
+}
+export function routeModel(c: Catalogue, tourId: string) {
+  const stops = c.stops
+    .filter((s) => s.tour_id === tourId)
+    .sort((a, b) => a.sort_order - b.sort_order || a.id.localeCompare(b.id));
+  const points = stops.map((s) => {
+    const p = c.places.find((p) => p.id === s.place_id);
+    return [p?.latitude ?? s.latitude, p?.longitude ?? s.longitude] as [number, number];
+  });
+  const parents = points.map((_, i) => i),
+    root = (i: number): number => (parents[i] === i ? i : root(parents[i]));
+  for (let i = 0; i < points.length; i++)
+    for (let j = 0; j < i; j++) if (metres(points[i], points[j]) <= 75) parents[root(i)] = root(j);
+  const groups = new Map<
+    number,
+    { key: string; position: [number, number]; numbers: number[]; stops: typeof stops }
+  >();
+  stops.forEach((s, i) => {
+    const key = root(i),
+      group = groups.get(key) ?? { key: s.id, position: points[key], numbers: [], stops: [] };
+    group.numbers.push(i + 1);
+    group.stops.push(s);
+    groups.set(key, group);
+  });
+  const segments = points.slice(1).map((p, i) => ({
+    key: stops[i + 1].id,
+    points: [points[i], p],
+    dayId: stops[i + 1].itinerary_day_id,
+  }));
+  return { stops, points, groups: [...groups.values()], segments };
+}
+function metres(a: [number, number], b: [number, number]) {
+  const r = Math.PI / 180,
+    dLat = (b[0] - a[0]) * r,
+    dLng = (b[1] - a[1]) * r,
+    v = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLng / 2) ** 2;
+  return 12742000 * Math.asin(Math.sqrt(Math.min(1, v)));
+}
+
+END SOURCE SNAPSHOT: src/lib/public/map-model.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/components/public/map-selection.ts
+"use client";
+import { useSearchParams } from "next/navigation";
+import { mapSelection } from "@/lib/public/map-model";
+import type { Catalogue } from "@/lib/public/types";
+export function useMapSelection(catalogue: Catalogue, locked?: string) {
+  const query = useSearchParams(),
+    selection = mapSelection(catalogue, query.get("tour"), query.get("day"), locked);
+  function update(tourId: string | null, dayId: string | null) {
+    const url = new URL(window.location.href),
+      tour = catalogue.tours.find((t) => t.id === tourId),
+      day = catalogue.days.find((d) => d.id === dayId && d.tour_id === tourId);
+    if (tour) url.searchParams.set("tour", tour.slug);
+    else url.searchParams.delete("tour");
+    if (day) url.searchParams.set("day", String(day.day_number));
+    else url.searchParams.delete("day");
+    if (url.href !== window.location.href) window.history.pushState(null, "", url);
+  }
+  return {
+    ...selection,
+    selectTour: (id: string | null) => update(id, null),
+    selectDay: (id: string | null) => update(selection.tour?.id ?? null, id),
+  };
+}
+
+END SOURCE SNAPSHOT: src/components/public/map-selection.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/editor/place-route-types.ts
+export type PlaceRouteChoice = {
+  id: string;
+  title: string;
+  updated_at: string;
+  connected: boolean;
+  days: { id: string; title: string; day_number: number }[];
+};
+
+END SOURCE SNAPSHOT: src/lib/editor/place-route-types.ts
+
+
+BEGIN SOURCE SNAPSHOT: src/lib/admin/navigation.ts
+// Admin tool labels are application UI, not public site navigation.
+export const adminSections = [
+  { slug: "mock-data", label: "Mock content" },
+  { slug: "settings", label: "Settings" },
+  { slug: "navigation", label: "Navigation" },
+  { slug: "footer", label: "Footer" },
+  { slug: "pages", label: "Pages" },
+  { slug: "media", label: "Media" },
+  { slug: "tours", label: "Tours" },
+  { slug: "places", label: "Places" },
+  { slug: "reviews", label: "Reviews" },
+  { slug: "inquiries", label: "Inquiries" },
+  { slug: "team", label: "Team" },
+  { slug: "vehicles", label: "Vehicles" },
+  { slug: "faqs", label: "FAQs" },
+  { slug: "blog", label: "Blog" },
+] as const;
+
+END SOURCE SNAPSHOT: src/lib/admin/navigation.ts
+
+C. DATABASE DDL AND RPC DISCOVERY INDEX
+Entries show source location and declaration, not proof of current remote state. Later migrations can replace or remove earlier objects. Full definitions remain in listed migration files.
+
+MIGRATION: 20261016170125_content_schema.sql
+line 4: revoke all on schema private from public, anon, authenticated;
+line 6: create function private.touch_updated_at()
+line 13: revoke all on function private.touch_updated_at() from public, anon, authenticated;
+line 15: create table public.site_settings (
+line 27: create table public.nav_items (
+line 41: create table public.footer_links (
+line 55: create table public.media (
+line 74: create table public.pages (
+line 86: create table public.page_sections (
+line 99: create table public.places (
+line 117: create table public.tours (
+line 139: create table public.itinerary_days (
+line 157: create table public.route_stops (
+line 178: create table public.vehicles (
+line 194: create table public.team_members (
+line 209: create table public.reviews (
+line 227: create table public.blog_posts (
+line 244: create table public.faqs (
+line 259: create table public.inquiries (
+line 275: create table public.admin_users (
+line 283: alter table public.site_settings enable row level security;
+line 284: revoke all on table public.site_settings from public, anon, authenticated;
+line 285: create trigger site_settings_updated_at before update on public.site_settings
+line 288: alter table public.nav_items enable row level security;
+line 289: revoke all on table public.nav_items from public, anon, authenticated;
+line 290: create trigger nav_items_updated_at before update on public.nav_items
+line 293: alter table public.footer_links enable row level security;
+line 294: revoke all on table public.footer_links from public, anon, authenticated;
+line 295: create trigger footer_links_updated_at before update on public.footer_links
+line 298: alter table public.media enable row level security;
+line 299: revoke all on table public.media from public, anon, authenticated;
+line 300: create trigger media_updated_at before update on public.media
+line 303: alter table public.pages enable row level security;
+line 304: revoke all on table public.pages from public, anon, authenticated;
+line 305: create trigger pages_updated_at before update on public.pages
+line 308: alter table public.page_sections enable row level security;
+line 309: revoke all on table public.page_sections from public, anon, authenticated;
+line 310: create trigger page_sections_updated_at before update on public.page_sections
+line 313: alter table public.places enable row level security;
+line 314: revoke all on table public.places from public, anon, authenticated;
+line 315: create trigger places_updated_at before update on public.places
+line 318: alter table public.tours enable row level security;
+line 319: revoke all on table public.tours from public, anon, authenticated;
+line 320: create trigger tours_updated_at before update on public.tours
+line 323: alter table public.itinerary_days enable row level security;
+line 324: revoke all on table public.itinerary_days from public, anon, authenticated;
+line 325: create trigger itinerary_days_updated_at before update on public.itinerary_days
+line 328: alter table public.route_stops enable row level security;
+line 329: revoke all on table public.route_stops from public, anon, authenticated;
+line 330: create trigger route_stops_updated_at before update on public.route_stops
+line 333: alter table public.vehicles enable row level security;
+line 334: revoke all on table public.vehicles from public, anon, authenticated;
+line 335: create trigger vehicles_updated_at before update on public.vehicles
+line 338: alter table public.team_members enable row level security;
+line 339: revoke all on table public.team_members from public, anon, authenticated;
+line 340: create trigger team_members_updated_at before update on public.team_members
+line 343: alter table public.reviews enable row level security;
+line 344: revoke all on table public.reviews from public, anon, authenticated;
+line 345: create trigger reviews_updated_at before update on public.reviews
+line 348: alter table public.blog_posts enable row level security;
+line 349: revoke all on table public.blog_posts from public, anon, authenticated;
+line 350: create trigger blog_posts_updated_at before update on public.blog_posts
+line 353: alter table public.faqs enable row level security;
+line 354: revoke all on table public.faqs from public, anon, authenticated;
+line 355: create trigger faqs_updated_at before update on public.faqs
+line 358: alter table public.inquiries enable row level security;
+line 359: revoke all on table public.inquiries from public, anon, authenticated;
+line 360: create trigger inquiries_updated_at before update on public.inquiries
+line 363: alter table public.admin_users enable row level security;
+line 364: revoke all on table public.admin_users from public, anon, authenticated;
+line 365: create trigger admin_users_updated_at before update on public.admin_users
+line 368: create index site_settings_publication_order_idx on public.site_settings (published, sort_order, id);
+line 369: create index nav_items_publication_order_idx on public.nav_items (published, sort_order, id);
+line 370: create index footer_links_publication_order_idx on public.footer_links (published, sort_order, id);
+line 371: create index media_publication_order_idx on public.media (published, sort_order, id);
+line 372: create index pages_publication_order_idx on public.pages (published, sort_order, id);
+line 373: create index page_sections_publication_order_idx on public.page_sections (published, sort_order, id);
+line 374: create index places_publication_order_idx on public.places (published, sort_order, id);
+line 375: create index tours_publication_order_idx on public.tours (published, sort_order, id);
+line 376: create index itinerary_days_publication_order_idx on public.itinerary_days (published, sort_order, id);
+line 377: create index route_stops_publication_order_idx on public.route_stops (published, sort_order, id);
+line 378: create index vehicles_publication_order_idx on public.vehicles (published, sort_order, id);
+line 379: create index team_members_publication_order_idx on public.team_members (published, sort_order, id);
+line 380: create index reviews_publication_order_idx on public.reviews (published, sort_order, id);
+line 381: create index blog_posts_publication_order_idx on public.blog_posts (published, sort_order, id);
+line 382: create index faqs_publication_order_idx on public.faqs (published, sort_order, id);
+line 383: create index page_sections_page_id_idx on public.page_sections (page_id);
+line 384: create index places_cover_media_id_idx on public.places (cover_media_id);
+line 385: create index tours_cover_media_id_idx on public.tours (cover_media_id);
+line 386: create index route_stops_itinerary_day_id_idx on public.route_stops (itinerary_day_id);
+line 387: create index route_stops_place_id_idx on public.route_stops (place_id);
+line 388: create index vehicles_cover_media_id_idx on public.vehicles (cover_media_id);
+line 389: create index team_members_photo_media_id_idx on public.team_members (photo_media_id);
+line 390: create index reviews_tour_id_idx on public.reviews (tour_id);
+line 391: create index blog_posts_cover_media_id_idx on public.blog_posts (cover_media_id);
+line 392: create index faqs_tour_id_idx on public.faqs (tour_id);
+line 393: create index inquiries_tour_id_idx on public.inquiries (tour_id);
+line 394: create index inquiries_status_created_at_idx on public.inquiries (status, created_at);
+line 395: create index route_stops_tour_day_idx on public.route_stops (tour_id, itinerary_day_id);
+
+MIGRATION: 20261016170144_content_access_policies.sql
+line 4: create function private.is_admin()
+line 9: revoke all on function private.is_admin() from public, anon, authenticated;
+line 10: grant usage on schema private to authenticated;
+line 11: grant execute on function private.is_admin() to authenticated;
+line 13: grant select on public.site_settings to anon;
+line 14: grant select, insert, update, delete on public.site_settings to authenticated;
+line 15: create policy site_settings_public_read on public.site_settings for select to anon
+line 17: create policy site_settings_authenticated_read on public.site_settings for select to authenticated
+line 19: create policy site_settings_admin_insert on public.site_settings for insert to authenticated
+line 21: create policy site_settings_admin_update on public.site_settings for update to authenticated
+line 23: create policy site_settings_admin_delete on public.site_settings for delete to authenticated
+line 26: grant select on public.nav_items to anon;
+line 27: grant select, insert, update, delete on public.nav_items to authenticated;
+line 28: create policy nav_items_public_read on public.nav_items for select to anon
+line 30: create policy nav_items_authenticated_read on public.nav_items for select to authenticated
+line 32: create policy nav_items_admin_insert on public.nav_items for insert to authenticated
+line 34: create policy nav_items_admin_update on public.nav_items for update to authenticated
+line 36: create policy nav_items_admin_delete on public.nav_items for delete to authenticated
+line 39: grant select on public.footer_links to anon;
+line 40: grant select, insert, update, delete on public.footer_links to authenticated;
+line 41: create policy footer_links_public_read on public.footer_links for select to anon
+line 43: create policy footer_links_authenticated_read on public.footer_links for select to authenticated
+line 45: create policy footer_links_admin_insert on public.footer_links for insert to authenticated
+line 47: create policy footer_links_admin_update on public.footer_links for update to authenticated
+line 49: create policy footer_links_admin_delete on public.footer_links for delete to authenticated
+line 52: grant select on public.media to anon;
+line 53: grant select, insert, update, delete on public.media to authenticated;
+line 54: create policy media_public_read on public.media for select to anon
+line 56: create policy media_authenticated_read on public.media for select to authenticated
+line 58: create policy media_admin_insert on public.media for insert to authenticated
+line 60: create policy media_admin_update on public.media for update to authenticated
+line 62: create policy media_admin_delete on public.media for delete to authenticated
+line 65: grant select on public.pages to anon;
+line 66: grant select, insert, update, delete on public.pages to authenticated;
+line 67: create policy pages_public_read on public.pages for select to anon
+line 69: create policy pages_authenticated_read on public.pages for select to authenticated
+line 71: create policy pages_admin_insert on public.pages for insert to authenticated
+line 73: create policy pages_admin_update on public.pages for update to authenticated
+line 75: create policy pages_admin_delete on public.pages for delete to authenticated
+line 78: grant select on public.page_sections to anon;
+line 79: grant select, insert, update, delete on public.page_sections to authenticated;
+line 80: create policy page_sections_public_read on public.page_sections for select to anon
+line 82: create policy page_sections_authenticated_read on public.page_sections for select to authenticated
+line 84: create policy page_sections_admin_insert on public.page_sections for insert to authenticated
+line 86: create policy page_sections_admin_update on public.page_sections for update to authenticated
+line 88: create policy page_sections_admin_delete on public.page_sections for delete to authenticated
+line 91: grant select on public.places to anon;
+line 92: grant select, insert, update, delete on public.places to authenticated;
+line 93: create policy places_public_read on public.places for select to anon
+line 95: create policy places_authenticated_read on public.places for select to authenticated
+line 97: create policy places_admin_insert on public.places for insert to authenticated
+line 99: create policy places_admin_update on public.places for update to authenticated
+line 101: create policy places_admin_delete on public.places for delete to authenticated
+line 104: grant select on public.tours to anon;
+line 105: grant select, insert, update, delete on public.tours to authenticated;
+line 106: create policy tours_public_read on public.tours for select to anon
+line 108: create policy tours_authenticated_read on public.tours for select to authenticated
+line 110: create policy tours_admin_insert on public.tours for insert to authenticated
+line 112: create policy tours_admin_update on public.tours for update to authenticated
+line 114: create policy tours_admin_delete on public.tours for delete to authenticated
+line 117: grant select on public.itinerary_days to anon;
+line 118: grant select, insert, update, delete on public.itinerary_days to authenticated;
+line 119: create policy itinerary_days_public_read on public.itinerary_days for select to anon
+line 121: create policy itinerary_days_authenticated_read on public.itinerary_days for select to authenticated
+line 123: create policy itinerary_days_admin_insert on public.itinerary_days for insert to authenticated
+line 125: create policy itinerary_days_admin_update on public.itinerary_days for update to authenticated
+line 127: create policy itinerary_days_admin_delete on public.itinerary_days for delete to authenticated
+line 130: grant select on public.route_stops to anon;
+line 131: grant select, insert, update, delete on public.route_stops to authenticated;
+line 132: create policy route_stops_public_read on public.route_stops for select to anon
+line 134: create policy route_stops_authenticated_read on public.route_stops for select to authenticated
+line 136: create policy route_stops_admin_insert on public.route_stops for insert to authenticated
+line 138: create policy route_stops_admin_update on public.route_stops for update to authenticated
+line 140: create policy route_stops_admin_delete on public.route_stops for delete to authenticated
+line 143: grant select on public.vehicles to anon;
+line 144: grant select, insert, update, delete on public.vehicles to authenticated;
+line 145: create policy vehicles_public_read on public.vehicles for select to anon
+line 147: create policy vehicles_authenticated_read on public.vehicles for select to authenticated
+line 149: create policy vehicles_admin_insert on public.vehicles for insert to authenticated
+line 151: create policy vehicles_admin_update on public.vehicles for update to authenticated
+line 153: create policy vehicles_admin_delete on public.vehicles for delete to authenticated
+line 156: grant select on public.team_members to anon;
+line 157: grant select, insert, update, delete on public.team_members to authenticated;
+line 158: create policy team_members_public_read on public.team_members for select to anon
+line 160: create policy team_members_authenticated_read on public.team_members for select to authenticated
+line 162: create policy team_members_admin_insert on public.team_members for insert to authenticated
+line 164: create policy team_members_admin_update on public.team_members for update to authenticated
+line 166: create policy team_members_admin_delete on public.team_members for delete to authenticated
+line 169: grant select on public.reviews to anon;
+line 170: grant select, insert, update, delete on public.reviews to authenticated;
+line 171: create policy reviews_public_read on public.reviews for select to anon
+line 173: create policy reviews_authenticated_read on public.reviews for select to authenticated
+line 175: create policy reviews_admin_insert on public.reviews for insert to authenticated
+line 177: create policy reviews_admin_update on public.reviews for update to authenticated
+line 179: create policy reviews_admin_delete on public.reviews for delete to authenticated
+line 182: grant select on public.blog_posts to anon;
+line 183: grant select, insert, update, delete on public.blog_posts to authenticated;
+line 184: create policy blog_posts_public_read on public.blog_posts for select to anon
+line 186: create policy blog_posts_authenticated_read on public.blog_posts for select to authenticated
+line 188: create policy blog_posts_admin_insert on public.blog_posts for insert to authenticated
+line 190: create policy blog_posts_admin_update on public.blog_posts for update to authenticated
+line 192: create policy blog_posts_admin_delete on public.blog_posts for delete to authenticated
+line 195: grant select on public.faqs to anon;
+line 196: grant select, insert, update, delete on public.faqs to authenticated;
+line 197: create policy faqs_public_read on public.faqs for select to anon
+line 199: create policy faqs_authenticated_read on public.faqs for select to authenticated
+line 201: create policy faqs_admin_insert on public.faqs for insert to authenticated
+line 203: create policy faqs_admin_update on public.faqs for update to authenticated
+line 205: create policy faqs_admin_delete on public.faqs for delete to authenticated
+line 209: grant insert (name, email, phone, country, message, tour_id, travel_date, travelers)
+line 211: grant select, insert, update, delete on public.inquiries to authenticated;
+line 212: create policy inquiries_public_submit on public.inquiries for insert to anon
+line 215: create policy inquiries_authenticated_submit on public.inquiries for insert to authenticated
+line 218: create policy inquiries_admin_read on public.inquiries for select to authenticated
+line 220: create policy inquiries_admin_update on public.inquiries for update to authenticated
+line 222: create policy inquiries_admin_delete on public.inquiries for delete to authenticated
+line 227: grant select, insert, update, delete on public.admin_users to authenticated;
+line 228: create policy admin_users_admin_read on public.admin_users for select to authenticated
+line 230: create policy admin_users_admin_insert on public.admin_users for insert to authenticated
+line 232: create policy admin_users_admin_update on public.admin_users for update to authenticated
+line 234: create policy admin_users_admin_delete on public.admin_users for delete to authenticated
+
+MIGRATION: 20261016170425_restrict_platform_trigger_function.sql
+line 6: revoke execute on function public.rls_auto_enable() from public, anon, authenticated;
+
+MIGRATION: 20261017141324_navigation_footer_editors.sql
+line 2: alter table public.nav_items add column parent_id uuid references public.nav_items(id) on delete cascade deferrable initially deferred;
+line 3: alter table public.nav_items add constraint nav_not_own_parent check (parent_id is distinct from id);
+line 4: create index nav_items_parent_order_idx on public.nav_items(parent_id, sort_order, id);
+line 6: create function private.check_nav_tree() returns trigger
+line 16: revoke all on function private.check_nav_tree() from public, anon, authenticated;
+line 21: create function private.published_nav_parents() returns setof uuid
+line 25: revoke all on function private.published_nav_parents() from public, anon, authenticated;
+line 26: grant usage on schema private to anon;
+line 27: grant execute on function private.published_nav_parents() to anon, authenticated;
+line 36: create function public.save_site_links(p_kind text, p_items jsonb, p_deleted uuid[], p_copy jsonb)
+line 80: revoke all on function public.save_site_links(text,jsonb,uuid[],jsonb) from public, anon, authenticated;
+line 81: grant execute on function public.save_site_links(text,jsonb,uuid[],jsonb) to authenticated;
+
+MIGRATION: 20261019031445_media_tour_management.sql
+line 4: create policy site_media_admin_select on storage.objects for select to authenticated using (bucket_id='site-media' and (select private.is_admin()));
+line 5: create policy site_media_admin_insert on storage.objects for insert to authenticated with check (bucket_id='site-media' and (select private.is_admin()));
+line 6: create policy site_media_admin_update on storage.objects for update to authenticated using (bucket_id='site-media' and (select private.is_admin())) with check (bucket_id='site-media' and (select private.is_admin()));
+line 7: create policy site_media_admin_delete on storage.objects for delete to authenticated using (bucket_id='site-media' and (select private.is_admin()));
+line 9: alter table public.tours add column difficulty text not null default '', add column best_months text[] not null default '{}', add column tags text[] not null default '{}', add column vehicle_type text not null default '', add column gallery uuid[] not null default '{}';
+line 10: alter table public.itinerary_days add column locations text not null default '', add column travel_time text not null default '', add column photos uuid[] not null default '{}';
+line 11: alter table public.itinerary_days drop constraint itinerary_days_tour_id_day_number_key;
+line 12: alter table public.itinerary_days add constraint itinerary_days_tour_id_day_number_key unique(tour_id,day_number) deferrable initially deferred;
+line 14: create function public.save_tour(p_tour jsonb,p_days jsonb,p_deleted uuid[],p_expected timestamptz)
+line 36: revoke all on function public.save_tour(jsonb,jsonb,uuid[],timestamptz) from public,anon;
+line 37: grant execute on function public.save_tour(jsonb,jsonb,uuid[],timestamptz) to authenticated;
+line 40: create function public.media_in_use(p_id uuid) returns boolean language plpgsql security invoker set search_path='' as $$
+line 51: revoke all on function public.media_in_use(uuid) from public,anon;
+line 52: grant execute on function public.media_in_use(uuid) to authenticated;
+line 53: create function private.prevent_used_media_delete() returns trigger language plpgsql security invoker set search_path='' as $$
+line 58: revoke all on function private.prevent_used_media_delete() from public,anon,authenticated;
+line 59: create trigger prevent_used_media_delete before delete on public.media for each row execute function private.prevent_used_media_delete();
+
+MIGRATION: 20261019032540_remaining_admin_editors.sql
+line 1: alter table public.places add column photos uuid[] not null default '{}', add column best_time text not null default '', add column tips text not null default '';
+line 2: alter table public.reviews add column photo_media_id uuid references public.media(id) on delete restrict;
+line 3: create index reviews_photo_media_id_idx on public.reviews(photo_media_id);
+line 4: alter table public.tours add column route_colour text not null default '#476A63' check(route_colour ~ '^#[0-9a-fA-F]{6}$');
+line 5: create function public.save_tour_route(p_tour jsonb,p_days jsonb,p_deleted uuid[],p_expected timestamptz,p_stops jsonb,p_deleted_stops uuid[])
+line 25: revoke all on function public.save_tour_route(jsonb,jsonb,uuid[],timestamptz,jsonb,uuid[]) from public,anon;
+line 26: grant execute on function public.save_tour_route(jsonb,jsonb,uuid[],timestamptz,jsonb,uuid[]) to authenticated;
+line 27: create function public.save_page(p_page jsonb,p_sections jsonb,p_deleted uuid[],p_expected timestamptz)
+line 48: revoke all on function public.save_page(jsonb,jsonb,uuid[],timestamptz) from public,anon;
+line 49: grant execute on function public.save_page(jsonb,jsonb,uuid[],timestamptz) to authenticated;
+
+MIGRATION: 20261019142253_public_website_submissions.sql
+line 1: alter table public.inquiries add column travel_end_date date, add column interests text not null default '' check(length(interests)<=2000), add column budget text not null default '' check(length(budget)<=300), add column consent boolean not null default false, add column consent_at timestamptz not null default now();
+line 2: alter table public.reviews add column consent boolean not null default false;
+line 3: alter table public.reviews alter column slug set default ('review-'||gen_random_uuid()::text);
+line 4: alter table public.places add column type text not null default '', add column best_months text[] not null default '{}';
+line 5: alter table public.tours add column regions text[] not null default '{}';
+line 7: create table private.submission_windows(key text primary key,started_at timestamptz not null,attempts integer not null);
+line 8: alter table private.submission_windows enable row level security;
+line 9: revoke all on private.submission_windows from public,anon,authenticated;
+line 10: create function private.guard_submission() returns trigger language plpgsql security definer set search_path='' as $$
+line 40: revoke all on function private.guard_submission() from public,anon,authenticated;
+line 41: create trigger inquiry_submission_guard before insert on public.inquiries for each row execute function private.guard_submission();
+line 42: create trigger review_submission_guard before insert on public.reviews for each row execute function private.guard_submission();
+line 43: grant insert(travel_end_date,interests,budget,consent) on public.inquiries to anon;
+line 44: grant insert(author_name,country,rating,body,tour_id,reviewed_on,consent) on public.reviews to anon;
+line 45: create policy reviews_public_submit on public.reviews for insert to anon,authenticated with check (
+line 56: create or replace function public.save_tour_route(p_tour jsonb,p_days jsonb,p_deleted uuid[],p_expected timestamptz,p_stops jsonb,p_deleted_stops uuid[])
+
+MIGRATION: 20261019143553_publish_website_content.sql
+
+MIGRATION: 20261019150554_polished_theme_design.sql
+
+MIGRATION: 20261019181018_removable_mock_showcase.sql
+line 171: alter table public.reviews disable trigger review_submission_guard;
+line 180: alter table public.reviews enable trigger review_submission_guard;
+line 193: create function private.retain_mock_origin() returns trigger language plpgsql set search_path='' as $$
+line 195: revoke all on function private.retain_mock_origin() from public,anon,authenticated;
+line 201: alter table public.inquiries add column tour_snapshot text not null default '';
+line 203: create function private.guard_inquiry_snapshot() returns trigger language plpgsql security definer set search_path='' as $$
+line 205: revoke all on function private.guard_inquiry_snapshot() from public,anon,authenticated;
+line 206: create trigger inquiry_snapshot_guard before insert on public.inquiries for each row execute function private.guard_inquiry_snapshot();
+line 208: create table private.mock_cleanup_queue(storage_path text primary key check(storage_path ~ '^[a-f0-9-]{36}\.(webp|png|jpg|jpeg|mp4|webm)$'),created_at timestamptz not null default now());
+line 209: alter table private.mock_cleanup_queue enable row level security;
+line 210: grant select,insert,delete on private.mock_cleanup_queue to authenticated;
+line 211: create policy cleanup_admin_read on private.mock_cleanup_queue for select to authenticated using ((select private.is_admin()));
+line 212: create policy cleanup_admin_insert on private.mock_cleanup_queue for insert to authenticated with check ((select private.is_admin()));
+line 213: create policy cleanup_admin_delete on private.mock_cleanup_queue for delete to authenticated using ((select private.is_admin()));
+line 215: create function public.mock_data_status() returns jsonb language plpgsql security invoker set search_path='' as $$
+line 223: create function public.remove_mock_data() returns jsonb language plpgsql security invoker set search_path='' as $$
+line 243: create function public.pending_mock_media() returns setof text language plpgsql security invoker set search_path='' as $$
+line 246: create function public.acknowledge_mock_media(paths text[]) returns void language plpgsql security invoker set search_path='' as $$
+line 250: revoke all on function public.mock_data_status(),public.remove_mock_data(),public.pending_mock_media(),public.acknowledge_mock_media(text[]) from public,anon;
+line 251: grant execute on function public.mock_data_status(),public.remove_mock_data(),public.pending_mock_media(),public.acknowledge_mock_media(text[]) to authenticated;
+
+MIGRATION: 20261019181414_preserve_mock_editor_provenance.sql
+line 2: create function private.inherit_mock_parent() returns trigger language plpgsql set search_path='' as $$
+line 11: revoke all on function private.inherit_mock_parent() from public,anon,authenticated;
+line 12: create trigger inherit_mock_parent before insert or update on public.itinerary_days for each row execute function private.inherit_mock_parent();
+line 13: create trigger inherit_mock_parent before insert or update on public.route_stops for each row execute function private.inherit_mock_parent();
+line 14: create trigger inherit_mock_parent before insert or update on public.page_sections for each row execute function private.inherit_mock_parent();
+line 15: create trigger inherit_mock_parent before insert or update on public.nav_items for each row execute function private.inherit_mock_parent();
+line 18: create function public.save_tour_copy(p_source uuid,p_tour jsonb,p_days jsonb,p_stops jsonb) returns uuid language plpgsql security invoker set search_path='' as $$
+line 29: revoke all on function public.save_tour_copy(uuid,jsonb,jsonb,jsonb) from public,anon;
+line 30: grant execute on function public.save_tour_copy(uuid,jsonb,jsonb,jsonb) to authenticated;
+
+MIGRATION: 20261019181831_quality_form_labels.sql
+
+MIGRATION: 20261019182116_consolidate_review_insert_policies.sql
+
+MIGRATION: 20261019182441_repair_itinerary_media_references.sql
+line 6: alter table public.itinerary_days add constraint itinerary_photos_nonnull check(array_position(photos,null) is null);
+line 7: alter table public.places add constraint place_photos_nonnull check(array_position(photos,null) is null);
+line 8: alter table public.tours add constraint tour_gallery_nonnull check(array_position(gallery,null) is null);
+
+MIGRATION: 20261019191400_sapphire_premium_design.sql
+
+MIGRATION: 20261019192225_sapphire_design_refinements.sql
+line 1: alter table public.tours alter column route_colour set default '#0B5FD6';
+
+MIGRATION: 20261019193546_distinct_tour_cover.sql
+
+MIGRATION: 20261020080628_single_tour_map_labels.sql
+
+MIGRATION: 20261021223249_server_only_submissions.sql
+line 2: revoke insert on public.inquiries, public.reviews from anon, public;
+line 12: drop policy if exists inquiries_public_submit on public.inquiries;
+line 13: drop policy if exists reviews_public_submit on public.reviews;
+line 18: drop trigger if exists inquiry_submission_guard on public.inquiries;
+line 19: drop trigger if exists review_submission_guard on public.reviews;
+line 20: drop function if exists private.guard_submission();
+line 22: create table private.public_submission_limits (
+line 27: create index public_submission_limits_expiry on private.public_submission_limits (expires_at);
+line 28: alter table private.public_submission_limits enable row level security;
+line 29: revoke all on private.public_submission_limits from public, anon, authenticated;
+line 30: grant usage on schema private to service_role;
+line 31: grant select, insert, update, delete on private.public_submission_limits to service_role;
+line 33: create function public.submit_verified_public_form(
+line 108: revoke all on function public.submit_verified_public_form(text, jsonb, text, text) from public, anon, authenticated;
+line 109: grant execute on function public.submit_verified_public_form(text, jsonb, text, text) to service_role;
+
+MIGRATION: 20261029123348_shared_place_routes.sql
+line 1: alter table public.route_stops drop constraint route_stops_place_id_fkey;
+line 2: alter table public.route_stops add constraint route_stops_place_id_fkey
+line 6: create function private.sync_place_routes() returns trigger
+line 22: revoke all on function private.sync_place_routes() from public, anon, authenticated;
+line 23: create trigger place_route_coordinates after update of latitude, longitude, coordinates_approximate
+line 25: create trigger place_route_deletion before delete on public.places
+line 28: create function public.add_place_to_routes(p_place uuid, p_expected timestamptz, p_routes jsonb)
+line 53: revoke all on function public.add_place_to_routes(uuid,timestamptz,jsonb) from public,anon;
+line 54: grant execute on function public.add_place_to_routes(uuid,timestamptz,jsonb) to authenticated;
+
+MIGRATION: 20261029193014_tour_discovery_labels.sql
+
+D. TEST CASE INVENTORY — NOT EXECUTED IN THIS UPDATE
+
+tests\admin-auth.test.mjs
+test("login throttle caps attempts, isolates clients and expires", () => {
+test("throttle stays bounded instead of evicting blocked clients", () => {
+test("login validation rejects invalid input and preserves password whitespace", () => {
+
+tests\editor.test.mjs
+test("tour validation preserves draft zero price and rejects invalid price, slug and media", () => {
+test("itinerary rejects duplicate IDs, deleted live days and excess days", () => {
+test("route stops must belong to an included day and cannot duplicate IDs", () => {
+test("entity editors reject unknown tables, bad coordinates and out-of-range review ratings", () => {
+test("page links and inquiry updates validate security-sensitive fields", () => {
+test("new home sections validate destination references, collection limits and step content", () => {
+
+tests\navigation.test.mjs
+test("links reject executable URLs, protocol-relative URLs and encoded bypasses", () => {
+test("dropdown validation rejects missing parents, cycles and grandchildren", () => {
+test("footer groups and WhatsApp destinations are validated", () => {
+
+tests\public-footer.test.mjs
+test("empty footer has no fallback text or brand", () => {
+test("footer groups, copy and external link protections render safely", () => {
+
+tests\public-site.test.mjs
+test("trip and review validation reject missing consent, bad ranges and forged fields", () => {
+test("public reads reject drafts even if a data response accidentally contains them", async () => {
+test("tour filters combine duration, tags, route region and month; distances are approximate", () => {
+test("public images use database alt text, responsive sizes and hide assets without alt text", () => {
+test("published themes enforce readable text contrast", () => {
+test("galleries show each media asset once and retain its first chosen position", () => {
+test("save bars distinguish hydration from an actual save", () => {
+test("map routes pass their animation class to Leaflet at creation", () => {
+test("route model merges repeat and nearby visits without joining disconnected day segments", () => {
+test("both palettes validate button, card and muted-text contrast", () => {
+test("pre-paint theme resolves saved, system, invalid and unavailable storage", () => {
+test("server authorization rejects missing, invalid and non-admin sessions", async () => {
+test("missing photo references never discard a valid itinerary day", () => {
+test("login HTML keeps credentials out of URLs and waits for hydration", () => {
+test("deleting a middle route stop reconnects and renumbers remaining stops", () => {
+test("tour discovery sorts missing prices last, searches linked places, and preserves catalogue order", () => {
+
+tests\settings.test.mjs
+test("rejects unsafe CSS, URLs, oversized lists and missing published identity", () => {
+test("imports legacy drafts without publishing or modifying them", () => {
+test("canonical settings take precedence and corrupt data never silently resets", () => {
+
+tests\smoke\public.spec.ts
+test(`anonymous ${table} inserts and submission RPC are rejected`, async ({ request }) => {
+test("public pages return content and a tour detail", async ({ page }) => {
+test("mobile map selects one tour and shares its day in the URL", async ({ page }) => {
+test("inquiry form submits with Cloudflare test verification", async ({ page }) => {
+test("verified signed-in non-admin cannot enter admin routes", async ({ page, context }) => {
+test(`visitor discovers a tour, explores its route, and reaches its inquiry at ${width}px`, async ({
+
+tests\submissions.test.mjs
+test("submission boundary requires signed timing, verified challenge and whitelists both payloads", async () => {
+test("public caching expires quickly and admin invalidation expires the shared tag immediately", async () => {
+test("tour details restrict every related query and distinguish missing rows from failures", async () => {
+test("successful admin settings edits invalidate the public read; failed saves retain the cache", async () => {
+
+tests\turnstile.test.mjs
+test("optional challenge skips only when both keys are absent", async () => {
+test("server challenge requires success, matching action and exact hostname", async () => {
+test("missing and oversized tokens are rejected before provider calls", async () => {
+test("required public challenges fail closed and test keys are local-only", async () => {
+
+E. CONTINUATION CHECKLIST FOR A NEW AGENT
+1. Read this history, AGENTS.md and the owner’s latest message. Do not re-ask decisions already recorded unless the scope changed.
+2. Check actual working directory, Git status/branch and current diff. Preserve concurrent work. This history is not a live filesystem monitor.
+3. Confirm task scope: public content, admin behavior, database, design or operations. Use targeted source anchors above rather than scanning credentials.
+4. Distinguish a missing published record from a query failure. Confirm parent visibility and media references before diagnosing an empty public section.
+5. For mutations, preserve requireAdmin, validation, RLS, explicit deletion lists, optimistic concurrency and cache invalidation. For public forms, preserve the secret-module boundary and fail-closed challenge/ticket checks.
+6. For database changes, add a migration and reconcile the remote ledger; do not edit historical migrations or point tools at another project.
+7. Follow the current task’s verification and commit instructions. Do not claim a deployment succeeded merely because Git push succeeded.
+8. Append request, action, result, check evidence and unfinished items with date to this file. Do not store private reasoning or credentials. Tell the owner briefly what changed.
+
+EXPANSION ACTION RECORD
+Read-only commands inspected rules/configuration/schema/source/test/migration listings. The initial file-search command also checked .github and reported it does not exist; other requested paths were listed successfully. No site failure resulted from that inventory message.
+Added exact contract and query references to retain details without spending tokens paraphrasing every field. Corrected the smoke-test port and map-selection path. No application behavior or database content was modified. No new lint/typecheck/build/browser tests were run for this text-only continuation, and no commit/push was requested again or performed here. The normal project check policy resumes for application tasks unless explicitly overridden.
+Available older assistant replies are still incomplete. This expanded file cannot supply an exact missing chat transcript, unpublished cloud state or secrets, and must not claim otherwise.
+Planned short completion reply: Expanded the history with exact schemas/settings, route and file inventories, database/RPC references, test coverage, security details and continuation instructions. Corrected the smoke-test port. Only the text file changed; no tests or deployment.
+
+Execution note: The first attempt to run the temporary history builder failed because Windows PowerShell interpreted UTF-8 punctuation using the wrong encoding. Nothing was appended by that failed attempt. Running the same script with explicit UTF-8 decoding succeeded. The expanded file measured 156,228 bytes before this note. The temporary builder is under ignored test-results and is not an application change.
+
+Actual completion reply: Expanded the history to about 156 KB with exact schemas and settings, file/route inventory, database and RPC references, test cases, security rules, workflows and future plans. Also corrected the smoke-test port. Missing historical replies and unverified live details remain clearly marked. No application changes, tests or deployment.
+
+APPEND FUTURE DATED ENTRIES AFTER THIS POINT
+
+10. HISTORY DELIVERY TO GIT — 7 NOVEMBER 2026
+Owner request: "perfect push it to main"
+Assistant progress reply: "I’ll commit the expanded history and push it to main."
+Checked Git status: main tracks origin/main; the history text file is the only untracked change. Scope is committing this documentation file only. No application files or database data are changed. No application tests are rerun for this documentation-only delivery. Commit and push results are recorded in Git and the completion message; this entry is written before those operations and does not itself certify their success.
+Completion reply on successful push: "Pushed the expanded history to main."
